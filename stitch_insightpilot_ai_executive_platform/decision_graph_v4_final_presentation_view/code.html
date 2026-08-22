@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Decision Graph - InsightPilot AI</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-container": "#14b8a6",
+                        "surface-container-highest": "#273647",
+                        "on-primary-container": "#00423b",
+                        "on-tertiary": "#2c303b",
+                        "primary": "#4fdbc8",
+                        "on-primary-fixed-variant": "#005048",
+                        "tertiary-fixed-dim": "#c3c6d4",
+                        "on-tertiary-container": "#363a46",
+                        "inverse-on-surface": "#233143",
+                        "background": "#051424",
+                        "on-secondary-fixed-variant": "#004395",
+                        "surface-dim": "#051424",
+                        "on-surface-variant": "#bbcac6",
+                        "on-primary": "#003731",
+                        "inverse-primary": "#006b5f",
+                        "on-tertiary-fixed-variant": "#434652",
+                        "on-surface": "#d4e4fa",
+                        "on-error": "#690005",
+                        "on-background": "#d4e4fa",
+                        "error-container": "#93000a",
+                        "outline-variant": "#3c4947",
+                        "primary-fixed-dim": "#4fdbc8",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "surface-container-low": "#0d1c2d",
+                        "tertiary": "#c3c6d4",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#71f8e4",
+                        "on-tertiary-fixed": "#171b26",
+                        "surface-container-lowest": "#010f1f",
+                        "on-secondary": "#002e6a",
+                        "secondary-fixed": "#d8e2ff",
+                        "surface": "#051424",
+                        "on-secondary-container": "#e6ecff",
+                        "surface-container-high": "#1c2b3c",
+                        "outline": "#859490",
+                        "tertiary-fixed": "#dfe2f1",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001a42",
+                        "tertiary-container": "#a1a4b2",
+                        "surface-variant": "#273647",
+                        "surface-container": "#122131",
+                        "secondary-container": "#0566d9",
+                        "inverse-surface": "#d4e4fa",
+                        "secondary": "#adc6ff",
+                        "on-primary-fixed": "#00201c",
+                        "surface-tint": "#4fdbc8",
+                        "surface-bright": "#2c3a4c"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "container-margin": "32px",
+                        "section-gap": "40px",
+                        "component-padding-y": "12px",
+                        "component-padding-x": "16px",
+                        "unit": "4px",
+                        "gutter": "16px"
+                    },
+                    fontFamily: {
+                        "headline-lg": ["Manrope"],
+                        "headline-lg-mobile": ["Manrope"],
+                        "table-data": ["Inter"],
+                        "headline-md": ["Manrope"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["JetBrains Mono"],
+                        "display-kpi": ["Manrope"]
+                    },
+                    fontSize: {
+                        "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "table-data": ["13px", { lineHeight: "18px", fontWeight: "450" }],
+                        "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "display-kpi": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom styles for graph lines and glassmorphism */
+        .glass-panel {
+            background: rgba(22, 27, 38, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .node-active {
+            box-shadow: 0 0 12px rgba(20, 184, 166, 0.4), 0 8px 32px rgba(0, 0, 0, 0.4);
+            border-color: rgba(20, 184, 166, 0.5);
+            background: rgba(22, 27, 38, 0.9);
+        }
+
+        .node-base {
+            background: rgba(22, 27, 38, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .node-base:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* SVG Line Animations */
+        .causal-line {
+            stroke: rgba(20, 184, 166, 0.4);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .causal-line-impact {
+            stroke: rgba(20, 184, 166, 0.8);
+            stroke-width: 3;
+            fill: none;
+            stroke-dasharray: 6;
+            animation: flowDash 20s linear infinite;
+        }
+        
+        .correlation-line {
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 1.5;
+            fill: none;
+            stroke-dasharray: 4 6;
+        }
+
+        .evidence-line {
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 1;
+            fill: none;
+        }
+
+        @keyframes flowDash {
+            to { stroke-dashoffset: -1000; }
+        }
+        
+        /* Custom scrollbar for side panel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen overflow-hidden flex font-body-sm text-body-sm antialiased w-[1920px] mx-auto h-[1080px]">
+<!-- Shared Component: SideNavBar -->
+<nav class="h-full w-64 fixed left-0 top-0 bg-surface-container dark:bg-surface-container border-r border-outline-variant/30 shadow-sm flex flex-col py-component-padding-y z-40">
+<div class="px-component-padding-x mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-sm">dashboard</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary leading-tight">InsightPilot AI</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Global Enterprise</p>
+</div>
+</div>
+<ul class="flex-1 px-3 space-y-1">
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Executive Command Center
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+                    Insights
+                </a>
+</li>
+<!-- Active Node -->
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 active:scale-[0.99] transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+                    Decision Graph
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+                    Recommendations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">travel_explore</span>
+                    Evidence Explorer
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+                    Executive Briefings
+                </a>
+</li>
+<li class="mt-auto pt-4 border-t border-outline-variant/20">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+<div class="px-4 mt-4">
+<button class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps font-bold py-2 px-4 rounded hover:bg-primary transition-colors duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+                Generate Briefing
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-64 w-full h-full flex flex-col relative bg-[#0B0F19]">
+<!-- Ambient Background Glow -->
+<div class="absolute top-1/2 left-1/2 w-[1200px] h-[800px] bg-primary-container/5 rounded-full blur-[160px] pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
+<!-- Shared Component: TopAppBar -->
+<header class="docked full-width top-0 sticky z-50 bg-surface/60 backdrop-blur-xl dark:bg-surface/60 border-b border-outline-variant/20 shadow-sm flex justify-between items-center h-16 px-container-margin w-full">
+<div class="flex items-center gap-4">
+<!-- Breadcrumb style context -->
+<div class="text-on-surface-variant font-label-caps text-label-caps flex items-center gap-2">
+                    Global Enterprise 
+                    <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-bold">Decision Graph</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm group-focus-within:text-primary transition-colors">search</span>
+<input class="bg-surface border border-outline-variant rounded py-1.5 pl-9 pr-4 text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all w-64 placeholder:text-on-surface-variant/50" placeholder="Search insights..." type="text"/>
+</div>
+<!-- Actions -->
+<button class="text-on-surface-variant hover:text-primary hover:bg-surface-container-high/50 transition-all p-2 rounded-full active:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant/50 overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<img alt="Executive User" class="w-full h-full object-cover" data-alt="A professional corporate headshot of an executive user in a modern office setting, bright lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGpG76HEfZ8pUzzu1I8SyxmAI-YJzMrREq8vrmyC3O9u1FWF780gRFQUvy3rVkk78D0ouaMOpdFlCnKlKUp7MJAd0CHKWsoJEU0gM2DWiLBpwc9BMS92oa5os2E6KHPT8MUDhPN_mebLm5w7EdfjLXgod6igBN41IY13orvycx26w1e6LHdlSZw756p-MizUYUcsNWEc5o0LIT1UuIkKw-M4fSPYbsb_al4leg9SA877dY3BaQJ9zr"/>
+</div>
+</div>
+</header>
+<!-- Top Toolbar (Graph Specific) -->
+<div class="px-container-margin py-6 border-b border-outline-variant/10 flex items-center justify-between z-10 relative">
+<div class="flex items-center gap-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[32px]">account_tree</span>
+                        Decision Graph
+                    </h2>
+<div class="text-on-surface-variant mt-1 text-body-sm">AI-generated business reasoning for North America East revenue</div>
+</div>
+<div class="h-10 w-px bg-outline-variant/30"></div>
+<!-- Status Chips -->
+<div class="flex flex-col gap-2">
+<div class="flex gap-2 font-label-caps text-label-caps">
+<span class="px-2 py-1 rounded-sm bg-primary-container/10 text-primary border border-primary/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                            Validated
+                        </span>
+<span class="px-2 py-1 rounded-sm bg-surface-container text-on-surface-variant border border-outline-variant/30">
+                            Confidence: <span class="text-on-surface ml-1 font-bold">87.4%</span>
+</span>
+<span class="px-2 py-1 rounded-sm bg-surface-container text-on-surface-variant border border-outline-variant/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                            Updated: 2m ago
+                        </span>
+</div>
+</div>
+</div>
+<!-- Graph Controls -->
+<div class="flex items-center gap-4">
+<!-- Legend -->
+<div class="hidden xl:flex items-center gap-4 mr-4 bg-surface-container/50 px-4 py-2 rounded-lg border border-outline-variant/20 text-xs text-on-surface-variant">
+<div class="flex items-center gap-2"><div class="w-4 h-0.5 bg-primary/40"></div> Causal</div>
+<div class="flex items-center gap-2"><div class="w-4 h-0.5 border-t-2 border-dashed border-white/15"></div> Correlational</div>
+<div class="flex items-center gap-2"><div class="w-4 h-px bg-white/10"></div> Evidence</div>
+<div class="flex items-center gap-2"><div class="w-4 h-1 border-t-[3px] border-dashed border-primary/80"></div> High Impact</div>
+</div>
+<div class="bg-surface-container rounded-lg border border-outline-variant/30 flex p-1">
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">zoom_out</span></button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">pan_tool</span></button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">fit_screen</span></button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">zoom_in</span></button>
+</div>
+<button class="px-4 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+                    Filter Graph
+                </button>
+</div>
+</div>
+<!-- Graph Canvas & Side Panel Container -->
+<div class="flex-1 flex relative overflow-hidden">
+<!-- SVG Connecting Lines (Absolute behind nodes) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none z-0" preserveaspectratio="none" viewbox="0 0 1656 892">
+<!-- Updated Paths roughly adjusting for new tighter layout -->
+<path class="causal-line-impact" d="M 280 440 C 350 440, 350 380, 420 380"></path>
+<path class="causal-line" d="M 280 440 C 350 440, 350 500, 420 500"></path>
+<path class="causal-line" d="M 280 440 C 350 440, 350 620, 420 620"></path>
+<path class="correlation-line" d="M 640 380 C 710 380, 710 380, 780 380"></path>
+<path class="evidence-line" d="M 640 380 C 710 380, 710 440, 780 440"></path>
+<path class="evidence-line" d="M 640 500 C 710 500, 710 560, 780 560"></path>
+<path class="evidence-line" d="M 640 620 C 710 620, 710 680, 780 680"></path>
+<path class="causal-line-impact" d="M 1000 440 C 1070 440, 1070 360, 1140 360"></path>
+<path class="causal-line" d="M 1000 560 C 1070 560, 1070 500, 1140 500"></path>
+<path class="causal-line-impact" d="M 1360 360 C 1430 360, 1430 440, 1500 440"></path>
+<path class="causal-line" d="M 1360 500 C 1430 500, 1430 440, 1500 440"></path>
+</svg>
+<!-- Interactive Graph Area -->
+<div class="flex-1 overflow-visible p-6 flex items-center justify-start gap-6 z-10 w-full h-full">
+<!-- Column 1: KPI Anchor -->
+<div class="flex flex-col gap-6 w-60 justify-center z-20">
+<div class="node-base border-error/50 bg-error/10 rounded-2xl p-5 cursor-pointer shadow-[0_8px_32px_rgba(255,180,171,0.1)] relative">
+<div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-variant rounded-full border-[4px] border-[#0B0F19]"></div>
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-error text-[24px]">warning</span>
+<span class="text-[10px] bg-error text-on-error px-2 py-1 rounded font-label-caps uppercase tracking-wider font-bold">Critical Status</span>
+</div>
+<h3 class="font-headline-md text-[20px] leading-tight text-on-surface mb-4">North America East Revenue</h3>
+<div class="flex flex-col gap-2">
+<div class="font-display-kpi text-[36px] leading-none text-error font-bold">-$12.4M</div>
+<div class="flex items-center gap-1.5 text-error text-xs font-medium bg-error/10 w-fit px-2 py-1 rounded-lg border border-error/20">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                                8.0% vs Last Quarter
+                            </div>
+</div>
+</div>
+</div>
+<!-- Column 2: Drivers & Factors -->
+<div class="flex flex-col gap-6 w-56">
+<div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Operational Drivers</div>
+<!-- Selected Active Node -->
+<div class="node-active rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full border-[4px] border-[#0B0F19] shadow-[0_0_12px_rgba(20,184,166,0.8)] z-10"></div>
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-primary text-xl">warehouse</span>
+<span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-label-caps border border-primary/30">Primary</span>
+</div>
+<h4 class="font-body-lg font-medium text-on-surface leading-tight mb-2 text-sm">Atlanta DC Stockout</h4>
+<div class="flex items-center gap-2">
+<div class="h-1 flex-1 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[91%]"></div>
+</div>
+<span class="text-[10px] text-primary font-mono">91.2% Conf</span>
+</div>
+</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-error text-xl">trending_down</span>
+<span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">INT</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">SKU-8821 Sales Volume</h4>
+<div class="text-error font-mono text-base">-64%</div>
+</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-error text-xl">assignment_return</span>
+<span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">INT</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor Orders</h4>
+<div class="text-error font-mono text-base">-27%</div>
+</div>
+</div>
+<!-- Column 3: External Factor -->
+<div class="flex flex-col gap-6 w-48 justify-center">
+<div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">External Factor</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-xl">storefront</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Competitor: Horizon Foods</h4>
+<div class="text-on-surface-variant text-xs">Price <span class="text-error font-bold">-15%</span></div>
+</div>
+</div>
+<!-- Column 4: Evidence -->
+<div class="flex flex-col gap-5 w-56">
+<div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Evidence Layer</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-lg">confirmation_number</span>
+<span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">CRM</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Zendesk Support Tickets</h4>
+<div class="text-error font-mono text-base">+310%</div>
+</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-lg">mail</span>
+<span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">COMM</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor Email</h4>
+<div class="text-on-surface-variant text-xs truncate">35K-unit cancellation</div>
+</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start justify-between mb-2">
+<span class="material-symbols-outlined text-tertiary-container text-lg">insights</span>
+<span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">EXT</span>
+</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Market Intelligence</h4>
+<div class="text-on-surface-variant text-xs">15% discount observed</div>
+</div>
+</div>
+<!-- Column 5: Actions -->
+<div class="flex flex-col gap-6 w-56 justify-center">
+<div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Proposed Actions</div>
+<div class="node-base border-primary-container/40 bg-primary-container/10 rounded-xl p-4 cursor-pointer hover:border-primary transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.1)] relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[18px]">local_shipping</span>
+</div>
+<div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Emergency Inventory Transfer</h4>
+<div class="text-primary text-xs flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[14px]">model_training</span> Operations</div>
+</div>
+</div>
+</div>
+<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center shrink-0 border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">payments</span>
+</div>
+<div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Temporary Trade Allowance</h4>
+<div class="text-on-surface-variant text-xs">Sales</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 6: Outcome -->
+<div class="flex flex-col w-64 justify-center">
+<div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-2 tracking-widest uppercase">Predicted Outcome</div>
+<div class="node-base rounded-2xl p-5 border-l-4 border-l-primary bg-gradient-to-r from-primary-container/10 to-transparent relative">
+<div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-primary rounded-full border-[4px] border-[#0B0F19]"></div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[24px]">monitoring</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant tracking-wider uppercase">Projected Recovery</span>
+</div>
+<div class="font-display-kpi text-[36px] leading-none text-primary mb-3 font-bold">$9.1M</div>
+<div class="text-xs text-on-surface-variant mb-4 bg-surface-container/50 p-3 rounded-lg border border-outline-variant/20">
+                            Recovers <span class="text-primary font-bold">73.4%</span> of projected loss within 14 days.<br/>
+<span class="text-on-surface mt-1 block">Net Benefit: <span class="font-bold text-primary">$8.68M</span></span>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary-fixed rounded-lg text-sm font-bold hover:bg-primary-fixed transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.3)]">
+                            Execute Strategy
+                        </button>
+</div>
+</div>
+</div>
+<!-- Right Side Panel (Selected Node Details) -->
+<aside class="glass-panel w-[320px] h-full absolute right-0 top-0 border-l border-outline-variant/20 shadow-[-16px_0_48px_rgba(0,0,0,0.6)] flex flex-col z-20">
+<!-- Panel Header -->
+<div class="p-5 border-b border-outline-variant/20 flex items-center justify-between bg-surface/60 backdrop-blur-md">
+<h3 class="font-headline-md text-[18px] font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+                        Node Details
+                    </h3>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1.5 rounded-lg hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">close</span></button>
+</div>
+<!-- Panel Content Scrollable -->
+<div class="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
+<!-- Node Identity -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-label-caps border border-primary/30 uppercase tracking-wider font-bold">Operational Driver</span>
+</div>
+<h2 class="font-headline-md text-[20px] leading-tight text-on-surface mb-2">Atlanta DC Stockout</h2>
+<p class="text-sm text-on-surface-variant leading-relaxed">Critical inventory depletion for high-velocity SKUs in the Southeast region.</p>
+</div>
+<!-- Key Metrics (Bento style mini-grid) -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/30">
+<div class="text-[10px] text-on-surface-variant font-label-caps mb-1 tracking-wider">Confidence</div>
+<div class="text-lg font-bold text-primary">91.2%</div>
+</div>
+<div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/30">
+<div class="text-[10px] text-on-surface-variant font-label-caps mb-1 tracking-wider">Impact Score</div>
+<div class="text-lg font-bold text-error">64%</div>
+</div>
+</div>
+<!-- Evidence Sources -->
+<div>
+<h4 class="font-label-caps text-xs text-on-surface-variant/70 mb-3 border-b border-outline-variant/20 pb-2 uppercase tracking-wider">Corroborating Evidence</h4>
+<div class="space-y-3">
+<div class="flex items-start gap-3 bg-surface-container/30 p-3 rounded-lg">
+<div class="w-6 h-6 rounded bg-surface-bright flex items-center justify-center shrink-0 border border-outline-variant/50">
+<span class="material-symbols-outlined text-[14px] text-tertiary">database</span>
+</div>
+<div>
+<div class="text-sm font-medium text-on-surface mb-0.5">ERP System</div>
+<div class="text-[12px] text-on-surface-variant leading-tight">Inventory levels at 0 since Tuesday.</div>
+</div>
+</div>
+<div class="flex items-start gap-3 bg-surface-container/30 p-3 rounded-lg">
+<div class="w-6 h-6 rounded bg-surface-bright flex items-center justify-center shrink-0 border border-outline-variant/50">
+<span class="material-symbols-outlined text-[14px] text-tertiary">headset_mic</span>
+</div>
+<div>
+<div class="text-sm font-medium text-on-surface mb-0.5">Support Tickets</div>
+<div class="text-[12px] text-on-surface-variant leading-tight">Spike in 'Where is my order?' from SE distributors.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Analysis Text -->
+<div class="bg-primary-container/10 rounded-lg p-4 border border-primary-container/30">
+<div class="flex items-center gap-2 mb-2 text-primary">
+<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span class="font-label-caps text-[10px] font-bold tracking-wider uppercase">AI Synthesis</span>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                            The root cause of the revenue drop is directly linked to the stockout at the Atlanta facility, which handles 80% of SKU-8821 distribution for the impacted region. Resolving this node is on the critical path to revenue recovery.
+                        </p>
+</div>
+<!-- Actions specific to this node -->
+<div class="mt-auto pt-4">
+<button class="w-full py-2 bg-transparent border-2 border-outline text-on-surface rounded-lg text-sm font-bold hover:bg-surface-container hover:border-outline-variant transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                            View Root Cause Analysis
+                        </button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+</body></html>

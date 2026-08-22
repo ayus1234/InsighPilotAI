@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Executive Decision Briefing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#14b8a6",
+                      "surface-container-highest": "#273647",
+                      "on-primary-container": "#00423b",
+                      "on-tertiary": "#2c303b",
+                      "primary": "#4fdbc8",
+                      "on-primary-fixed-variant": "#005048",
+                      "tertiary-fixed-dim": "#c3c6d4",
+                      "on-tertiary-container": "#363a46",
+                      "inverse-on-surface": "#233143",
+                      "background": "#051424",
+                      "on-secondary-fixed-variant": "#004395",
+                      "surface-dim": "#051424",
+                      "on-surface-variant": "#bbcac6",
+                      "on-primary": "#003731",
+                      "inverse-primary": "#006b5f",
+                      "on-tertiary-fixed-variant": "#434652",
+                      "on-surface": "#d4e4fa",
+                      "on-error": "#690005",
+                      "on-background": "#d4e4fa",
+                      "error-container": "#93000a",
+                      "outline-variant": "#3c4947",
+                      "primary-fixed-dim": "#4fdbc8",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "surface-container-low": "#0d1c2d",
+                      "tertiary": "#c3c6d4",
+                      "error": "#ffb4ab",
+                      "primary-fixed": "#71f8e4",
+                      "on-tertiary-fixed": "#171b26",
+                      "surface-container-lowest": "#010f1f",
+                      "on-secondary": "#002e6a",
+                      "secondary-fixed": "#d8e2ff",
+                      "surface": "#051424",
+                      "on-secondary-container": "#e6ecff",
+                      "surface-container-high": "#1c2b3c",
+                      "outline": "#859490",
+                      "tertiary-fixed": "#dfe2f1",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed": "#001a42",
+                      "tertiary-container": "#a1a4b2",
+                      "surface-variant": "#273647",
+                      "surface-container": "#122131",
+                      "secondary-container": "#0566d9",
+                      "inverse-surface": "#d4e4fa",
+                      "secondary": "#adc6ff",
+                      "on-primary-fixed": "#00201c",
+                      "surface-tint": "#4fdbc8",
+                      "surface-bright": "#2c3a4c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "container-margin": "32px",
+                      "section-gap": "40px",
+                      "component-padding-y": "12px",
+                      "component-padding-x": "16px",
+                      "unit": "4px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": [
+                              "Manrope"
+                      ],
+                      "headline-lg-mobile": [
+                              "Manrope"
+                      ],
+                      "table-data": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Manrope"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "JetBrains Mono"
+                      ],
+                      "display-kpi": [
+                              "Manrope"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "table-data": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "450"
+                              }
+                      ],
+                      "headline-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-kpi": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #0B0F19; /* Base Layer */
+            color: #d4e4fa; /* on-surface */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .presentation-container {
+            width: 1920px;
+            height: 1080px;
+            background-color: #0B0F19;
+            transform-origin: top left;
+            overflow: hidden;
+            position: relative;
+        }
+        .glass-panel {
+            background-color: #161B26;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .active-glow {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(20, 184, 166, 0.3);
+        }
+        
+        /* Auto-scale container to fit viewport while maintaining 16:9 */
+        @media (max-aspect-ratio: 16/9) {
+            .presentation-container {
+                width: 100vw;
+                height: 56.25vw;
+            }
+        }
+        @media (min-aspect-ratio: 16/9) {
+            .presentation-container {
+                height: 100vh;
+                width: 177.77vh;
+            }
+        }
+      </style>
+</head>
+<body class="bg-black antialiased">
+<!-- 16:9 Presentation Container -->
+<div class="presentation-container mx-auto flex flex-col p-[60px]">
+<!-- Header Area -->
+<header class="flex justify-between items-start mb-8 border-b border-outline-variant/30 pb-6">
+<div>
+<div class="inline-flex items-center gap-3 mb-4 px-4 py-2 bg-error-container/20 border border-error/30 rounded-full text-error">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span class="font-label-caps text-[14px] uppercase tracking-widest font-bold">Critical Alert Briefing</span>
+</div>
+<h1 class="font-headline-lg text-[48px] leading-[1.2] text-on-surface tracking-tight font-bold mb-3">Executive Decision Briefing: North America East Revenue Decline</h1>
+<p class="font-body-lg text-[20px] text-on-surface-variant flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span> Oct 24, 2023
+                <span class="text-outline-variant">|</span>
+<span class="material-symbols-outlined text-[20px]">smart_toy</span> Generated by InsightPilot AI
+            </p>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-4 items-center h-full">
+<button class="px-6 py-3 border border-outline-variant rounded font-label-caps text-[14px] text-on-surface hover:bg-surface-bright/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">ios_share</span> Share
+            </button>
+<button class="px-6 py-3 border border-outline-variant rounded font-label-caps text-[14px] text-on-surface hover:bg-surface-bright/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span> Export
+            </button>
+<button class="px-6 py-3 border border-outline-variant rounded font-label-caps text-[14px] text-on-surface hover:bg-surface-bright/10 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">person_add</span> Assign Owner
+            </button>
+<button class="px-8 py-3 bg-primary-container text-on-primary-container rounded font-label-caps text-[14px] hover:bg-primary transition-colors flex items-center gap-2 font-bold">
+<span class="material-symbols-outlined text-[20px]">check_circle</span> Approve Recommendation
+            </button>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="flex-1 grid grid-cols-12 grid-rows-2 gap-6 min-h-0">
+<!-- Situation (Top Left) -->
+<section class="col-span-4 row-span-1 glass-panel rounded-2xl p-6 flex flex-col justify-between h-full">
+<div>
+<h2 class="font-label-caps text-[16px] text-on-surface-variant mb-4 uppercase tracking-widest flex items-center gap-3 border-b border-outline-variant/30 pb-3">
+<span class="material-symbols-outlined text-[20px]">trending_down</span> 1. Situation
+                </h2>
+<div class="font-display-kpi text-[80px] leading-none text-error mb-2 font-bold tracking-tighter">-$12.4M</div>
+<div class="flex items-center gap-2 text-error font-headline-md text-[24px]">
+<span class="material-symbols-outlined text-[28px]">arrow_downward</span>
+<span>8.0% shortfall vs projected</span>
+</div>
+</div>
+<p class="font-body-lg text-[18px] leading-relaxed text-on-surface-variant mt-4 border-t border-outline-variant/30 pt-4">
+                North America East region has experienced a significant revenue contraction over the last 14 days, deviating sharply from Q3 forecasts.
+            </p>
+</section>
+<!-- Diagnosis (Top Middle) -->
+<section class="col-span-4 row-span-1 glass-panel rounded-2xl p-6 flex flex-col h-full">
+<h2 class="font-label-caps text-[16px] text-on-surface-variant mb-4 uppercase tracking-widest flex items-center gap-3 border-b border-outline-variant/30 pb-3">
+<span class="material-symbols-outlined text-[20px]">troubleshoot</span> 2. Diagnosis
+            </h2>
+<div class="flex flex-col gap-4 flex-1">
+<div class="bg-surface p-5 rounded-xl border border-outline-variant/20 flex flex-col flex-1">
+<h3 class="font-headline-lg text-[22px] text-on-surface mb-2">Primary Driver: Stockout</h3>
+<p class="font-body-lg text-[16px] leading-relaxed text-on-surface-variant mb-auto">
+                        Critical inventory depletion of flagship SKUs in key hubs (NY, PA). Bottleneck at Port of Newark.
+                    </p>
+<div class="mt-4">
+<div class="flex justify-between mb-1 font-label-caps text-[12px]">
+<span class="text-on-surface-variant">Impact Weight</span>
+<span class="text-error font-bold">75%</span>
+</div>
+<div class="w-full bg-surface-variant h-2 rounded-full overflow-hidden">
+<div class="bg-error w-[75%] h-full"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface p-5 rounded-xl border border-outline-variant/20 flex flex-col flex-1">
+<h3 class="font-headline-lg text-[22px] text-on-surface mb-2">Secondary: Price Pressure</h3>
+<p class="font-body-lg text-[16px] leading-relaxed text-on-surface-variant mb-auto">
+                        Competitor X launched a flash sale undercutting mid-tier offerings by 15%.
+                    </p>
+<div class="mt-4">
+<div class="flex justify-between mb-1 font-label-caps text-[12px]">
+<span class="text-on-surface-variant">Impact Weight</span>
+<span class="text-primary font-bold">25%</span>
+</div>
+<div class="w-full bg-surface-variant h-2 rounded-full overflow-hidden">
+<div class="bg-primary w-[25%] h-full"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Evidence (Top Right) -->
+<section class="col-span-4 row-span-1 glass-panel rounded-2xl p-6 flex flex-col h-full">
+<h2 class="font-label-caps text-[16px] text-on-surface-variant mb-4 uppercase tracking-widest flex items-center gap-3 border-b border-outline-variant/30 pb-3">
+<span class="material-symbols-outlined text-[20px]">plagiarism</span> 3. Evidence
+            </h2>
+<div class="flex flex-col justify-around flex-1 gap-4">
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/20">
+<span class="font-headline-md text-[18px] text-on-surface">NY Hub Inventory Level</span>
+<span class="font-label-caps text-[14px] font-bold text-error bg-error-container/20 px-3 py-1.5 rounded-lg border border-error/20">12% (CRITICAL)</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/20">
+<span class="font-headline-md text-[18px] text-on-surface">Competitor Pricing vs Baseline</span>
+<span class="font-label-caps text-[14px] font-bold text-primary bg-primary-container/20 px-3 py-1.5 rounded-lg border border-primary/20">-15.4%</span>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface rounded-xl border border-outline-variant/20">
+<span class="font-headline-md text-[18px] text-on-surface">Cart Abandonment (NA-E)</span>
+<span class="font-label-caps text-[14px] font-bold text-error bg-error-container/20 px-3 py-1.5 rounded-lg border border-error/20">+34% vs Avg</span>
+</div>
+</div>
+</section>
+<!-- Recommended Action & Impact (Bottom Full Width) -->
+<section class="col-span-12 row-span-1 active-glow glass-panel rounded-2xl p-8 flex flex-col border-primary/40 relative overflow-hidden h-full">
+<!-- Subtle background accent -->
+<div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+<div class="grid grid-cols-2 gap-12 h-full relative z-10">
+<!-- Recommended Action -->
+<div class="flex flex-col h-full border-r border-outline-variant/30 pr-12">
+<div class="flex justify-between items-center mb-6 border-b border-primary/20 pb-4">
+<h2 class="font-label-caps text-[16px] text-primary uppercase tracking-widest flex items-center gap-3 font-bold">
+<span class="material-symbols-outlined text-[24px]">offline_bolt</span> 4. Recommended Action
+                            </h2>
+<span class="font-label-caps text-[14px] bg-primary/20 text-primary px-4 py-1.5 rounded-full border border-primary/30 font-bold uppercase tracking-wider">Priority: High</span>
+</div>
+<h3 class="font-headline-lg text-[36px] text-on-surface mb-6 font-bold leading-tight">Execute Emergency Inventory Transfer + Targeted Intervention</h3>
+<p class="font-body-lg text-[22px] leading-relaxed text-on-surface-variant">
+                            Divert 40,000 units from Mid-West regional surplus directly to NA-East fulfillment centers via expedited ground freight. Simultaneously, activate dynamic pricing matching for the mid-tier segment to stem volume loss.
+                        </p>
+</div>
+<!-- Expected Impact -->
+<div class="flex flex-col h-full justify-center">
+<h2 class="font-label-caps text-[16px] text-on-surface-variant mb-6 uppercase tracking-widest flex items-center gap-3 border-b border-outline-variant/30 pb-4">
+<span class="material-symbols-outlined text-[20px]">insights</span> 5. Expected Impact
+        </h2>
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div class="bg-surface border border-primary/30 rounded-xl p-8 flex flex-col justify-center">
+<div class="font-label-caps text-[16px] text-on-surface-variant mb-4 uppercase tracking-wider">Projected Recovery</div>
+<div class="font-display-kpi text-[80px] text-primary font-bold leading-none mb-2">+$9.1M</div>
+<div class="font-headline-md text-[20px] text-on-surface-variant">in retained revenue</div>
+</div>
+<div class="bg-surface border border-outline-variant/30 rounded-xl p-8 flex flex-col justify-center gap-6">
+<div>
+<div class="flex justify-between items-center mb-3">
+<span class="font-label-caps text-[16px] text-on-surface-variant uppercase tracking-wider">AI Confidence Score</span>
+<span class="font-headline-md text-[28px] text-primary font-bold">87.4%</span>
+</div>
+<div class="w-full bg-surface-variant h-3 rounded-full overflow-hidden">
+<div class="bg-primary w-[87.4%] h-full"></div>
+</div>
+</div>
+<p class="font-body-sm text-[16px] text-on-surface-variant mt-2">Based on analysis of 12 similar historical supply chain disruption events.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+</body></html>

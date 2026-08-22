@@ -1,0 +1,4 @@
+# InsightPilot AI — Foundational Python Dependencies
+# Dependencies will be introduced incrementally during their respective implementation steps.
+
+python-dotenv>=1.0.0
