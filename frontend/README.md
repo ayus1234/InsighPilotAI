@@ -113,6 +113,19 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 - **Actions & Outcome:** Emergency Inventory Transfer (`$484K`), Targeted Outreach (`$180K`) $\to$ Projected Recovery `$757.6K` (`$729.6K` Net Benefit)
 - **Interactive Node Details Panel:** Dynamic node inspection for KPI, Drivers 1–4 with evidence and AI synthesis.
 
+### Screen 5: Evidence Explorer (`GET /api/v1/investigations/{kpi_id}`)
+- **Verified Evidence Count:** `9 verified enterprise nodes`
+- **Unstructured Material Cards:**
+  - `EVID_CRM_PO_DEFERRAL_001`: Regional Distributor PO Deferral Memos (29 delayed POs / 35K unit order cancellation)
+  - `EVID_ZND_TKT_SURGE_001`: Zendesk Support Tickets (+310% Out of Stock surge)
+  - `EVID_MKT_COMP_INTEL_001`: Competitor Horizon Foods 15% discount promotional scrape
+- **Structured Corroboration Table:**
+  - `SAP S/4HANA (MM-WM)`: `INV-SNAP-21971` (94% High)
+  - `ERP Sales Ledger`: SKU-8821 Volume Deficit (89% High)
+  - `CRM Global Distribution`: 29 Delayed Distributor Orders (85% High)
+  - `External Intel Pipeline`: Horizon 15% Price Cut (78% Med)
+- **Search & Filter:** Instant client-side text filtering over loaded enterprise evidence.
+
 ---
 
 ## 6. Phased Implementation Roadmap
@@ -120,8 +133,9 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 1. **Step 10B (Complete):** Frontend Foundation, API Client, and Screen 1 Integration.
 2. **Step 10C (Complete):** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
 3. **Step 10D (Complete):** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
-4. **Step 10E:** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
+4. **Step 10E (Complete):** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
 5. **Step 10F:** Recommendations & What-If Simulation (Screen 6) Live Slider.
 6. **Step 10G:** Executive Briefing (Screen 7) & Grounded Gemini Persona Narrative.
+
 
 
