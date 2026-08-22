@@ -19,7 +19,7 @@ class Settings:
     API_PORT: int = int(os.getenv("API_PORT", "8000"))
     
     # CORS Origins (comma-separated in env)
-    raw_cors: str = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173")
+    raw_cors: str = os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:8080,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:8080,http://127.0.0.1:5173")
     CORS_ORIGINS: List[str] = [origin.strip() for origin in raw_cors.split(",") if origin.strip()]
 
 settings = Settings()
