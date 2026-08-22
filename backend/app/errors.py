@@ -43,6 +43,33 @@ class InvalidInvestigationRequestError(APIError):
             status_code=status.HTTP_400_BAD_REQUEST
         )
 
+class InvalidPersonaAPIError(APIError):
+    """Raised when an unsupported persona is requested."""
+    def __init__(self, persona: str):
+        super().__init__(
+            code="INVALID_PERSONA",
+            message=f"Unsupported persona '{persona}'. Supported personas: 'CFO', 'REGIONAL_SALES_MANAGER'.",
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+class AIServiceUnavailableAPIError(APIError):
+    """Raised when Gemini API is unconfigured or unreachable."""
+    def __init__(self, detail: str = "AI Reasoning Service is currently unavailable."):
+        super().__init__(
+            code="AI_SERVICE_UNAVAILABLE",
+            message=detail,
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE
+        )
+
+class AIGroundingAPIError(APIError):
+    """Raised when generated AI narrative fails post-generation grounding checks."""
+    def __init__(self, detail: str = "AI reasoning output failed grounding validation."):
+        super().__init__(
+            code="AI_GROUNDING_FAILED",
+            message=detail,
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY
+        )
+
 def register_error_handlers(app: FastAPI) -> None:
     """Registers unified JSON exception handlers on the FastAPI application."""
     
@@ -63,7 +90,8 @@ def register_error_handlers(app: FastAPI) -> None:
         code_map = {
             404: "NOT_FOUND",
             405: "METHOD_NOT_ALLOWED",
-            500: "INTERNAL_SERVER_ERROR"
+            500: "INTERNAL_SERVER_ERROR",
+            503: "SERVICE_UNAVAILABLE"
         }
         code = code_map.get(exc.status_code, "HTTP_ERROR")
         return JSONResponse(
