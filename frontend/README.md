@@ -126,6 +126,12 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
   - `External Intel Pipeline`: Horizon 15% Price Cut (78% Med)
 - **Search & Filter:** Instant client-side text filtering over loaded enterprise evidence.
 
+### Screen 6: Recommendations & What-If Simulation (`GET /api/v1/recommendations/{kpi_id}` & `POST /api/v1/simulations/inventory-availability`)
+- **Priority 1 (Critical):** Emergency Inventory Transfer (`REC-2026-NAE-001`, `+$484K` Recovery, `+1.2 pts` margin, `91%` conf, `14 days`)
+- **Priority 2 (High):** Distributor Recovery Outreach (`REC-2026-NAE-002`, `+$180K` Recovery, `+0.6 pts` margin, `85%` conf, `21 days`)
+- **Action Prioritization Matrix:** Preserved 2x2 Impact vs Effort layout with plotted points for Quick Wins and Major Projects.
+- **What-If Scenario Simulation:** Live slider controlling inventory availability (79.4% to 100.0%) triggering deterministic simulations to update Projected Recovery (`+$341.4K` at 90.0%), Projected Revenue (`$14.54M`), and Confidence (`91% HIGH`).
+
 ---
 
 ## 6. Phased Implementation Roadmap
@@ -134,8 +140,9 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 2. **Step 10C (Complete):** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
 3. **Step 10D (Complete):** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
 4. **Step 10E (Complete):** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
-5. **Step 10F:** Recommendations & What-If Simulation (Screen 6) Live Slider.
+5. **Step 10F (Complete):** Recommendations & What-If Simulation (Screen 6) Live Slider.
 6. **Step 10G:** Executive Briefing (Screen 7) & Grounded Gemini Persona Narrative.
+
 
 
 
