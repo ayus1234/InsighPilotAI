@@ -1,7 +1,7 @@
 # InsightPilot AI — Frontend Architecture & Integration Guide
 
 > **Accenture Innovation Challenge 2026 — Track 3: BusinessIntelligence.ai**  
-> **Status:** Step 10B Approved Architecture & Screen 1 Integration
+> **Status:** Grounded Gemini Intelligence Integrated Across All 7 Stitch Screens
 
 ---
 
@@ -13,7 +13,8 @@ InsightPilot AI utilizes a zero-framework, lightweight frontend architecture des
 - **Styling:** Tailwind CSS CDN with Material 3 Dark Theme design tokens (Primary Teal `#4fdbc8`, Deep Navy `#051424`, Glass Panels with backdrop blur).
 - **Scripts:** Native JavaScript (ES Modules).
 - **Icons & Fonts:** Material Symbols Outlined, Manrope (Display KPIs), Inter (Body), JetBrains Mono (Labels).
-- **API Client:** Lightweight browser `fetch()` abstraction with configurable base URL, `AbortController` timeouts, and structured error handling.
+- **API Client:** Native browser `fetch()` client (`frontend/api/client.js`) with configurable base URL, `AbortController` timeouts, typed errors, and grounded Gemini endpoint helpers.
+- **State Store:** Lightweight in-memory cache store (`frontend/state/store.js`) supporting persona switching (CFO vs Regional Sales Manager) and query parameter deep-links.
 
 ---
 
@@ -21,13 +22,13 @@ InsightPilot AI utilizes a zero-framework, lightweight frontend architecture des
 
 ```text
 stitch_insightpilot_ai_executive_platform/
-├── executive_command_center_v3_optimized_hierarchy/   # Screen 1 (Integrated with live KPI APIs)
-├── ai_investigation_activity_v2/                       # Screen 2 (Activity timeline)
-├── root_cause_investigation_v2/                        # Screen 3 (Diagnostic drivers)
-├── decision_graph_v4_final_presentation_view/         # Screen 4 (Decision Graph)
-├── evidence_explorer_v2/                               # Screen 5 (Evidence repository)
-├── recommendations_simulation_v3_decision_ready/       # Screen 6 (Action cards & slider)
-└── executive_briefing_v3_boardroom_ready/              # Screen 7 (Executive slide briefing)
+├── executive_command_center_v3_optimized_hierarchy/   # Screen 1 (Live KPI & Grounded AI Summary)
+├── ai_investigation_activity_v2/                       # Screen 2 (Timeline & Grounded AI Synthesis)
+├── root_cause_investigation_v2/                        # Screen 3 (Diagnostic Drivers & AI Reasoning)
+├── decision_graph_v4_final_presentation_view/         # Screen 4 (Decision Graph & AI Inspector)
+├── evidence_explorer_v2/                               # Screen 5 (Evidence Repository & URL Filter)
+├── recommendations_simulation_v3_decision_ready/       # Screen 6 (Action Cards & What-If Slider)
+└── executive_briefing_v3_boardroom_ready/              # Screen 7 (Executive Boardroom Briefing)
 
 frontend/
 ├── api/
@@ -35,7 +36,7 @@ frontend/
 ├── config/
 │   └── config.js             # Base URL config (defaults to http://127.0.0.1:8000)
 ├── utils/
-│   └── formatters.js         # Formatting helpers (Currency, %, Points, Numbers)
+│   └── formatters.js         # Formatting helpers (Currency, %, Points, Numbers, Confidence)
 ├── state/
 │   └── store.js              # Lightweight state store for active KPI, persona, and caches
 └── README.md                 # This documentation
@@ -47,25 +48,25 @@ frontend/
 
 ### Step 1: Start the Backend (Port 8000)
 ```bash
-python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
+python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
 ```
 
-### Step 2: Start the Frontend Static Server (Port 3000)
+### Step 2: Start the Frontend Static Server (Port 8080)
 ```bash
-python -m http.server 3000
+python -m http.server 8080
 ```
 
 ### Step 3: Open in Browser
 Navigate to:
 ```text
-http://localhost:3000/stitch_insightpilot_ai_executive_platform/executive_command_center_v3_optimized_hierarchy/code.html
+http://localhost:8080/stitch_insightpilot_ai_executive_platform/executive_command_center_v3_optimized_hierarchy/code.html
 ```
 
 ---
 
 ## 4. API Client & Base URL Configuration
 
-The API client (`frontend/api/client.js`) automatically points to `http://127.0.0.1:8000` (or `window.__API_BASE_URL__`).
+The API client (`frontend/api/client.js`) automatically connects to `http://127.0.0.1:8000` (or `window.__API_BASE_URL__`).
 
 ### Available Methods:
 - `apiClient.getKPIs()`: Returns all 5 tracked enterprise KPIs.
@@ -78,79 +79,18 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 - `apiClient.getRecommendations(kpiId, region)`: Prioritized prescriptive actions.
 - `apiClient.getSimulationBaseline(region)`: Empirical baseline availability & revenue.
 - `apiClient.simulateInventoryAvailability(availabilityRatio, region)`: Live recovery projection.
-- `apiClient.getAIExplanation(kpiId, persona, region)`: Grounded Gemini executive narrative.
+- `apiClient.getAIExplanation(kpiId, options)`: Grounded Gemini executive narrative (`POST /api/v1/ai/explain/{kpi_id}`).
 
 ---
 
-## 5. Screen Integrations Status
+## 5. Screen Integration Summary
 
-### Screen 1: Executive Command Center (`GET /api/v1/kpis`)
-- **Revenue:** `$14.20M (-7.97%)`
-- **Gross Margin:** `57.4% (-3.2 pts)`
-- **Units Sold:** `105,400 (-8.5%)`
-- **Inventory Availability:** `79.4% (-14.8 pts)`
-- **Distributor Orders:** `842 (-12.1%)`
-
-### Screen 2: AI Investigation Activity (`GET /api/v1/investigations/{kpi_id}`)
-- **Confidence Score:** `89.0%`
-- **Drivers Count:** `4 drivers decomposed`
-- **Evidence Count:** `9 verified nodes`
-- **Investigation Status:** `SYSTEM STATUS: MISSION ACCOMPLISHED`
-
-### Screen 3: Root Cause Investigation (`GET /api/v1/investigations/{kpi_id}`)
-- **KPI Variance:** `-$1.23M Variance (-7.97%)`
-- **Ranked Driver 1 (Primary):** Atlanta DC Stockout (`43.2%`, `94.0%` conf, `-$550K` impact)
-- **Ranked Driver 2:** SKU-8821 Sales Volume (`26.7%`, `89.0%` conf, `-$340K` impact)
-- **Ranked Driver 3:** Distributor Orders Deferral (`18.8%`, `85.0%` conf, `-$240K` impact)
-- **Ranked Driver 4:** Competitor Horizon Foods Pricing (`11.3%`, `78.0%` conf, `-$144K` impact)
-- **Evidence Points:** Verified references to `EVID_ERP_ATL_STOCKOUT_001`, `EVID_ZND_TKT_SURGE_001`, `EVID_CRM_PO_DEFERRAL_001`, `EVID_MKT_COMP_INTEL_001`
-
-### Screen 4: Decision Graph (`GET /api/v1/investigations/{kpi_id}`)
-- **KPI Anchor:** `-$1.23M (-7.97% vs Last Quarter)`
-- **Operational Drivers:** Atlanta DC Stockout (`94.0% Conf`), SKU-8821 Volume (`-$340K`), Distributor Orders (`-$240K`)
-- **External Market Driver:** Horizon Foods Pricing (`Price -15%, -$144K`)
-- **Evidence Layer:** `EVID_ZND_TKT_SURGE_001`, `EVID_CRM_PO_DEFERRAL_001`, `EVID_MKT_COMP_INTEL_001`
-- **Actions & Outcome:** Emergency Inventory Transfer (`$484K`), Targeted Outreach (`$180K`) $\to$ Projected Recovery `$757.6K` (`$729.6K` Net Benefit)
-- **Interactive Node Details Panel:** Dynamic node inspection for KPI, Drivers 1–4 with evidence and AI synthesis.
-
-### Screen 5: Evidence Explorer (`GET /api/v1/investigations/{kpi_id}`)
-- **Verified Evidence Count:** `9 verified enterprise nodes`
-- **Unstructured Material Cards:**
-  - `EVID_CRM_PO_DEFERRAL_001`: Regional Distributor PO Deferral Memos (29 delayed POs / 35K unit order cancellation)
-  - `EVID_ZND_TKT_SURGE_001`: Zendesk Support Tickets (+310% Out of Stock surge)
-  - `EVID_MKT_COMP_INTEL_001`: Competitor Horizon Foods 15% discount promotional scrape
-- **Structured Corroboration Table:**
-  - `SAP S/4HANA (MM-WM)`: `INV-SNAP-21971` (94% High)
-  - `ERP Sales Ledger`: SKU-8821 Volume Deficit (89% High)
-  - `CRM Global Distribution`: 29 Delayed Distributor Orders (85% High)
-  - `External Intel Pipeline`: Horizon 15% Price Cut (78% Med)
-- **Search & Filter:** Instant client-side text filtering over loaded enterprise evidence.
-
-### Screen 6: Recommendations & What-If Simulation (`GET /api/v1/recommendations/{kpi_id}` & `POST /api/v1/simulations/inventory-availability`)
-- **Priority 1 (Critical):** Emergency Inventory Transfer (`REC-2026-NAE-001`, `+$484K` Recovery, `+1.2 pts` margin, `91%` conf, `14 days`)
-- **Priority 2 (High):** Distributor Recovery Outreach (`REC-2026-NAE-002`, `+$180K` Recovery, `+0.6 pts` margin, `85%` conf, `21 days`)
-- **Action Prioritization Matrix:** Preserved 2x2 Impact vs Effort layout with plotted points for Quick Wins and Major Projects.
-- **What-If Scenario Simulation:** Live slider controlling inventory availability (79.4% to 100.0%) triggering deterministic simulations to update Projected Recovery (`+$341.4K` at 90.0%), Projected Revenue (`$14.54M`), and Confidence (`91% HIGH`).
-
-### Screen 7: Executive Briefing (`GET /api/v1/investigations/{kpi_id}` & `GET /api/v1/recommendations/{kpi_id}`)
-- **Section 1 (Situation):** `-$1.23M` Variance, `7.97% shortfall vs Q2 baseline ($15.43M -> $14.20M)`
-- **Section 2 (Diagnosis):** Primary Driver Atlanta DC Stockout (`43.2%`, `-$550K`), Secondary SKU-8821 Volume (`26.7%`, `-$340K`)
-- **Section 3 (Evidence):** Atlanta DC Availability `79.4%`, Zendesk Ticket Surge `+310%`, Horizon Scrape `-15.0%`
-- **Section 4 (Recommended Action):** Emergency Inventory Transfer (`REC-2026-NAE-001`, 20K Units to Atlanta DC)
-- **Section 5 (Projected Impact):** `+$757.6K` Projected Recovery (`+$729.6K` Net Benefit), `89.0%` Investigation Confidence
-
----
-
-## 6. Phased Implementation Roadmap
-
-1. **Step 10B (Complete):** Frontend Foundation, API Client, and Screen 1 Integration.
-2. **Step 10C (Complete):** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
-3. **Step 10D (Complete):** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
-4. **Step 10E (Complete):** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
-5. **Step 10F (Complete):** Recommendations & What-If Simulation (Screen 6) Live Slider.
-6. **Step 10G (Complete):** Executive Briefing (Screen 7) Live Boardroom Presentation.
-
-
-
-
-
+| Screen | Primary API Endpoint | Grounded Gemini Role | Quantitative Truth |
+| :--- | :--- | :--- | :--- |
+| **1. Command Center** | `GET /api/v1/kpis` | Executive summary narrative | Revenue `$14.20M (-7.97%)` |
+| **2. Investigation** | `GET /api/v1/investigations/{id}` | Multi-agent synthesis & status | Confidence `89.0% HIGH` |
+| **3. Root Cause** | `GET /api/v1/investigations/{id}` | Causal & secondary reasoning | Atlanta Stockout `43.2% (-$550K)` |
+| **4. Decision Graph** | `GET /api/v1/investigations/{id}` | Node inspector synthesis | Full causal graph topology |
+| **5. Evidence Explorer** | `GET /api/v1/evidence/{id}` | Verified citation deep-linking | 9 cryptographically verified nodes |
+| **6. Recommendations** | `GET /api/v1/recommendations/{id}` | Action rationale synthesis | P1 Emergency Transfer `+$484K` |
+| **7. Executive Briefing** | `GET /api/v1/ai/explain/{id}` | Comprehensive boardroom briefing | Total recovery projected: `+$757.6K` |
