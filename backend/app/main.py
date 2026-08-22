@@ -12,6 +12,8 @@ from backend.app.routes.kpis import router as kpis_router
 from backend.app.routes.investigations import router as investigations_router
 from backend.app.routes.evidence import router as evidence_router
 from backend.app.routes.ai import router as ai_router
+from backend.app.routes.recommendations import router as recommendations_router
+from backend.app.routes.simulations import router as simulations_router
 
 def create_app() -> FastAPI:
     """Factory creating and configuring the FastAPI application."""
@@ -20,7 +22,8 @@ def create_app() -> FastAPI:
         version=settings.APP_VERSION,
         description=(
             "REST API exposing the deterministic KPI calculations, multi-factor driver analyses, "
-            "cryptographic evidence lineage graphs, and grounded Gemini reasoning of InsightPilot AI."
+            "cryptographic evidence lineage graphs, action recommendations, what-if simulations, "
+            "and grounded Gemini reasoning of InsightPilot AI."
         ),
         docs_url="/docs",
         redoc_url="/redoc",
@@ -45,6 +48,8 @@ def create_app() -> FastAPI:
     app.include_router(investigations_router, prefix=settings.API_PREFIX)
     app.include_router(evidence_router, prefix=settings.API_PREFIX)
     app.include_router(ai_router, prefix=settings.API_PREFIX)
+    app.include_router(recommendations_router, prefix=settings.API_PREFIX)
+    app.include_router(simulations_router, prefix=settings.API_PREFIX)
 
     return app
 

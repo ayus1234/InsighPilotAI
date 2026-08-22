@@ -18,6 +18,19 @@ from backend.app.schemas.evidence import (
     EvidenceListResponse,
     LineageTraceResponse
 )
+from backend.app.schemas.recommendation import (
+    ExpectedImpactModel,
+    RecommendationConfidenceModel,
+    RecommendationItemResponse,
+    RecommendationListResponse
+)
+from backend.app.schemas.simulation import (
+    SimulationRequest,
+    SimulationRecoveryModel,
+    SimulationConfidenceModel,
+    SimulationResponse,
+    SimulationBaselineResponse
+)
 
 __all__ = [
     "HealthResponse",
@@ -36,4 +49,13 @@ __all__ = [
     "EvidenceItemResponse",
     "EvidenceListResponse",
     "LineageTraceResponse",
+    "ExpectedImpactModel",
+    "RecommendationConfidenceModel",
+    "RecommendationItemResponse",
+    "RecommendationListResponse",
+    "SimulationRequest",
+    "SimulationRecoveryModel",
+    "SimulationConfidenceModel",
+    "SimulationResponse",
+    "SimulationBaselineResponse",
 ]

@@ -8,6 +8,8 @@ from analytics.data_loader import DataLoader
 from backend.app.services.kpi_service import KPIService
 from backend.app.services.investigation_service import InvestigationService
 from backend.app.services.evidence_service import EvidenceService
+from backend.app.services.recommendation_service import RecommendationService
+from backend.app.services.simulation_service import SimulationService
 from ai.service import AIService
 
 @lru_cache(maxsize=1)
@@ -29,6 +31,16 @@ def get_investigation_service() -> InvestigationService:
 def get_evidence_service() -> EvidenceService:
     """Returns singleton instance of the EvidenceService."""
     return EvidenceService(get_data_loader())
+
+@lru_cache(maxsize=1)
+def get_recommendation_service() -> RecommendationService:
+    """Returns singleton instance of the RecommendationService."""
+    return RecommendationService(get_data_loader())
+
+@lru_cache(maxsize=1)
+def get_simulation_service() -> SimulationService:
+    """Returns singleton instance of the SimulationService."""
+    return SimulationService(get_data_loader())
 
 @lru_cache(maxsize=1)
 def get_ai_service() -> AIService:

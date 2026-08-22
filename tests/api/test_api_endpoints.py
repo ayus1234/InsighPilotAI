@@ -132,7 +132,58 @@ class TestAPIEndpoints(unittest.TestCase):
         data = response.json()
         self.assertEqual(data["error"]["code"], "EVIDENCE_NOT_FOUND")
 
-    # 12. Deterministic Repeated Requests
+    # 12. Recommendations List
+    def test_get_recommendations_endpoint(self):
+        response = self.client.get("/api/v1/recommendations/north_america_east_revenue")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["kpi_id"], "north_america_east_revenue")
+        self.assertEqual(data["total_recommendations"], 4)
+        self.assertEqual(data["recommendations"][0]["recommendation_id"], "REC-2026-NAE-001")
+        self.assertEqual(data["recommendations"][0]["priority"], "CRITICAL")
+
+    # 13. Single Recommendation Detail
+    def test_get_single_recommendation_endpoint(self):
+        response = self.client.get("/api/v1/recommendations/north_america_east_revenue/REC-2026-NAE-001")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["recommendation_id"], "REC-2026-NAE-001")
+        self.assertEqual(data["driver_id"], "atlanta_dc_stockout")
+        self.assertIn("Emergency Inventory Transfer", data["action"])
+
+    # 14. Simulation Baseline State
+    def test_simulation_baseline_endpoint(self):
+        response = self.client.get("/api/v1/simulations/baseline")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["baseline_availability_pct"], 79.4)
+        self.assertEqual(data["baseline_revenue_usd"], 14200000.05)
+
+    # 15. Simulation Inventory Availability Execution
+    def test_simulation_execution_endpoint(self):
+        response = self.client.post(
+            "/api/v1/simulations/inventory-availability",
+            json={"inventory_availability": 0.90}
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["baseline_value"], 79.4)
+        self.assertEqual(data["scenario_value"], 90.0)
+        self.assertEqual(data["availability_delta"], 10.6)
+        self.assertGreater(data["estimated_recovery"]["revenue_recovery_usd"], 300000.0)
+        self.assertEqual(data["confidence"]["label"], "HIGH")
+
+    # 16. Simulation Invalid Input 400
+    def test_simulation_invalid_input_400(self):
+        response = self.client.post(
+            "/api/v1/simulations/inventory-availability",
+            json={"inventory_availability": 150.0} # > 100%
+        )
+        self.assertEqual(response.status_code, 400)
+        data = response.json()
+        self.assertEqual(data["error"]["code"], "INVALID_SIMULATION_INPUT")
+
+    # 17. Deterministic Repeated Requests
     def test_investigation_determinism(self):
         res1 = self.client.get("/api/v1/investigations/north_america_east_revenue").json()
         res2 = self.client.get("/api/v1/investigations/north_america_east_revenue").json()
@@ -142,7 +193,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(res1["overall"]["overall_confidence"], res2["overall"]["overall_confidence"])
         self.assertEqual(len(res1["drivers"]), len(res2["drivers"]))
 
-    # 13. OpenAPI Docs Availability
+    # 18. OpenAPI Docs Availability
     def test_openapi_docs_endpoint(self):
         response = self.client.get("/openapi.json")
         self.assertEqual(response.status_code, 200)
@@ -151,8 +202,10 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertIn("/health", data["paths"])
         self.assertIn("/api/v1/kpis", data["paths"])
         self.assertIn("/api/v1/investigations/{kpi_id}", data["paths"])
+        self.assertIn("/api/v1/recommendations/{kpi_id}", data["paths"])
+        self.assertIn("/api/v1/simulations/inventory-availability", data["paths"])
 
-    # 14. CORS Options Preflight
+    # 19. CORS Options Preflight
     def test_cors_preflight(self):
         response = self.client.options(
             "/api/v1/kpis",
