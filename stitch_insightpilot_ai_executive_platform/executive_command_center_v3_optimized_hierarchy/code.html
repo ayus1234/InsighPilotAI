@@ -153,38 +153,44 @@
 <p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Global Enterprise</p>
 </div>
 <ul class="flex-1 space-y-2 px-3 overflow-y-auto">
+<!-- 0: Executive Command Center -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 scale-[0.99] transition-transform duration-150" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 scale-[0.99] transition-transform duration-150" href="../executive_command_center_v3_optimized_hierarchy/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
 <span class="font-label-caps text-label-caps">Executive Command Center</span>
 </a>
 </li>
+<!-- 1: Insights / Root Cause -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../root_cause_investigation_v2/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
 <span class="font-label-caps text-label-caps">Insights</span>
 </a>
 </li>
+<!-- 2: Decision Graph -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../decision_graph_v4_final_presentation_view/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_tree</span>
 <span class="font-label-caps text-label-caps">Decision Graph</span>
 </a>
 </li>
+<!-- 3: Recommendations -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../recommendations_simulation_v3_decision_ready/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">auto_awesome</span>
 <span class="font-label-caps text-label-caps">Recommendations</span>
 </a>
 </li>
+<!-- 4: Evidence Explorer -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../evidence_explorer_v2/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">travel_explore</span>
 <span class="font-label-caps text-label-caps">Evidence Explorer</span>
 </a>
 </li>
+<!-- 5: Executive Briefings -->
 <li>
-<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../executive_briefing_v3_boardroom_ready/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
 <span class="font-label-caps text-label-caps">Executive Briefings</span>
 </a>
@@ -197,7 +203,7 @@
 </li>
 </ul>
 <div class="px-6 mt-4 mb-4">
-<button class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-3 rounded-lg hover:bg-primary-fixed transition-colors">
+<button onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'" class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-3 rounded-lg hover:bg-primary-fixed transition-colors">
                 Generate Briefing
             </button>
 </div>
@@ -225,21 +231,21 @@
 <!-- Page Header -->
 <div class="flex items-end justify-between shrink-0 mb-2">
 <div>
-<p class="font-label-caps text-[12px] text-primary mb-1">October 24, 2023 • Q4 FY24</p>
+<p class="font-label-caps text-[12px] text-primary mb-1">Fiscal Anomaly Monitor • 2026-Q3 vs 2026-Q2</p>
 <h2 class="font-headline-lg text-[28px] leading-[36px] text-on-surface mb-1">Good morning, Executive Team</h2>
 <p class="font-body-lg text-[16px] text-on-surface-variant">Here is what changed across your business today.</p>
 </div>
 <div class="flex items-center gap-4">
 <div class="relative">
 <select class="appearance-none bg-surface-container-high border border-outline-variant/30 text-on-surface font-body-sm py-2 pl-4 pr-10 rounded-lg focus:outline-none focus:border-primary transition-colors">
+<option>North America East (NA-East)</option>
 <option>Global Org (All Regions)</option>
-<option>North America</option>
 <option>EMEA</option>
 <option>APAC</option>
 </select>
 <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" style="font-size: 18px;">expand_more</span>
 </div>
-<button class="bg-primary-container text-on-primary-container font-label-caps text-[12px] px-5 py-2 rounded-lg hover:bg-primary transition-colors flex items-center gap-2">
+<button onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'" class="bg-primary-container text-on-primary-container font-label-caps text-[12px] px-5 py-2 rounded-lg hover:bg-primary transition-colors flex items-center gap-2">
 <span class="material-symbols-outlined" style="font-size: 18px;">description</span>
                     Generate Executive Briefing
                 </button>
@@ -252,16 +258,16 @@
 <div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
 <div class="flex justify-between items-start mb-1">
 <h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Revenue</h3>
-<div class="bg-error-container/20 text-error px-2 py-0.5 rounded text-[9px] flex items-center gap-1 border border-error/20 font-bold">
+<div id="kpi-revenue-badge" class="bg-error-container/20 text-error px-2 py-0.5 rounded text-[9px] flex items-center gap-1 border border-error/20 font-bold">
 <span class="material-symbols-outlined" style="font-size: 10px;">warning</span> CRITICAL
                     </div>
 </div>
 <div>
-<span class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">$148.2M</span>
+<span id="kpi-revenue-val" class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">$14.20M</span>
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-1 text-error font-body-sm font-medium text-[12px]">
 <span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
-<span>-8.0%</span>
+<span id="kpi-revenue-pct">-7.97%</span>
 </div>
 <svg class="w-14 h-5" viewbox="0 0 100 20">
 <path class="sparkline sparkline-down" d="M0,5 L20,10 L40,8 L60,16 L80,18 L100,20"></path>
@@ -269,56 +275,56 @@
 </div>
 </div>
 </div>
-<!-- Gross Profit -->
+<!-- Gross Profit / Margin -->
 <div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-[110px]">
 <div class="flex justify-between items-start mb-1">
-<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Gross Profit</h3>
+<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Gross Margin</h3>
 <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 14px;">monetization_on</span>
 </div>
 <div>
-<span class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">$62.4M</span>
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-1 text-primary font-body-sm font-medium text-[12px]">
-<span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
-<span>+1.2%</span>
-</div>
-<svg class="w-14 h-5" viewbox="0 0 100 20">
-<path class="sparkline sparkline-up" d="M0,15 L20,12 L40,14 L60,8 L80,5 L100,2"></path>
-</svg>
-</div>
-</div>
-</div>
-<!-- Customer Churn -->
-<div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-[110px]">
-<div class="flex justify-between items-start mb-1">
-<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Customer Churn</h3>
-<span class="material-symbols-outlined text-tertiary" style="font-size: 14px;">group_remove</span>
-</div>
-<div>
-<span class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">4.2%</span>
-<div class="flex items-center justify-between">
-<div class="flex items-center gap-1 text-tertiary font-body-sm font-medium text-[12px]">
-<span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span>
-<span>+0.8%</span>
-</div>
-<svg class="w-14 h-5" viewbox="0 0 100 20">
-<path class="sparkline sparkline-neutral" d="M0,15 L20,12 L40,16 L60,8 L80,6 L100,2"></path>
-</svg>
-</div>
-</div>
-</div>
-<!-- Inventory Health -->
-<div class="glass-panel rounded-xl p-4 flex flex-col justify-between border-error/20 relative h-[110px]">
-<div class="absolute top-2 right-2 w-1.5 h-1.5 bg-error rounded-full animate-pulse"></div>
-<div class="flex justify-between items-start mb-1">
-<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Inventory Health</h3>
-</div>
-<div>
-<span class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">68/100</span>
+<span id="kpi-margin-val" class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">57.4%</span>
 <div class="flex items-center justify-between">
 <div class="flex items-center gap-1 text-error font-body-sm font-medium text-[12px]">
 <span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
-<span>-12 pts</span>
+<span id="kpi-margin-pct">-3.2 pts</span>
+</div>
+<svg class="w-14 h-5" viewbox="0 0 100 20">
+<path class="sparkline sparkline-down" d="M0,15 L20,12 L40,14 L60,8 L80,5 L100,2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Units Sold -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-[110px]">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Units Sold</h3>
+<span class="material-symbols-outlined text-tertiary" style="font-size: 14px;">inventory</span>
+</div>
+<div>
+<span id="kpi-units-val" class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">105,400</span>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1 text-tertiary font-body-sm font-medium text-[12px]">
+<span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
+<span id="kpi-units-pct">-8.5%</span>
+</div>
+<svg class="w-14 h-5" viewbox="0 0 100 20">
+<path class="sparkline sparkline-down" d="M0,15 L20,12 L40,16 L60,8 L80,6 L100,2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Inventory Availability -->
+<div class="glass-panel rounded-xl p-4 flex flex-col justify-between border-error/20 relative h-[110px]">
+<div class="absolute top-2 right-2 w-1.5 h-1.5 bg-error rounded-full animate-pulse"></div>
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Inventory Availability</h3>
+</div>
+<div>
+<span id="kpi-inventory-val" class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">79.4%</span>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1 text-error font-body-sm font-medium text-[12px]">
+<span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
+<span id="kpi-inventory-pct">-14.8 pts</span>
 </div>
 <svg class="w-14 h-5" viewbox="0 0 100 20">
 <path class="sparkline sparkline-down" d="M0,2 L20,5 L40,10 L60,8 L80,18 L100,20"></path>
@@ -326,21 +332,21 @@
 </div>
 </div>
 </div>
-<!-- Operating Margin -->
+<!-- Distributor Orders -->
 <div class="glass-panel rounded-xl p-4 flex flex-col justify-between h-[110px]">
 <div class="flex justify-between items-start mb-1">
-<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Operating Margin</h3>
-<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 14px;">pie_chart</span>
+<h3 class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">Distributor Orders</h3>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 14px;">shopping_cart</span>
 </div>
 <div>
-<span class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">18.5%</span>
+<span id="kpi-orders-val" class="font-display-kpi text-[32px] leading-[36px] text-on-surface block mb-1">842</span>
 <div class="flex items-center justify-between">
-<div class="flex items-center gap-1 text-on-surface-variant font-body-sm font-medium text-[12px]">
-<span class="material-symbols-outlined" style="font-size: 14px;">trending_flat</span>
-<span>0.0%</span>
+<div class="flex items-center gap-1 text-error font-body-sm font-medium text-[12px]">
+<span class="material-symbols-outlined" style="font-size: 14px;">trending_down</span>
+<span id="kpi-orders-pct">-12.1%</span>
 </div>
 <svg class="w-14 h-5" viewbox="0 0 100 20">
-<path class="sparkline sparkline-neutral" d="M0,10 L20,11 L40,9 L60,10 L80,10 L100,10"></path>
+<path class="sparkline sparkline-down" d="M0,10 L20,11 L40,9 L60,10 L80,10 L100,10"></path>
 </svg>
 </div>
 </div>
@@ -362,11 +368,11 @@
 <h2 class="font-headline-md text-[22px] text-on-surface">AI Executive Summary</h2>
 </div>
 <div class="bg-surface-container border border-outline-variant/30 px-3 py-1.5 rounded-full font-label-caps text-[11px] text-on-surface-variant flex items-center gap-2">
-                            Confidence: <span class="text-primary font-bold">87.4%</span>
+                            Confidence: <span id="ai-summary-confidence" class="text-primary font-bold">89.0%</span>
 </div>
 </div>
-<p class="font-body-lg text-[20px] leading-[32px] text-on-surface font-light max-w-3xl overflow-y-auto pr-4">
-                        "North America East revenue declined <span class="text-error font-medium bg-error/10 px-1.5 rounded">8.0%</span> against baseline. The strongest contributing factor is a <span class="text-tertiary font-medium border-b border-tertiary/50 border-dashed pb-0.5">localized inventory shortage affecting SKU-8821</span>, amplified by increased competitive pricing pressure."
+<p id="ai-summary-text" class="font-body-lg text-[20px] leading-[32px] text-on-surface font-light max-w-3xl overflow-y-auto pr-4">
+                        "North America East revenue declined <span class="text-error font-medium bg-error/10 px-1.5 rounded">-7.97% (-$1.23M)</span> against baseline. The primary contributing factor is the <span class="text-tertiary font-medium border-b border-tertiary/50 border-dashed pb-0.5">Atlanta DC stockout (43.2% contribution)</span>, compounded by SKU-8821 volume contraction, distributor order deferrals, and competitor pricing pressure."
                     </p>
 </div>
 <div class="flex justify-between items-center border-t border-outline-variant/20 pt-4 mt-4 z-10 shrink-0">
@@ -379,7 +385,7 @@
                         </button>
 </div>
 <!-- Primary CTA for Decision Graph -->
-<button class="bg-primary text-on-primary font-label-caps text-[13px] px-6 py-2.5 rounded-lg hover:bg-primary-fixed transition-all flex items-center gap-2 font-bold shadow-[0_0_20px_rgba(79,219,200,0.3)]">
+<button onclick="window.location.href='../decision_graph_v4_final_presentation_view/code.html'" class="bg-primary text-on-primary font-label-caps text-[13px] px-6 py-2.5 rounded-lg hover:bg-primary-fixed transition-all flex items-center gap-2 font-bold shadow-[0_0_20px_rgba(79,219,200,0.3)]">
                         Open Decision Graph 
                         <span class="material-symbols-outlined" style="font-size: 18px;">arrow_forward</span>
 </button>
@@ -401,8 +407,8 @@
 <span class="font-label-caps text-[10px] text-error font-bold tracking-wider">CRITICAL</span>
 <span class="font-label-caps text-[9px] text-on-surface-variant">2h ago</span>
 </div>
-<p class="font-body-sm text-[14px] text-on-surface mb-1">NA Revenue missed target by $12.4M</p>
-<a class="text-primary font-label-caps text-[10px] hover:underline" href="#">Investigate →</a>
+<p id="priority-alert-text" class="font-body-sm text-[14px] text-on-surface mb-1">NA-East Revenue missed baseline target by $1.23M (-7.97%)</p>
+<a class="text-primary font-label-caps text-[10px] hover:underline" href="../root_cause_investigation_v2/code.html">Investigate →</a>
 </div>
 </div>
 <!-- High Alert -->
@@ -414,8 +420,8 @@
 <span class="font-label-caps text-[10px] text-tertiary font-bold tracking-wider">HIGH</span>
 <span class="font-label-caps text-[9px] text-on-surface-variant">4h ago</span>
 </div>
-<p class="font-body-sm text-[14px] text-on-surface mb-1">Customer Churn increased +4.2% in Enterprise</p>
-<a class="text-primary font-label-caps text-[10px] hover:underline" href="#">View Segment →</a>
+<p class="font-body-sm text-[14px] text-on-surface mb-1">Inventory Availability fell to 79.4% in Atlanta DC</p>
+<a class="text-primary font-label-caps text-[10px] hover:underline" href="../evidence_explorer_v2/code.html">View Evidence →</a>
 </div>
 </div>
 <!-- Medium Alert -->
@@ -427,8 +433,8 @@
 <span class="font-label-caps text-[10px] text-secondary font-bold tracking-wider">MEDIUM</span>
 <span class="font-label-caps text-[9px] text-on-surface-variant">Yesterday</span>
 </div>
-<p class="font-body-sm text-[14px] text-on-surface mb-1">Inventory Risk detected in EU distribution</p>
-<a class="text-primary font-label-caps text-[10px] hover:underline" href="#">Review Stock →</a>
+<p class="font-body-sm text-[14px] text-on-surface mb-1">Distributor Order Deferrals detected (29 delayed POs)</p>
+<a class="text-primary font-label-caps text-[10px] hover:underline" href="../recommendations_simulation_v3_decision_ready/code.html">Review Levers →</a>
 </div>
 </div>
 </div>
@@ -441,14 +447,14 @@
 <h2 class="font-headline-md text-[18px] text-on-surface">Decision Graph: Root Cause Analysis</h2>
 <p class="font-body-sm text-[13px] text-on-surface-variant mt-0.5">Tracing revenue decline path</p>
 </div>
-<button class="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors">
+<button onclick="window.location.href='../decision_graph_v4_final_presentation_view/code.html'" class="text-primary hover:bg-primary/10 p-1.5 rounded-lg transition-colors">
 <span class="material-symbols-outlined" style="font-size: 20px;">fullscreen</span>
 </button>
 </div>
 <div class="flex-1 w-full bg-surface-container-lowest rounded-lg border border-outline-variant/20 relative overflow-hidden flex items-center justify-center">
 <div class="relative w-full max-w-4xl h-full flex items-center justify-between px-12">
 <!-- KPI Node -->
-<div class="z-10 flex flex-col items-center">
+<div class="z-10 flex flex-col items-center cursor-pointer" onclick="window.location.href='../root_cause_investigation_v2/code.html'">
 <div class="w-12 h-12 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-center z-10 relative">
 <span class="material-symbols-outlined text-on-surface-variant" style="font-size: 20px;">query_stats</span>
 <div class="absolute left-full top-1/2 w-12 h-[1px] bg-outline-variant/50 -translate-y-1/2 z-0"></div>
@@ -457,38 +463,38 @@
 <span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">KPI<br/>Revenue</span>
 </div>
 <!-- Driver Node -->
-<div class="z-10 flex flex-col items-center">
+<div class="z-10 flex flex-col items-center cursor-pointer" onclick="window.location.href='../decision_graph_v4_final_presentation_view/code.html'">
 <div class="w-14 h-14 rounded-lg bg-surface-container-high border-2 border-secondary flex items-center justify-center z-10 relative shadow-[0_0_15px_rgba(5,102,217,0.2)]">
 <span class="material-symbols-outlined text-secondary" style="font-size: 22px;">price_change</span>
 <div class="absolute left-full top-1/2 w-12 h-[1px] bg-secondary/50 -translate-y-1/2 z-0"></div>
 <div class="absolute left-full top-1/2 -translate-y-1/2 translate-x-12 w-1.5 h-1.5 rounded-full bg-secondary/50"></div>
 </div>
-<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Driver<br/>Price Pressure</span>
+<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Driver<br/>Atlanta Stockout</span>
 </div>
 <!-- Evidence Node -->
-<div class="z-10 flex flex-col items-center">
+<div class="z-10 flex flex-col items-center cursor-pointer" onclick="window.location.href='../evidence_explorer_v2/code.html'">
 <div class="w-14 h-14 rounded-lg bg-surface-container border-2 border-tertiary flex items-center justify-center z-10 relative">
 <span class="material-symbols-outlined text-tertiary" style="font-size: 22px;">inventory_2</span>
 <div class="absolute left-full top-1/2 w-12 h-[1px] bg-tertiary/50 -translate-y-1/2 z-0"></div>
 <div class="absolute left-full top-1/2 -translate-y-1/2 translate-x-12 w-1.5 h-1.5 rounded-full bg-tertiary/50"></div>
 </div>
-<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Evidence<br/>SKU-8821</span>
+<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Evidence<br/>ERP Snapshot</span>
 </div>
 <!-- Action Node -->
-<div class="z-10 flex flex-col items-center">
+<div class="z-10 flex flex-col items-center cursor-pointer" onclick="window.location.href='../recommendations_simulation_v3_decision_ready/code.html'">
 <div class="w-12 h-12 rounded-lg bg-surface-container border border-primary/50 flex items-center justify-center z-10 relative">
 <span class="material-symbols-outlined text-primary" style="font-size: 20px;">bolt</span>
 <div class="absolute left-full top-1/2 w-12 h-[1px] bg-error/50 -translate-y-1/2 z-0"></div>
 <div class="absolute left-full top-1/2 -translate-y-1/2 translate-x-12 w-1.5 h-1.5 rounded-full bg-error/50"></div>
 </div>
-<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Action<br/>Adjust Pricing</span>
+<span class="font-label-caps text-[9px] mt-1.5 text-on-surface-variant text-center leading-tight">Action<br/>Emerg Transfer</span>
 </div>
 <!-- Outcome Node (Impact) -->
-<div class="z-10 flex flex-col items-center">
+<div class="z-10 flex flex-col items-center cursor-pointer" onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'">
 <div class="w-16 h-16 rounded-xl bg-error/10 border-2 border-error flex items-center justify-center z-10 shadow-[0_0_20px_rgba(255,180,171,0.2)]">
 <div class="text-center">
 <span class="material-symbols-outlined text-error mb-0.5" style="font-size: 20px;">trending_down</span>
-<div class="font-headline-md text-[16px] text-error leading-none">-8.0%</div>
+<div class="font-headline-md text-[16px] text-error leading-none">-7.97%</div>
 </div>
 </div>
 <span class="font-label-caps text-[9px] mt-1.5 text-error font-bold text-center leading-tight">Outcome<br/>NA Impact</span>
@@ -498,4 +504,67 @@
 </div>
 </main>
 </div>
+
+<!-- Step 10B: Lightweight API Client Live Binding -->
+<script type="module">
+    import { apiClient } from "../../frontend/api/client.js";
+    import { formatCurrencyMillions, formatPercent, formatPoints, formatNumber } from "../../frontend/utils/formatters.js";
+
+    async function initCommandCenter() {
+        try {
+            const data = await apiClient.getKPIs();
+            if (data && data.kpis) {
+                const kpis = data.kpis;
+                
+                // 1. Revenue
+                if (kpis.revenue) {
+                    const elVal = document.getElementById("kpi-revenue-val");
+                    const elPct = document.getElementById("kpi-revenue-pct");
+                    if (elVal) elVal.textContent = formatCurrencyMillions(kpis.revenue.current_value);
+                    if (elPct) elPct.textContent = formatPercent(kpis.revenue.percent_change);
+                }
+                
+                // 2. Gross Margin
+                if (kpis.gross_margin) {
+                    const elVal = document.getElementById("kpi-margin-val");
+                    const elPct = document.getElementById("kpi-margin-pct");
+                    if (elVal) elVal.textContent = formatPercent(kpis.gross_margin.current_value, false);
+                    if (elPct) elPct.textContent = formatPoints(kpis.gross_margin.percent_change);
+                }
+                
+                // 3. Units Sold
+                if (kpis.units_sold) {
+                    const elVal = document.getElementById("kpi-units-val");
+                    const elPct = document.getElementById("kpi-units-pct");
+                    if (elVal) elVal.textContent = formatNumber(kpis.units_sold.current_value);
+                    if (elPct) elPct.textContent = formatPercent(kpis.units_sold.percent_change);
+                }
+                
+                // 4. Inventory Availability
+                if (kpis.inventory_availability) {
+                    const elVal = document.getElementById("kpi-inventory-val");
+                    const elPct = document.getElementById("kpi-inventory-pct");
+                    if (elVal) elVal.textContent = formatPercent(kpis.inventory_availability.current_value, false);
+                    if (elPct) elPct.textContent = formatPoints(kpis.inventory_availability.percent_change);
+                }
+                
+                // 5. Distributor Orders
+                if (kpis.distributor_orders) {
+                    const elVal = document.getElementById("kpi-orders-val");
+                    const elPct = document.getElementById("kpi-orders-pct");
+                    if (elVal) elVal.textContent = formatNumber(kpis.distributor_orders.current_value);
+                    if (elPct) elPct.textContent = formatPercent(kpis.distributor_orders.percent_change);
+                }
+            }
+        } catch (err) {
+            console.warn("[InsightPilot UI] Live API offline, fallback to initial state:", err.message);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initCommandCenter);
+    } else {
+        initCommandCenter();
+    }
+</script>
 </body></html>
