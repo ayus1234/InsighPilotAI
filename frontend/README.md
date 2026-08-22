@@ -82,25 +82,37 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 
 ---
 
-## 5. Screen 1 (Executive Command Center) Live Integration
+## 5. Screen Integrations Status
 
-Screen 1 is now dynamically connected to `GET /api/v1/kpis`:
+### Screen 1: Executive Command Center (`GET /api/v1/kpis`)
+- **Revenue:** `$14.20M (-7.97%)`
+- **Gross Margin:** `57.4% (-3.2 pts)`
+- **Units Sold:** `105,400 (-8.5%)`
+- **Inventory Availability:** `79.4% (-14.8 pts)`
+- **Distributor Orders:** `842 (-12.1%)`
 
-| UI Card | Raw Backend Value | Formatted Display |
-|---|---|---|
-| **Revenue** | `$14,200,000.05` | **`$14.20M (-7.97%)`** |
-| **Gross Margin** | `57.4%` | **`57.4% (-3.2 pts)`** |
-| **Units Sold** | `105,400` | **`105,400 (-8.5%)`** |
-| **Inventory Availability** | `79.4%` | **`79.4% (-14.8 pts)`** |
-| **Distributor Orders** | `842` | **`842 (-12.1%)`** |
+### Screen 2: AI Investigation Activity (`GET /api/v1/investigations/{kpi_id}`)
+- **Confidence Score:** `89.0%`
+- **Drivers Count:** `4 drivers decomposed`
+- **Evidence Count:** `9 verified nodes`
+- **Investigation Status:** `SYSTEM STATUS: MISSION ACCOMPLISHED`
+
+### Screen 3: Root Cause Investigation (`GET /api/v1/investigations/{kpi_id}`)
+- **KPI Variance:** `-$1.23M Variance (-7.97%)`
+- **Ranked Driver 1 (Primary):** Atlanta DC Stockout (`43.2%`, `94.0%` conf, `-$550K` impact)
+- **Ranked Driver 2:** SKU-8821 Sales Volume (`26.7%`, `89.0%` conf, `-$340K` impact)
+- **Ranked Driver 3:** Distributor Orders Deferral (`18.8%`, `85.0%` conf, `-$240K` impact)
+- **Ranked Driver 4:** Competitor Horizon Foods Pricing (`11.3%`, `78.0%` conf, `-$144K` impact)
+- **Evidence Points:** Verified references to `EVID_ERP_ATL_STOCKOUT_001`, `EVID_ZND_TKT_SURGE_001`, `EVID_CRM_PO_DEFERRAL_001`, `EVID_MKT_COMP_INTEL_001`
 
 ---
 
 ## 6. Phased Implementation Roadmap
 
 1. **Step 10B (Complete):** Frontend Foundation, API Client, and Screen 1 Integration.
-2. **Step 10C:** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
+2. **Step 10C (Complete):** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
 3. **Step 10D:** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
 4. **Step 10E:** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
 5. **Step 10F:** Recommendations & What-If Simulation (Screen 6) Live Slider.
 6. **Step 10G:** Executive Briefing (Screen 7) & Grounded Gemini Persona Narrative.
+

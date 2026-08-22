@@ -159,38 +159,44 @@
 <p class="font-label-caps text-label-caps text-on-surface-variant mt-1">Global Enterprise</p>
 </div>
 <ul class="flex-1 px-4 space-y-2">
+<!-- 0: Executive Command Center -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../executive_command_center_v3_optimized_hierarchy/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
 <span class="font-label-caps text-label-caps">Executive Command Center</span>
 </a>
 </li>
+<!-- 1: Insights / Root Cause -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10" href="../root_cause_investigation_v2/code.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
 <span class="font-label-caps text-label-caps">Insights</span>
 </a>
 </li>
+<!-- 2: Decision Graph -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../decision_graph_v4_final_presentation_view/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_tree</span>
 <span class="font-label-caps text-label-caps">Decision Graph</span>
 </a>
 </li>
+<!-- 3: Recommendations -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../recommendations_simulation_v3_decision_ready/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">auto_awesome</span>
 <span class="font-label-caps text-label-caps">Recommendations</span>
 </a>
 </li>
+<!-- 4: Evidence Explorer -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">travel_explore</span>
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../evidence_explorer_v2/code.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">travel_explore</span>
 <span class="font-label-caps text-label-caps">Evidence Explorer</span>
 </a>
 </li>
+<!-- 5: Executive Briefings -->
 <li>
-<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center space-x-3 px-4 py-3 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../executive_briefing_v3_boardroom_ready/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">description</span>
 <span class="font-label-caps text-label-caps">Executive Briefings</span>
 </a>
@@ -201,7 +207,7 @@
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
 <span class="font-label-caps text-label-caps">Settings</span>
 </a>
-<button class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-3 rounded-lg hover:bg-primary-container/90 transition-colors">
+<button onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'" class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps py-3 rounded-lg hover:bg-primary-container/90 transition-colors">
                 Generate Briefing
             </button>
 <div class="flex items-center space-x-3 px-4 py-2 mt-4 border-t border-outline-variant/30 pt-4">
@@ -230,7 +236,7 @@
 <!-- Header of Timeline Panel -->
 <div class="flex justify-between items-center mb-12">
 <div>
-<h3 class="font-label-caps text-label-caps text-surface-tint mb-2 tracking-wider">SYSTEM STATUS: MISSION ACCOMPLISHED</h3>
+<h3 id="investigation-status-badge" class="font-label-caps text-label-caps text-surface-tint mb-2 tracking-wider">SYSTEM STATUS: MISSION ACCOMPLISHED</h3>
 <div class="font-headline-lg text-headline-lg text-on-surface">Multi-Agent Investigation Timeline</div>
 </div>
 <div class="flex items-center space-x-6">
@@ -241,10 +247,10 @@
 <div class="h-10 w-px bg-outline-variant/30"></div>
 <div class="flex flex-col items-end">
 <span class="font-label-caps text-label-caps text-on-surface-variant mb-1">Confidence</span>
-<span class="font-headline-md text-headline-md text-primary">87%</span>
+<span id="investigation-confidence-val" class="font-headline-md text-headline-md text-primary">89.0%</span>
 </div>
-<button class="ml-4 bg-primary-container text-on-primary-container hover:bg-primary-container/90 transition-colors rounded-lg px-6 py-3 font-label-caps text-label-caps flex items-center shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined mr-2">description</span> View Briefing
+<button onclick="window.location.href='../root_cause_investigation_v2/code.html'" class="ml-4 bg-primary-container text-on-primary-container hover:bg-primary-container/90 transition-colors rounded-lg px-6 py-3 font-label-caps text-label-caps flex items-center shadow-lg shadow-primary/20 cursor-pointer">
+<span class="material-symbols-outlined mr-2">analytics</span> View Diagnosis
                         </button>
 </div>
 </div>
@@ -255,43 +261,43 @@
 <!-- Filled Line -->
 <div class="absolute left-20 right-20 h-1 bg-primary top-1/2 transform -translate-y-1/2 rounded-full z-0 shadow-[0_0_8px_rgba(20,184,166,0.5)]"></div>
 <!-- Step 1: Anomaly Detection -->
-<div class="relative z-10 flex flex-col items-center group w-48">
+<div class="relative z-10 flex flex-col items-center group w-48 cursor-pointer" onclick="window.location.href='../executive_command_center_v3_optimized_hierarchy/code.html'">
 <span class="font-label-caps text-[11px] text-on-surface-variant mb-4 uppercase tracking-widest">Detecting</span>
 <div class="w-16 h-16 bg-surface-container rounded-2xl border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(20,184,166,0.2)] group-hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] transition-all bg-surface">
 <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">troubleshoot</span>
 </div>
 <h4 class="font-headline-md text-[18px] text-on-surface mb-2 text-center leading-tight">Anomaly Detection</h4>
-<span class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">Detected</span>
+<span id="step-anomaly-badge" class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">NA-East ↓7.97%</span>
 </div>
 <!-- Step 2: Root Cause -->
-<div class="relative z-10 flex flex-col items-center group w-48">
+<div class="relative z-10 flex flex-col items-center group w-48 cursor-pointer" onclick="window.location.href='../root_cause_investigation_v2/code.html'">
 <span class="font-label-caps text-[11px] text-on-surface-variant mb-4 uppercase tracking-widest">Investigating</span>
 <div class="w-16 h-16 bg-surface-container rounded-2xl border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(20,184,166,0.2)] group-hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] transition-all bg-surface">
 <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">account_tree</span>
 </div>
 <h4 class="font-headline-md text-[18px] text-on-surface mb-2 text-center leading-tight">Root Cause</h4>
-<span class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">7 hypotheses</span>
+<span id="step-drivers-badge" class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">4 drivers</span>
 </div>
 <!-- Step 3: Evidence Retrieval -->
-<div class="relative z-10 flex flex-col items-center group w-48">
+<div class="relative z-10 flex flex-col items-center group w-48 cursor-pointer" onclick="window.location.href='../evidence_explorer_v2/code.html'">
 <span class="font-label-caps text-[11px] text-on-surface-variant mb-4 uppercase tracking-widest">Validating</span>
 <div class="w-16 h-16 bg-surface-container rounded-2xl border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(20,184,166,0.2)] group-hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] transition-all bg-surface">
 <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">folder_special</span>
 </div>
 <h4 class="font-headline-md text-[18px] text-on-surface mb-2 text-center leading-tight">Evidence Retrieval</h4>
-<span class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">47 items</span>
+<span id="step-evidence-badge" class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full">9 verified nodes</span>
 </div>
 <!-- Step 4: Recommendation -->
-<div class="relative z-10 flex flex-col items-center group w-48">
+<div class="relative z-10 flex flex-col items-center group w-48 cursor-pointer" onclick="window.location.href='../recommendations_simulation_v3_decision_ready/code.html'">
 <span class="font-label-caps text-[11px] text-on-surface-variant mb-4 uppercase tracking-widest">Simulating</span>
 <div class="w-16 h-16 bg-surface-container rounded-2xl border-2 border-primary flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(20,184,166,0.2)] group-hover:shadow-[0_0_20px_rgba(20,184,166,0.4)] transition-all bg-surface">
 <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">science</span>
 </div>
 <h4 class="font-headline-md text-[18px] text-on-surface mb-2 text-center leading-tight">Recommendation</h4>
-<span class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full text-center">Scenario completed</span>
+<span id="step-rec-badge" class="font-body-sm text-body-sm text-primary bg-primary/10 px-3 py-1 rounded-full text-center">4 action levers</span>
 </div>
 <!-- Step 5: Briefing -->
-<div class="relative z-10 flex flex-col items-center group w-48">
+<div class="relative z-10 flex flex-col items-center group w-48 cursor-pointer" onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'">
 <span class="font-label-caps text-[11px] text-primary mb-4 uppercase tracking-widest font-bold">Briefing Ready</span>
 <div class="w-20 h-20 bg-primary-container rounded-2xl border-2 border-primary flex items-center justify-center mb-4 pulse-active node-glow bg-surface text-primary">
 <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">description</span>
@@ -303,4 +309,53 @@
 </div>
 </div>
 </main>
+
+<!-- Step 10C: Investigation Activity Live Binding -->
+<script type="module">
+    import { apiClient } from "../../frontend/api/client.js";
+    import { store } from "../../frontend/state/store.js";
+    import { formatPercent } from "../../frontend/utils/formatters.js";
+
+    async function initActivityTimeline() {
+        try {
+            const data = await apiClient.getInvestigation();
+            if (data) {
+                // Cache investigation in store for Screen 3
+                store.setCache("active_investigation", data);
+
+                // Update Confidence
+                if (data.overall && data.overall.overall_confidence !== undefined) {
+                    const elConf = document.getElementById("investigation-confidence-val");
+                    if (elConf) elConf.textContent = (data.overall.overall_confidence * 100).toFixed(1) + "%";
+                }
+
+                // Update Drivers count
+                if (data.drivers && data.drivers.length) {
+                    const elDrivers = document.getElementById("step-drivers-badge");
+                    if (elDrivers) elDrivers.textContent = `${data.drivers.length} drivers`;
+                }
+
+                // Update Evidence count
+                if (data.evidence && data.evidence.length) {
+                    const elEvidence = document.getElementById("step-evidence-badge");
+                    if (elEvidence) elEvidence.textContent = `${data.evidence.length} verified nodes`;
+                }
+
+                // Update Status
+                const elStatus = document.getElementById("investigation-status-badge");
+                if (elStatus && data.overall && data.overall.investigation_status) {
+                    elStatus.textContent = `SYSTEM STATUS: ${data.overall.investigation_status.toUpperCase()}`;
+                }
+            }
+        } catch (err) {
+            console.warn("[InsightPilot UI] Live Investigation API offline, fallback to initial state:", err.message);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initActivityTimeline);
+    } else {
+        initActivityTimeline();
+    }
+</script>
 </body></html>
