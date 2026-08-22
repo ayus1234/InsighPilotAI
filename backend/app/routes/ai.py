@@ -1,29 +1,68 @@
 """
 InsightPilot AI — AI Reasoning Routes
-Exposes grounded Gemini executive narrative and driver explanation endpoints.
+Exposes grounded Gemini executive narrative, structured reasoning, and driver explanation endpoints.
 """
 
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel, Field
 from fastapi import APIRouter, Depends, Path, Query, status
 from backend.app.schemas.common import ErrorResponse
-from backend.app.services.investigation_service import InvestigationService
-from backend.app.services.evidence_service import EvidenceService
-from backend.app.dependencies import get_investigation_service, get_evidence_service, get_ai_service
+from backend.app.services.gemini_service import GeminiService
+from backend.app.dependencies import get_gemini_service
 from backend.app.errors import (
     KPINotFoundError,
     InvalidPersonaAPIError,
     AIServiceUnavailableAPIError,
     AIGroundingAPIError
 )
-from ai.service import AIService, AIServiceUnavailableError, AIGroundingError
-from ai.schemas.explanation import AIExplanationResponse, AIDriverExplanationResponse
-from ai.schemas.persona import resolve_persona
+from ai.schemas.explanation import (
+    StructuredAIExplanationResponse,
+    AIExplanationResponse,
+    AIDriverExplanationResponse
+)
 
 router = APIRouter(prefix="/ai", tags=["AI Reasoning"])
 
 class AIExplanationRequest(BaseModel):
     persona: str = Field("CFO", example="CFO", description="Target executive persona ('CFO' or 'REGIONAL_SALES_MANAGER')")
+
+class AIExplainRequest(BaseModel):
+    persona: str = Field("CFO", example="CFO", description="Target executive persona ('CFO' or 'REGIONAL_SALES_MANAGER')")
+    explanation_mode: Literal["structured", "executive", "driver"] = Field("structured", description="Explanation output mode")
+    driver_id: Optional[str] = Field(None, example="atlanta_dc_stockout", description="Target driver ID if mode is 'driver'")
+    include_recommendations: bool = Field(True, description="Whether to ground the explanation with recommended actions")
+    include_simulation: bool = Field(False, description="Whether to include simulation state in the context")
+
+@router.post(
+    "/explain/{kpi_id}",
+    response_model=StructuredAIExplanationResponse,
+    responses={
+        400: {"model": ErrorResponse, "description": "Invalid persona or request parameters"},
+        404: {"model": ErrorResponse, "description": "KPI not found"},
+        422: {"model": ErrorResponse, "description": "AI grounding validation failed"},
+        503: {"model": ErrorResponse, "description": "AI service unavailable / unconfigured"}
+    },
+    summary="Generate canonical structured AI explanation",
+    description="Orchestrates grounded Gemini reasoning over deterministic investigation, evidence, and recommendation data."
+)
+async def explain_investigation(
+    kpi_id: str = Path(..., description="Target KPI identifier (e.g. north_america_east_revenue)"),
+    request: AIExplainRequest = AIExplainRequest(),
+    region: str = Query("NA-East", description="Target geographical region"),
+    prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
+    curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
+    gemini_service: GeminiService = Depends(get_gemini_service)
+) -> StructuredAIExplanationResponse:
+    """Generates a structured, evidence-grounded reasoning response for the target KPI."""
+    return gemini_service.explain_investigation_structured(
+        kpi_id=kpi_id,
+        persona=request.persona,
+        region=region,
+        prev_period_id=prev_period_id,
+        curr_period_id=curr_period_id,
+        include_recommendations=request.include_recommendations,
+        include_simulation=request.include_simulation
+    )
 
 @router.post(
     "/investigations/{kpi_id}/explanation",
@@ -43,43 +82,16 @@ async def generate_executive_explanation(
     region: str = Query("NA-East", description="Target geographical region"),
     prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
     curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
-    investigation_service: InvestigationService = Depends(get_investigation_service),
-    evidence_service: EvidenceService = Depends(get_evidence_service),
-    ai_service: AIService = Depends(get_ai_service)
+    gemini_service: GeminiService = Depends(get_gemini_service)
 ) -> AIExplanationResponse:
-    """Generates a grounded executive explanation for the specified KPI."""
-    # 1. Validate Persona
-    try:
-        persona_profile = resolve_persona(request.persona)
-    except ValueError as ve:
-        raise InvalidPersonaAPIError(request.persona)
-
-    # 2. Retrieve Deterministic Investigation Output
-    inv_response = investigation_service.run_investigation(
+    """Generates an executive briefing narrative tailored to leadership."""
+    return gemini_service.explain_investigation_executive(
         kpi_id=kpi_id,
+        persona=request.persona,
         region=region,
         prev_period_id=prev_period_id,
-        curr_period_id=curr_period_id,
-        persona_id=persona_profile.persona.value
+        curr_period_id=curr_period_id
     )
-    inv_dict = inv_response.model_dump()
-
-    # 3. Retrieve Deterministic Evidence Output
-    ev_response = evidence_service.get_investigation_evidence(kpi_id=kpi_id, region=region)
-    ev_list = [e.model_dump() for e in ev_response.evidence]
-
-    # 4. Generate Grounded AI Explanation
-    try:
-        ai_resp = ai_service.generate_executive_explanation(
-            investigation_result=inv_dict,
-            evidence_items=ev_list,
-            persona=persona_profile.persona.value
-        )
-        return ai_resp
-    except AIServiceUnavailableError as sue:
-        raise AIServiceUnavailableAPIError(str(sue))
-    except AIGroundingError as ge:
-        raise AIGroundingAPIError(str(ge))
 
 @router.post(
     "/investigations/{kpi_id}/drivers/{driver_id}/explanation",
@@ -100,37 +112,14 @@ async def generate_driver_explanation(
     region: str = Query("NA-East", description="Target geographical region"),
     prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
     curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
-    investigation_service: InvestigationService = Depends(get_investigation_service),
-    evidence_service: EvidenceService = Depends(get_evidence_service),
-    ai_service: AIService = Depends(get_ai_service)
+    gemini_service: GeminiService = Depends(get_gemini_service)
 ) -> AIDriverExplanationResponse:
     """Generates a grounded driver-specific explanation."""
-    try:
-        persona_profile = resolve_persona(request.persona)
-    except ValueError:
-        raise InvalidPersonaAPIError(request.persona)
-
-    inv_response = investigation_service.run_investigation(
+    return gemini_service.explain_driver(
         kpi_id=kpi_id,
+        driver_id=driver_id,
+        persona=request.persona,
         region=region,
         prev_period_id=prev_period_id,
-        curr_period_id=curr_period_id,
-        persona_id=persona_profile.persona.value
+        curr_period_id=curr_period_id
     )
-    inv_dict = inv_response.model_dump()
-
-    ev_response = evidence_service.get_investigation_evidence(kpi_id=kpi_id, region=region)
-    ev_list = [e.model_dump() for e in ev_response.evidence]
-
-    try:
-        ai_resp = ai_service.generate_driver_explanation(
-            investigation_result=inv_dict,
-            evidence_items=ev_list,
-            driver_id=driver_id,
-            persona=persona_profile.persona.value
-        )
-        return ai_resp
-    except AIServiceUnavailableError as sue:
-        raise AIServiceUnavailableAPIError(str(sue))
-    except AIGroundingError as ge:
-        raise AIGroundingAPIError(str(ge))

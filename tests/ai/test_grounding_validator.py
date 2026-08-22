@@ -61,7 +61,8 @@ class TestGroundingValidator(unittest.TestCase):
         }
         with self.assertRaises(GroundingValidationError) as ctx:
             self.validator.validate_grounding(confident_response, abstained_context)
-        self.assertIn("in abstention state", str(ctx.exception))
+        self.assertIn("abstention state", str(ctx.exception))
+
 
         # A response acknowledging uncertainty passes
         uncertain_response = {

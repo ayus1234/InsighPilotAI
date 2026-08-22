@@ -1,6 +1,6 @@
 """
 InsightPilot AI — AI Reasoning Service Tests
-Tests executive explanation and driver explanation using mocked Gemini client (zero external API calls).
+Tests structured explanation, executive explanation, and driver explanation using mocked Gemini client (zero external API calls).
 """
 
 import unittest
@@ -22,6 +22,60 @@ class TestAIService(unittest.TestCase):
         cls.inv_res = cls.inv_engine.run_investigation("north_america_east_revenue", "NA-East", "2026-Q2", "2026-Q3", "CFO")
         ev_bundle = cls.ev_engine.get_all_evidence_for_investigation("NA-East")
         cls.evidence_items = ev_bundle["all_evidence_nodes"]
+
+    def test_structured_explanation_generation(self):
+        mock_client = MagicMock(spec=GeminiClient)
+        mock_client.generate_json.return_value = (
+            {
+                "summary": "North America East revenue contracted 7.97% (-$1.23M) primarily due to Atlanta DC inventory availability dropping to 68.2%.",
+                "reasoning": [
+                    {
+                        "statement": "Atlanta DC experienced inventory stockout on SKU-8821 causing $550k in unfulfilled demand.",
+                        "supporting_evidence_ids": ["EVID_ERP_ATL_STOCKOUT_001"],
+                        "confidence": 94
+                    },
+                    {
+                        "statement": "Wholesale distributor Apex East deferred purchase orders pending inventory replenishment.",
+                        "supporting_evidence_ids": ["EVID_CRM_PO_DEF_006"],
+                        "confidence": 85
+                    }
+                ],
+                "primary_driver_explanation": "Atlanta DC stockout (43.2% contribution) is the primary driver substantiated by SAP inventory snapshots and expedited freight surcharges.",
+                "secondary_driver_explanation": "Secondary drivers include SKU-8821 volume contraction and distributor order deferrals.",
+                "uncertainty": "Competitor pricing impact is an analytical inference from regional scrapers.",
+                "recommended_next_step": "Execute emergency inter-DC transfer from Charlotte to Atlanta.",
+                "abstained": False,
+                "abstention_reason": None,
+                "grounded_evidence_ids": [
+                    "EVID_ERP_ATL_STOCKOUT_001",
+                    "EVID_CRM_PO_DEF_006"
+                ]
+            },
+            {
+                "model": "gemini-2.5-flash",
+                "latency_ms": 710.0,
+                "prompt_tokens": 480,
+                "completion_tokens": 220,
+                "total_tokens": 700
+            }
+        )
+
+        service = AIService(client=mock_client)
+        resp = service.generate_structured_explanation(
+            investigation_result=self.inv_res,
+            evidence_items=self.evidence_items,
+            persona="CFO"
+        )
+
+        self.assertEqual(resp.investigation_id, self.inv_res["investigation_id"])
+        self.assertEqual(resp.persona, "CFO")
+        self.assertIn("7.97%", resp.explanation.summary)
+        self.assertEqual(len(resp.explanation.reasoning), 2)
+        self.assertEqual(resp.explanation.reasoning[0].confidence, 94)
+        self.assertEqual(len(resp.explanation.grounded_evidence_ids), 2)
+        self.assertFalse(resp.explanation.abstained)
+        self.assertEqual(resp.metadata.validation_status, "VERIFIED_GROUNDED")
+        self.assertEqual(resp.metadata.total_tokens, 700)
 
     def test_executive_explanation_generation(self):
         mock_client = MagicMock(spec=GeminiClient)

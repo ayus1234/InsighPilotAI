@@ -22,6 +22,55 @@ class TestAIIntegrationAPI(unittest.TestCase):
         mock_gemini.generate_json.return_value = generate_mock_data
         return AIService(client=mock_gemini)
 
+    def test_structured_explain_api_success(self):
+        mock_response = (
+            {
+                "summary": "North America East revenue contracted 7.97% (-$1.23M) primarily due to Atlanta DC stockouts.",
+                "reasoning": [
+                    {
+                        "statement": "Atlanta DC inventory dropped to 68.2%, causing $550k in unfulfilled demand.",
+                        "supporting_evidence_ids": ["EVID_ERP_ATL_STOCKOUT_001"],
+                        "confidence": 94
+                    }
+                ],
+                "primary_driver_explanation": "Atlanta DC stockout was the primary operational bottleneck.",
+                "secondary_driver_explanation": "SKU-8821 sales volume and distributor order deferrals compounded the deficit.",
+                "uncertainty": "Competitor pricing impact is an analytical estimate.",
+                "recommended_next_step": "Transfer inventory from Charlotte to Atlanta.",
+                "abstained": False,
+                "abstention_reason": None,
+                "grounded_evidence_ids": ["EVID_ERP_ATL_STOCKOUT_001"]
+            },
+            {
+                "model": "gemini-2.5-flash",
+                "latency_ms": 480.0,
+                "prompt_tokens": 450,
+                "completion_tokens": 180,
+                "total_tokens": 630
+            }
+        )
+        mock_service = self._get_mock_ai_service(mock_response)
+        app.dependency_overrides[get_ai_service] = lambda: mock_service
+
+        try:
+            response = self.client.post(
+                "/api/v1/ai/explain/north_america_east_revenue",
+                json={
+                    "persona": "CFO",
+                    "explanation_mode": "structured",
+                    "include_recommendations": True
+                }
+            )
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            self.assertEqual(data["persona"], "CFO")
+            self.assertIn("7.97%", data["explanation"]["summary"])
+            self.assertEqual(len(data["explanation"]["reasoning"]), 1)
+            self.assertEqual(data["explanation"]["reasoning"][0]["confidence"], 94)
+            self.assertEqual(data["metadata"]["validation_status"], "VERIFIED_GROUNDED")
+        finally:
+            app.dependency_overrides.pop(get_ai_service, None)
+
     def test_executive_explanation_api_success(self):
         mock_response = (
             {
@@ -94,7 +143,7 @@ class TestAIIntegrationAPI(unittest.TestCase):
 
     def test_invalid_persona_returns_400(self):
         response = self.client.post(
-            "/api/v1/ai/investigations/north_america_east_revenue/explanation",
+            "/api/v1/ai/explain/north_america_east_revenue",
             json={"persona": "UNSUPPORTED_ROLE"}
         )
         self.assertEqual(response.status_code, 400)
@@ -103,7 +152,7 @@ class TestAIIntegrationAPI(unittest.TestCase):
 
     def test_unknown_kpi_returns_404(self):
         response = self.client.post(
-            "/api/v1/ai/investigations/unknown_kpi/explanation",
+            "/api/v1/ai/explain/unknown_kpi",
             json={"persona": "CFO"}
         )
         self.assertEqual(response.status_code, 404)
@@ -118,7 +167,7 @@ class TestAIIntegrationAPI(unittest.TestCase):
 
         try:
             response = self.client.post(
-                "/api/v1/ai/investigations/north_america_east_revenue/explanation",
+                "/api/v1/ai/explain/north_america_east_revenue",
                 json={"persona": "CFO"}
             )
             self.assertEqual(response.status_code, 503)
@@ -131,12 +180,14 @@ class TestAIIntegrationAPI(unittest.TestCase):
         # Return response with hallucinated evidence ID
         mock_response = (
             {
-                "headline": "Revenue down",
-                "situation": "Situation text",
-                "diagnosis": "Diagnosis text",
-                "evidence_summary": "Summary",
+                "summary": "Revenue down",
+                "reasoning": [],
+                "primary_driver_explanation": "Diagnosis text",
+                "secondary_driver_explanation": "Secondary text",
                 "uncertainty": "Caveats",
-                "executive_takeaway": "Takeaway",
+                "recommended_next_step": "Takeaway",
+                "abstained": False,
+                "abstention_reason": None,
                 "grounded_evidence_ids": ["EVID_HALLUCINATED_999"]
             },
             {"model": "gemini-2.5-flash", "latency_ms": 300.0}
@@ -146,7 +197,7 @@ class TestAIIntegrationAPI(unittest.TestCase):
 
         try:
             response = self.client.post(
-                "/api/v1/ai/investigations/north_america_east_revenue/explanation",
+                "/api/v1/ai/explain/north_america_east_revenue",
                 json={"persona": "CFO"}
             )
             self.assertEqual(response.status_code, 422)

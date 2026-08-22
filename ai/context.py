@@ -1,6 +1,7 @@
 """
 InsightPilot AI — Grounded Context Builder
-Converts deterministic investigation results into a clean, compact, structured context for Gemini prompts.
+Converts deterministic investigation results, evidence records, recommendations, and simulations
+into a clean, compact, structured context for Gemini reasoning prompts.
 """
 
 from typing import Dict, Any, List, Optional
@@ -13,9 +14,11 @@ class GroundedContextBuilder:
     def build_investigation_context(
         investigation_result: Dict[str, Any],
         evidence_items: List[Dict[str, Any]],
-        persona: str = "CFO"
+        persona: str = "CFO",
+        recommendations: Optional[List[Dict[str, Any]]] = None,
+        simulation: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
-        """Constructs the canonical grounded context payload."""
+        """Constructs the canonical grounded context payload for LLM reasoning."""
         persona_profile = resolve_persona(persona)
 
         kpi_raw = investigation_result.get("kpi", {})
@@ -26,7 +29,9 @@ class GroundedContextBuilder:
             "previous_value": kpi_raw.get("previous_value"),
             "variance_amount": kpi_raw.get("variance_amount"),
             "percent_change": kpi_raw.get("percent_change"),
-            "materiality_status": kpi_raw.get("materiality_status")
+            "materiality_status": kpi_raw.get("materiality_status"),
+            "region": investigation_result.get("region", "NA-East"),
+            "period": f"{investigation_result.get('prev_period_id', '2026-Q2')} -> {investigation_result.get('curr_period_id', '2026-Q3')}"
         }
 
         drivers_list = []
@@ -50,10 +55,10 @@ class GroundedContextBuilder:
                 "source_domain": ev.get("source_domain"),
                 "source_record_id": ev.get("source_record_id"),
                 "timestamp": ev.get("timestamp"),
-                "freshness_status": ev.get("freshness", {}).get("status"),
+                "freshness_status": ev.get("freshness", {}).get("status") if isinstance(ev.get("freshness"), dict) else ev.get("freshness"),
                 "analytical_method": ev.get("analytical_method"),
                 "finding_summary": ev.get("finding_summary"),
-                "confidence_score": ev.get("confidence", {}).get("score")
+                "confidence_score": ev.get("confidence", {}).get("score") if isinstance(ev.get("confidence"), dict) else ev.get("confidence")
             })
 
         overall_raw = investigation_result.get("overall", {})
@@ -64,7 +69,7 @@ class GroundedContextBuilder:
             "abstention_reason": overall_raw.get("abstention_reason")
         }
 
-        return {
+        context: Dict[str, Any] = {
             "investigation_id": investigation_result.get("investigation_id", "INV-EXEC-2026-NAE-001"),
             "kpi": kpi_block,
             "drivers": drivers_list,
@@ -77,3 +82,33 @@ class GroundedContextBuilder:
                 "tone": persona_profile.tone
             }
         }
+
+        # Optional recommendations context
+        if recommendations:
+            recs_list = []
+            for r in recommendations:
+                exp_impact = r.get("expected_impact", {})
+                recs_list.append({
+                    "recommendation_id": r.get("recommendation_id"),
+                    "action": r.get("action"),
+                    "owner": r.get("owner"),
+                    "controllability": r.get("controllability"),
+                    "priority": r.get("priority"),
+                    "expected_recovery_usd": exp_impact.get("revenue_recovery_usd", r.get("expected_recovery_usd")),
+                    "margin_impact_pts": exp_impact.get("gross_margin_impact_points", r.get("margin_impact_pts")),
+                    "recovery_timeframe_days": exp_impact.get("recovery_timeframe_days", r.get("recovery_timeframe_days")),
+                    "confidence_score": r.get("confidence", {}).get("score") if isinstance(r.get("confidence"), dict) else r.get("confidence_score")
+                })
+            context["recommendations"] = recs_list
+
+        # Optional simulation context
+        if simulation:
+            context["simulation"] = {
+                "baseline_availability_pct": simulation.get("baseline_value", simulation.get("baseline_availability_pct")),
+                "scenario_availability_pct": simulation.get("scenario_value", simulation.get("scenario_availability_pct")),
+                "projected_revenue_usd": simulation.get("projected_value", simulation.get("projected_revenue_usd")),
+                "estimated_recovery_usd": simulation.get("estimated_recovery", {}).get("revenue_recovery_usd", simulation.get("estimated_recovery_usd")),
+                "confidence_score": simulation.get("confidence", {}).get("score") if isinstance(simulation.get("confidence"), dict) else simulation.get("confidence_score")
+            }
+
+        return context
