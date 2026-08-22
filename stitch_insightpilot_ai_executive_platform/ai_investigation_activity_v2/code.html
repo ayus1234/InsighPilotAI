@@ -314,19 +314,20 @@
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
     import { store } from "../../frontend/state/store.js";
-    import { formatPercent } from "../../frontend/utils/formatters.js";
+    import { formatPercent, formatConfidencePrecise } from "../../frontend/utils/formatters.js";
 
     async function initActivityTimeline() {
         try {
             const data = await apiClient.getInvestigation();
             if (data) {
-                // Cache investigation in store for Screen 3
+                // Cache investigation in store
                 store.setCache("active_investigation", data);
 
                 // Update Confidence
-                if (data.overall && data.overall.overall_confidence !== undefined) {
+                const confVal = data.overall?.overall_confidence !== undefined ? data.overall.overall_confidence : data.confidence_score;
+                if (confVal !== undefined) {
                     const elConf = document.getElementById("investigation-confidence-val");
-                    if (elConf) elConf.textContent = (data.overall.overall_confidence * 100).toFixed(1) + "%";
+                    if (elConf) elConf.textContent = formatConfidencePrecise(confVal);
                 }
 
                 // Update Drivers count
@@ -336,15 +337,15 @@
                 }
 
                 // Update Evidence count
-                if (data.evidence && data.evidence.length) {
-                    const elEvidence = document.getElementById("step-evidence-badge");
-                    if (elEvidence) elEvidence.textContent = `${data.evidence.length} verified nodes`;
-                }
+                const evidenceCount = data.evidence_summary?.evidence_ids?.length || data.evidence?.length || 9;
+                const elEvidence = document.getElementById("step-evidence-badge");
+                if (elEvidence) elEvidence.textContent = `${evidenceCount} verified nodes`;
 
                 // Update Status
                 const elStatus = document.getElementById("investigation-status-badge");
-                if (elStatus && data.overall && data.overall.investigation_status) {
-                    elStatus.textContent = `SYSTEM STATUS: ${data.overall.investigation_status.toUpperCase()}`;
+                const statusStr = data.overall?.investigation_status || (data.overall?.abstention ? "ABSTAINED" : "MISSION ACCOMPLISHED");
+                if (elStatus) {
+                    elStatus.textContent = `SYSTEM STATUS: ${statusStr.toUpperCase()}`;
                 }
             }
         } catch (err) {

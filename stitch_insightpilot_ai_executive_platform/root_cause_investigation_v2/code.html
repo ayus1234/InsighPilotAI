@@ -529,7 +529,7 @@
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
     import { store } from "../../frontend/state/store.js";
-    import { formatCurrencyThousands, formatCurrencyMillions, formatPercent } from "../../frontend/utils/formatters.js";
+    import { formatCurrencyThousands, formatCurrencyMillions, formatPercent, formatConfidencePrecise } from "../../frontend/utils/formatters.js";
 
     async function initRootCause() {
         try {
@@ -541,11 +541,13 @@
 
             if (data) {
                 // Update KPI Variance
-                if (data.kpi_state) {
+                const kpi = data.kpi || data.kpi_state;
+                if (kpi) {
                     const elPct = document.getElementById("kpi-impact-pct");
                     const elVar = document.getElementById("kpi-impact-variance");
-                    if (elPct) elPct.textContent = formatPercent(data.kpi_state.percent_change);
-                    if (elVar) elVar.textContent = `${formatCurrencyMillions(data.kpi_state.variance_usd)} Variance`;
+                    const varVal = kpi.variance_amount !== undefined ? kpi.variance_amount : kpi.variance_usd;
+                    if (elPct) elPct.textContent = formatPercent(kpi.percent_change);
+                    if (elVar) elVar.textContent = `${formatCurrencyMillions(varVal)} Variance`;
                 }
 
                 // Update Drivers
@@ -558,11 +560,15 @@
                         const elConf = document.getElementById(`driver-${num}-conf`);
                         const elImpact = document.getElementById(`driver-${num}-impact`);
 
+                        const contrib = d.contribution_pct !== undefined ? d.contribution_pct : d.contribution?.percentage;
+                        const impact = d.impact_usd !== undefined ? d.impact_usd : d.contribution?.monetary_impact_usd;
+                        const conf = d.confidence_score !== undefined ? d.confidence_score : d.confidence?.score;
+
                         if (elName) elName.textContent = d.driver_name;
-                        if (elBar) elBar.style.width = `${Math.min(100, Math.max(5, d.contribution_pct))}%`;
-                        if (elContrib) elContrib.textContent = `${d.contribution_pct.toFixed(1)}%`;
-                        if (elConf) elConf.textContent = `${(d.confidence_score * 100).toFixed(1)}%`;
-                        if (elImpact) elImpact.textContent = formatCurrencyThousands(d.impact_usd);
+                        if (elBar && contrib !== undefined) elBar.style.width = `${Math.min(100, Math.max(5, contrib))}%`;
+                        if (elContrib && contrib !== undefined) elContrib.textContent = `${contrib.toFixed(1)}%`;
+                        if (elConf && conf !== undefined) elConf.textContent = formatConfidencePrecise(conf);
+                        if (elImpact && impact !== undefined) elImpact.textContent = formatCurrencyThousands(impact);
                     });
                 }
             }

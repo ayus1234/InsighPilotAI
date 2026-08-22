@@ -45,9 +45,24 @@ export function formatNumber(val) {
     return Number(val).toLocaleString("en-US");
 }
 
+export function formatConfidence(val) {
+    if (val === null || val === undefined || isNaN(val)) return "0%";
+    const num = Number(val);
+    const pct = num <= 1.0 && num > 0 ? num * 100 : num;
+    return `${pct.toFixed(0)}%`;
+}
+
+export function formatConfidencePrecise(val, decimals = 1) {
+    if (val === null || val === undefined || isNaN(val)) return "0.0%";
+    const num = Number(val);
+    const pct = num <= 1.0 && num > 0 ? num * 100 : num;
+    return `${pct.toFixed(decimals)}%`;
+}
+
 export function truncateHash(hashStr) {
     if (!hashStr || typeof hashStr !== "string") return "";
     const clean = hashStr.startsWith("sha256:") ? hashStr.slice(7) : hashStr;
     if (clean.length <= 12) return clean;
     return `${clean.slice(0, 8)}...${clean.slice(-4)}`;
 }
+

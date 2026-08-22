@@ -485,17 +485,16 @@
 
     async function initEvidenceExplorer() {
         try {
-            // First check active investigation cache
-            let investigation = store.getCache("active_investigation");
-            if (!investigation) {
-                investigation = await apiClient.getInvestigation();
-                if (investigation) store.setCache("active_investigation", investigation);
+            let evidenceData = store.getCache("active_evidence_list");
+            if (!evidenceData) {
+                evidenceData = await apiClient.getEvidenceList();
+                if (evidenceData) store.setCache("active_evidence_list", evidenceData);
             }
 
-            if (investigation && investigation.evidence && investigation.evidence.length) {
-                evidenceList = investigation.evidence;
+            if (evidenceData && evidenceData.evidence && evidenceData.evidence.length) {
+                evidenceList = evidenceData.evidence;
                 const elCount = document.getElementById("evidence-counter-label");
-                if (elCount) elCount.textContent = `Showing ${evidenceList.length} verified evidence nodes`;
+                if (elCount) elCount.textContent = `Showing ${evidenceData.total_evidence || evidenceList.length} verified evidence nodes`;
             }
         } catch (err) {
             console.warn("[InsightPilot UI] Evidence Explorer live fetch fallback:", err.message);

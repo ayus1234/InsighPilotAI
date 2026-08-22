@@ -368,7 +368,7 @@
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
     import { store } from "../../frontend/state/store.js";
-    import { formatCurrencyMillions, formatCurrencyThousands, formatPercent } from "../../frontend/utils/formatters.js";
+    import { formatCurrencyMillions, formatCurrencyThousands, formatPercent, formatConfidencePrecise } from "../../frontend/utils/formatters.js";
 
     async function initBriefing() {
         try {
@@ -382,14 +382,17 @@
                 const elPct = document.getElementById("briefing-percent-change");
                 const elDesc = document.getElementById("briefing-situation-desc");
 
-                if (elVar && inv.kpi_state) {
-                    elVar.textContent = formatCurrencyMillions(inv.kpi_state.variance_usd);
-                }
-                if (elPct && inv.kpi_state) {
-                    elPct.textContent = `${Math.abs(inv.kpi_state.percent_change).toFixed(2)}% shortfall vs Q2 baseline`;
-                }
-                if (elDesc && inv.kpi_state) {
-                    elDesc.textContent = `North America East region experienced revenue contraction from ${formatCurrencyMillions(inv.kpi_state.previous_period_value)} (Q2) to ${formatCurrencyMillions(inv.kpi_state.current_period_value)} (Q3), driven by multi-layered supply chain and commercial factors.`;
+                const kpi = inv.kpi || inv.kpi_state;
+                if (kpi) {
+                    const varVal = kpi.variance_amount !== undefined ? kpi.variance_amount : kpi.variance_usd;
+                    const prevVal = kpi.previous_value !== undefined ? kpi.previous_value : kpi.previous_period_value;
+                    const currVal = kpi.current_value !== undefined ? kpi.current_value : kpi.current_period_value;
+
+                    if (elVar) elVar.textContent = formatCurrencyMillions(varVal);
+                    if (elPct) elPct.textContent = `${Math.abs(kpi.percent_change).toFixed(2)}% shortfall vs Q2 baseline`;
+                    if (elDesc) {
+                        elDesc.textContent = `North America East region experienced revenue contraction from ${formatCurrencyMillions(prevVal)} (Q2) to ${formatCurrencyMillions(currVal)} (Q3), driven by multi-layered supply chain and commercial factors.`;
+                    }
                 }
 
                 // Section 2: Diagnosis Drivers
@@ -401,27 +404,39 @@
                     const elD1Weight = document.getElementById("briefing-driver-1-weight");
                     const elD1Bar = document.getElementById("briefing-driver-1-bar");
 
+                    const contrib1 = d1.contribution_pct !== undefined ? d1.contribution_pct : d1.contribution?.percentage;
+                    const imp1 = d1.impact_usd !== undefined ? d1.impact_usd : d1.contribution?.monetary_impact_usd;
+
                     if (elD1Title) elD1Title.textContent = `Primary Driver: ${d1.driver_name}`;
-                    if (elD1Weight) elD1Weight.textContent = `${d1.contribution.percentage.toFixed(1)}% (${formatCurrencyThousands(d1.contribution.monetary_impact_usd)})`;
-                    if (elD1Bar) elD1Bar.style.width = `${d1.contribution.percentage}%`;
+                    if (elD1Weight && contrib1 !== undefined && imp1 !== undefined) {
+                        elD1Weight.textContent = `${contrib1.toFixed(1)}% (${formatCurrencyThousands(imp1)})`;
+                    }
+                    if (elD1Bar && contrib1 !== undefined) elD1Bar.style.width = `${contrib1}%`;
 
                     if (d2) {
                         const elD2Title = document.getElementById("briefing-driver-2-title");
                         const elD2Weight = document.getElementById("briefing-driver-2-weight");
                         const elD2Bar = document.getElementById("briefing-driver-2-bar");
 
+                        const contrib2 = d2.contribution_pct !== undefined ? d2.contribution_pct : d2.contribution?.percentage;
+                        const imp2 = d2.impact_usd !== undefined ? d2.impact_usd : d2.contribution?.monetary_impact_usd;
+
                         if (elD2Title) elD2Title.textContent = `Secondary: ${d2.driver_name}`;
-                        if (elD2Weight) elD2Weight.textContent = `${d2.contribution.percentage.toFixed(1)}% (${formatCurrencyThousands(d2.contribution.monetary_impact_usd)})`;
-                        if (elD2Bar) elD2Bar.style.width = `${d2.contribution.percentage}%`;
+                        if (elD2Weight && contrib2 !== undefined && imp2 !== undefined) {
+                            elD2Weight.textContent = `${contrib2.toFixed(1)}% (${formatCurrencyThousands(imp2)})`;
+                        }
+                        if (elD2Bar && contrib2 !== undefined) elD2Bar.style.width = `${contrib2}%`;
                     }
                 }
 
                 // Section 5: Confidence Score
                 const elConf = document.getElementById("briefing-conf-score");
                 const elConfBar = document.getElementById("briefing-conf-bar");
-                if (elConf && inv.confidence_score !== undefined) {
-                    elConf.textContent = `${(inv.confidence_score * 100).toFixed(1)}%`;
-                    if (elConfBar) elConfBar.style.width = `${inv.confidence_score * 100}%`;
+                const confVal = inv.overall?.overall_confidence !== undefined ? inv.overall.overall_confidence : inv.confidence_score;
+                if (elConf && confVal !== undefined) {
+                    elConf.textContent = formatConfidencePrecise(confVal);
+                    const pctNum = confVal <= 1.0 && confVal > 0 ? confVal * 100 : confVal;
+                    if (elConfBar) elConfBar.style.width = `${pctNum}%`;
                 }
             }
 

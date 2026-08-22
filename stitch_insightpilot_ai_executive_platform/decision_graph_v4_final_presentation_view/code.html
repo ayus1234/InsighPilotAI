@@ -648,17 +648,20 @@
 
             if (investigationData) {
                 // Confidence Header
-                if (investigationData.overall && investigationData.overall.overall_confidence !== undefined) {
+                const confVal = investigationData.overall?.overall_confidence !== undefined ? investigationData.overall.overall_confidence : investigationData.confidence_score;
+                if (confVal !== undefined) {
                     const elConf = document.getElementById("graph-confidence-val");
-                    if (elConf) elConf.textContent = `${(investigationData.overall.overall_confidence * 100).toFixed(1)}%`;
+                    if (elConf) elConf.textContent = formatConfidencePrecise(confVal);
                 }
 
                 // KPI Column
-                if (investigationData.kpi_state) {
+                const kpi = investigationData.kpi || investigationData.kpi_state;
+                if (kpi) {
                     const elVal = document.getElementById("graph-kpi-val");
                     const elPct = document.getElementById("graph-kpi-pct");
-                    if (elVal) elVal.textContent = formatCurrencyMillions(investigationData.kpi_state.variance_usd);
-                    if (elPct) elPct.innerHTML = `<span class="material-symbols-outlined text-[14px]">arrow_downward</span> ${formatPercent(investigationData.kpi_state.percent_change)} vs Last Quarter`;
+                    const varVal = kpi.variance_amount !== undefined ? kpi.variance_amount : kpi.variance_usd;
+                    if (elVal) elVal.textContent = formatCurrencyMillions(varVal);
+                    if (elPct) elPct.innerHTML = `<span class="material-symbols-outlined text-[14px]">arrow_downward</span> ${formatPercent(kpi.percent_change)} vs Last Quarter`;
                 }
 
                 // Drivers Column
@@ -671,26 +674,30 @@
                     if (d1) {
                         const elName = document.getElementById("graph-driver-1-name");
                         const elConf = document.getElementById("graph-driver-1-conf");
+                        const conf1 = d1.confidence_score !== undefined ? d1.confidence_score : d1.confidence?.score;
                         if (elName) elName.textContent = d1.driver_name;
-                        if (elConf) elConf.textContent = `${(d1.confidence_score * 100).toFixed(1)}% Conf`;
+                        if (elConf && conf1 !== undefined) elConf.textContent = `${formatConfidencePrecise(conf1)} Conf`;
                     }
                     if (d2) {
                         const elName = document.getElementById("graph-driver-2-name");
                         const elImpact = document.getElementById("graph-driver-2-impact");
+                        const imp2 = d2.impact_usd !== undefined ? d2.impact_usd : d2.contribution?.monetary_impact_usd;
                         if (elName) elName.textContent = d2.driver_name;
-                        if (elImpact) elImpact.textContent = formatCurrencyThousands(d2.impact_usd);
+                        if (elImpact && imp2 !== undefined) elImpact.textContent = formatCurrencyThousands(imp2);
                     }
                     if (d3) {
                         const elName = document.getElementById("graph-driver-3-name");
                         const elImpact = document.getElementById("graph-driver-3-impact");
+                        const imp3 = d3.impact_usd !== undefined ? d3.impact_usd : d3.contribution?.monetary_impact_usd;
                         if (elName) elName.textContent = d3.driver_name;
-                        if (elImpact) elImpact.textContent = formatCurrencyThousands(d3.impact_usd);
+                        if (elImpact && imp3 !== undefined) elImpact.textContent = formatCurrencyThousands(imp3);
                     }
                     if (d4) {
                         const elName = document.getElementById("graph-driver-4-name");
                         const elImpact = document.getElementById("graph-driver-4-impact");
+                        const imp4 = d4.impact_usd !== undefined ? d4.impact_usd : d4.contribution?.monetary_impact_usd;
                         if (elName) elName.textContent = d4.driver_name;
-                        if (elImpact) elImpact.innerHTML = `Price <span class="text-error font-bold">-15%</span> (${formatCurrencyThousands(d4.impact_usd)})`;
+                        if (elImpact && imp4 !== undefined) elImpact.innerHTML = `Price <span class="text-error font-bold">-15%</span> (${formatCurrencyThousands(imp4)})`;
                     }
                 }
             }
