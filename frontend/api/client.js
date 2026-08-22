@@ -136,11 +136,38 @@ class APIClient {
         });
     }
 
-    getAIExplanation(kpiId = CONFIG.DEFAULT_KPI_ID, persona = CONFIG.DEFAULT_PERSONA, region = CONFIG.DEFAULT_REGION) {
-        return this.post(`/api/v1/ai/investigations/${kpiId}/explanation?region=${encodeURIComponent(region)}`, {
+    getAIExplanation(kpiId = CONFIG.DEFAULT_KPI_ID, options = {}) {
+        const persona = typeof options === "string" ? options : (options.persona || CONFIG.DEFAULT_PERSONA);
+        const region = options.region || CONFIG.DEFAULT_REGION;
+        const prevPeriod = options.prevPeriod || CONFIG.DEFAULT_PREV_PERIOD;
+        const currPeriod = options.currPeriod || CONFIG.DEFAULT_CURR_PERIOD;
+        const explanationMode = options.explanationMode || "structured";
+        const driverId = options.driverId || null;
+        const includeRecommendations = options.includeRecommendations !== undefined ? options.includeRecommendations : true;
+        const includeSimulation = options.includeSimulation !== undefined ? options.includeSimulation : false;
+
+        const queryParams = new URLSearchParams({
+            region,
+            prev_period_id: prevPeriod,
+            curr_period_id: currPeriod
+        }).toString();
+
+        return this.post(`/api/v1/ai/explain/${kpiId}?${queryParams}`, {
+            persona,
+            explanation_mode: explanationMode,
+            driver_id: driverId,
+            include_recommendations: includeRecommendations,
+            include_simulation: includeSimulation
+        });
+    }
+
+    getAIDriverExplanation(kpiId = CONFIG.DEFAULT_KPI_ID, driverId = "", persona = CONFIG.DEFAULT_PERSONA, region = CONFIG.DEFAULT_REGION) {
+        const queryParams = new URLSearchParams({ region }).toString();
+        return this.post(`/api/v1/ai/investigations/${kpiId}/drivers/${driverId}/explanation?${queryParams}`, {
             persona
         });
     }
 }
 
 export const apiClient = new APIClient();
+

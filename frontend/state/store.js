@@ -27,6 +27,18 @@ class AppStore {
         this.listeners.forEach((fn) => fn(this.state));
     }
 
+    getPersona() {
+        return this.state.selectedPersona;
+    }
+
+    setPersona(persona) {
+        const normalized = (persona || "").toUpperCase();
+        const validPersona = (normalized === "REGIONAL_SALES_MANAGER" || normalized === "RSM") 
+            ? "REGIONAL_SALES_MANAGER" 
+            : "CFO";
+        this.setState({ selectedPersona: validPersona });
+    }
+
     subscribe(listener) {
         this.listeners.push(listener);
         return () => {
@@ -38,7 +50,7 @@ class AppStore {
         this.cache.set(key, { value, timestamp: Date.now() });
     }
 
-    getCache(key, maxAgeMs = 60000) {
+    getCache(key, maxAgeMs = 120000) {
         const entry = this.cache.get(key);
         if (!entry) return null;
         if (Date.now() - entry.timestamp > maxAgeMs) {
@@ -46,6 +58,17 @@ class AppStore {
             return null;
         }
         return entry.value;
+    }
+
+    // Persona-aware AI explanation caching
+    getAIExplanationCache(kpiId = this.state.selectedKPI, persona = this.state.selectedPersona, region = this.state.selectedRegion) {
+        const key = `ai_explanation_${kpiId}_${persona}_${region}_${this.state.prevPeriod}_${this.state.currPeriod}`;
+        return this.getCache(key);
+    }
+
+    setAIExplanationCache(data, kpiId = this.state.selectedKPI, persona = this.state.selectedPersona, region = this.state.selectedRegion) {
+        const key = `ai_explanation_${kpiId}_${persona}_${region}_${this.state.prevPeriod}_${this.state.currPeriod}`;
+        this.setCache(key, data);
     }
 }
 

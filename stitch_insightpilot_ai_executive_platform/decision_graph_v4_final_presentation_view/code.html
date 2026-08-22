@@ -701,6 +701,30 @@
                     }
                 }
             }
+
+            // Fetch Grounded AI Explanation to enrich node details
+            try {
+                const persona = store.getPersona();
+                let aiData = store.getAIExplanationCache();
+                if (!aiData) {
+                    aiData = await apiClient.getAIExplanation("north_america_east_revenue", { persona });
+                    if (aiData) store.setAIExplanationCache(aiData);
+                }
+
+                if (aiData && aiData.explanation) {
+                    const exp = aiData.explanation;
+                    if (exp.primary_driver_explanation) {
+                        NODE_DETAILS["driver-1"].synthesis = exp.primary_driver_explanation;
+                    }
+                    if (exp.secondary_driver_explanation) {
+                        NODE_DETAILS["driver-2"].synthesis = exp.secondary_driver_explanation;
+                    }
+                    // Refresh currently selected panel if open
+                    selectNode("driver-1");
+                }
+            } catch (aiErr) {
+                console.warn("[InsightPilot UI] Decision Graph AI synthesis fallback:", aiErr.message);
+            }
         } catch (err) {
             console.warn("[InsightPilot UI] Decision Graph live fetch fallback:", err.message);
         }

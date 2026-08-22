@@ -305,12 +305,30 @@
 <h4 class="font-headline-md text-[18px] text-primary mb-2 text-center leading-tight font-bold">Briefing</h4>
 <span class="font-body-sm text-body-sm text-on-surface bg-surface-container-high px-3 py-1 rounded-full border border-primary/30">Generated</span>
 </div>
+<!-- Grounded AI Synthesis Summary -->
+<div id="ai-synthesis-container" class="mt-6 pt-4 border-t border-outline-variant/20 flex items-center justify-between gap-6">
+    <div class="flex items-center gap-3 flex-1">
+        <div class="bg-primary/10 p-2 rounded-lg border border-primary/20 shrink-0">
+            <span class="material-symbols-outlined text-primary text-[20px]">auto_awesome</span>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+                <span class="font-label-caps text-[10px] text-primary font-bold tracking-wider">GROUNDED AI SYNTHESIS</span>
+                <span id="ai-persona-badge" class="font-label-caps text-[9px] text-on-surface-variant bg-surface-dim px-1.5 py-0.5 rounded border border-outline-variant/20">CFO VIEW</span>
+                <span id="ai-abstention-badge" class="hidden font-label-caps text-[9px] text-error bg-error/10 px-1.5 py-0.5 rounded border border-error/30 font-bold">ABSTAINED</span>
+            </div>
+            <p id="ai-synthesis-text" class="font-body-sm text-[13px] text-on-surface line-clamp-2">
+                "Analyzing multi-factor causal drivers and verifying evidence chain..."
+            </p>
+        </div>
+    </div>
+    <div id="ai-citations-box" class="flex items-center gap-2 shrink-0"></div>
 </div>
 </div>
 </div>
 </main>
 
-<!-- Step 10C: Investigation Activity Live Binding -->
+<!-- Step 12.2: Investigation Activity Live & Grounded Gemini Binding -->
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
     import { store } from "../../frontend/state/store.js";
@@ -346,6 +364,49 @@
                 const statusStr = data.overall?.investigation_status || (data.overall?.abstention ? "ABSTAINED" : "MISSION ACCOMPLISHED");
                 if (elStatus) {
                     elStatus.textContent = `SYSTEM STATUS: ${statusStr.toUpperCase()}`;
+                }
+            }
+
+            // Fetch Grounded AI Explanation
+            try {
+                const persona = store.getPersona();
+                const elPersonaBadge = document.getElementById("ai-persona-badge");
+                if (elPersonaBadge) elPersonaBadge.textContent = `${persona.replace('_', ' ')} VIEW`;
+
+                let aiData = store.getAIExplanationCache();
+                if (!aiData) {
+                    aiData = await apiClient.getAIExplanation("north_america_east_revenue", { persona });
+                    if (aiData) store.setAIExplanationCache(aiData);
+                }
+
+                if (aiData && aiData.explanation) {
+                    const exp = aiData.explanation;
+                    const elSynth = document.getElementById("ai-synthesis-text");
+                    const elAbstain = document.getElementById("ai-abstention-badge");
+                    const elCitations = document.getElementById("ai-citations-box");
+
+                    if (exp.abstained) {
+                        if (elAbstain) elAbstain.classList.remove("hidden");
+                        if (elSynth) elSynth.textContent = exp.abstention_reason || "Insufficient evidence for definitive causal attribution. Uncertainty bound acknowledged.";
+                    } else {
+                        if (elSynth && exp.summary) {
+                            elSynth.textContent = `"${exp.summary}"`;
+                        }
+                    }
+
+                    if (elCitations && exp.grounded_evidence_ids && exp.grounded_evidence_ids.length) {
+                        elCitations.innerHTML = exp.grounded_evidence_ids.slice(0, 2).map(id => `
+                            <a href="../evidence_explorer_v2/code.html?q=${encodeURIComponent(id)}" class="font-label-caps text-[10px] text-primary hover:text-primary-fixed bg-primary/10 border border-primary/20 px-2 py-1 rounded transition-colors flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">link</span> ${id.split('_').slice(1, 3).join('_')}
+                            </a>
+                        `).join('');
+                    }
+                }
+            } catch (aiErr) {
+                console.warn("[InsightPilot UI] Grounded AI explanation fetch fallback:", aiErr.message);
+                const elSynth = document.getElementById("ai-synthesis-text");
+                if (elSynth) {
+                    elSynth.textContent = "AI explanation service offline. Deterministic causal multi-factor ranking remains active.";
                 }
             }
         } catch (err) {

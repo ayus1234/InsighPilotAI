@@ -503,28 +503,42 @@
 
     // Client-side search filtering
     const searchInput = document.getElementById("search-evidence-input");
-    if (searchInput) {
-        searchInput.addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            const cards = document.querySelectorAll("#unstructured-evidence-cards > div");
-            const rows = document.querySelectorAll("#structured-evidence-rows > tr");
+    function applyFilter(query) {
+        const q = (query || "").toLowerCase().trim();
+        const cards = document.querySelectorAll("#unstructured-evidence-cards > div");
+        const rows = document.querySelectorAll("#structured-evidence-rows > tr");
 
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = query === "" || text.includes(query) ? "" : "none";
-            });
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = q === "" || text.includes(q) ? "" : "none";
+        });
 
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = query === "" || text.includes(query) ? "" : "none";
-            });
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = q === "" || text.includes(q) ? "" : "none";
         });
     }
 
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => applyFilter(e.target.value));
+    }
+
+    async function handleUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const query = params.get("q") || params.get("evidence_id") || params.get("driver");
+        if (query && searchInput) {
+            searchInput.value = query;
+            applyFilter(query);
+        }
+    }
+
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initEvidenceExplorer);
+        document.addEventListener("DOMContentLoaded", async () => {
+            await initEvidenceExplorer();
+            handleUrlParams();
+        });
     } else {
-        initEvidenceExplorer();
+        initEvidenceExplorer().then(handleUrlParams);
     }
 </script>
 </body></html>

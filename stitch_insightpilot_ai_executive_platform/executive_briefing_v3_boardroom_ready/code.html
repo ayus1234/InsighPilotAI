@@ -364,7 +364,7 @@
 </main>
 </div>
 
-<!-- Step 10G: Executive Briefing Live Data Binding -->
+<!-- Step 12.2: Executive Briefing Live Data & Grounded Gemini Binding -->
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
     import { store } from "../../frontend/state/store.js";
@@ -372,7 +372,7 @@
 
     async function initBriefing() {
         try {
-            // Load Investigation State
+            // 1. Load Investigation State
             const inv = store.getCache("active_investigation") || await apiClient.getInvestigation();
             if (inv) {
                 store.setCache("active_investigation", inv);
@@ -440,7 +440,7 @@
                 }
             }
 
-            // Load Recommendations State
+            // 2. Load Recommendations State
             const recData = await apiClient.getRecommendations();
             if (recData && recData.recommendations && recData.recommendations.length) {
                 const r1 = recData.recommendations[0];
@@ -451,6 +451,39 @@
                 if (elActDesc && r1.rationale) {
                     elActDesc.textContent = `${r1.rationale} Expected recovery: ${formatCurrencyThousands(r1.expected_impact.revenue_recovery_usd)} within ${r1.expected_impact.recovery_timeframe_days} days.`;
                 }
+            }
+
+            // 3. Load Grounded Gemini Executive Narrative
+            try {
+                const persona = store.getPersona();
+                let aiData = store.getAIExplanationCache();
+                if (!aiData) {
+                    aiData = await apiClient.getAIExplanation("north_america_east_revenue", { persona });
+                    if (aiData) store.setAIExplanationCache(aiData);
+                }
+
+                if (aiData && aiData.explanation) {
+                    const exp = aiData.explanation;
+                    const elSitDesc = document.getElementById("briefing-situation-desc");
+                    const elD1Desc = document.getElementById("briefing-driver-1-desc");
+                    const elD2Desc = document.getElementById("briefing-driver-2-desc");
+                    const elActDesc = document.getElementById("briefing-action-desc");
+
+                    if (elSitDesc && exp.summary) {
+                        elSitDesc.textContent = exp.summary;
+                    }
+                    if (elD1Desc && exp.primary_driver_explanation) {
+                        elD1Desc.textContent = exp.primary_driver_explanation;
+                    }
+                    if (elD2Desc && exp.secondary_driver_explanation) {
+                        elD2Desc.textContent = exp.secondary_driver_explanation;
+                    }
+                    if (elActDesc && exp.recommended_next_step) {
+                        elActDesc.textContent = exp.recommended_next_step;
+                    }
+                }
+            } catch (aiErr) {
+                console.warn("[InsightPilot UI] Executive Briefing AI narrative fallback:", aiErr.message);
             }
         } catch (err) {
             console.warn("[InsightPilot UI] Executive Briefing live fetch fallback:", err.message);

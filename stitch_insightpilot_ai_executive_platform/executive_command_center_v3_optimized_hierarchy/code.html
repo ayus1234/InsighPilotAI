@@ -505,10 +505,11 @@
 </main>
 </div>
 
-<!-- Step 10B: Lightweight API Client Live Binding -->
+<!-- Step 12.2: Live KPI & Grounded Gemini Executive Summary Binding -->
 <script type="module">
     import { apiClient } from "../../frontend/api/client.js";
-    import { formatCurrencyMillions, formatPercent, formatPoints, formatNumber } from "../../frontend/utils/formatters.js";
+    import { store } from "../../frontend/state/store.js";
+    import { formatCurrencyMillions, formatPercent, formatPoints, formatNumber, formatConfidencePrecise } from "../../frontend/utils/formatters.js";
 
     async function initCommandCenter() {
         try {
@@ -555,6 +556,25 @@
                     if (elVal) elVal.textContent = formatNumber(kpis.distributor_orders.current_value);
                     if (elPct) elPct.textContent = formatPercent(kpis.distributor_orders.percent_change);
                 }
+            }
+
+            // Asynchronously fetch grounded AI executive summary
+            try {
+                let aiData = store.getAIExplanationCache();
+                if (!aiData) {
+                    aiData = await apiClient.getAIExplanation("north_america_east_revenue", { persona: store.getPersona() });
+                    if (aiData) store.setAIExplanationCache(aiData);
+                }
+
+                if (aiData && aiData.explanation) {
+                    const elSummary = document.getElementById("ai-summary-text");
+                    const elConf = document.getElementById("ai-summary-confidence");
+                    if (elSummary && aiData.explanation.summary) {
+                        elSummary.textContent = `"${aiData.explanation.summary}"`;
+                    }
+                }
+            } catch (aiErr) {
+                console.warn("[InsightPilot UI] Grounded AI summary fetch fallback:", aiErr.message);
             }
         } catch (err) {
             console.warn("[InsightPilot UI] Live API offline, fallback to initial state:", err.message);
