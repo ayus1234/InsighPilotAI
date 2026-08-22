@@ -132,6 +132,13 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 - **Action Prioritization Matrix:** Preserved 2x2 Impact vs Effort layout with plotted points for Quick Wins and Major Projects.
 - **What-If Scenario Simulation:** Live slider controlling inventory availability (79.4% to 100.0%) triggering deterministic simulations to update Projected Recovery (`+$341.4K` at 90.0%), Projected Revenue (`$14.54M`), and Confidence (`91% HIGH`).
 
+### Screen 7: Executive Briefing (`GET /api/v1/investigations/{kpi_id}` & `GET /api/v1/recommendations/{kpi_id}`)
+- **Section 1 (Situation):** `-$1.23M` Variance, `7.97% shortfall vs Q2 baseline ($15.43M -> $14.20M)`
+- **Section 2 (Diagnosis):** Primary Driver Atlanta DC Stockout (`43.2%`, `-$550K`), Secondary SKU-8821 Volume (`26.7%`, `-$340K`)
+- **Section 3 (Evidence):** Atlanta DC Availability `79.4%`, Zendesk Ticket Surge `+310%`, Horizon Scrape `-15.0%`
+- **Section 4 (Recommended Action):** Emergency Inventory Transfer (`REC-2026-NAE-001`, 20K Units to Atlanta DC)
+- **Section 5 (Projected Impact):** `+$757.6K` Projected Recovery (`+$729.6K` Net Benefit), `89.0%` Investigation Confidence
+
 ---
 
 ## 6. Phased Implementation Roadmap
@@ -141,7 +148,8 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 3. **Step 10D (Complete):** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
 4. **Step 10E (Complete):** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
 5. **Step 10F (Complete):** Recommendations & What-If Simulation (Screen 6) Live Slider.
-6. **Step 10G:** Executive Briefing (Screen 7) & Grounded Gemini Persona Narrative.
+6. **Step 10G (Complete):** Executive Briefing (Screen 7) Live Boardroom Presentation.
+
 
 
 
