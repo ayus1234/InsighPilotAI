@@ -105,14 +105,23 @@ The API client (`frontend/api/client.js`) automatically points to `http://127.0.
 - **Ranked Driver 4:** Competitor Horizon Foods Pricing (`11.3%`, `78.0%` conf, `-$144K` impact)
 - **Evidence Points:** Verified references to `EVID_ERP_ATL_STOCKOUT_001`, `EVID_ZND_TKT_SURGE_001`, `EVID_CRM_PO_DEFERRAL_001`, `EVID_MKT_COMP_INTEL_001`
 
+### Screen 4: Decision Graph (`GET /api/v1/investigations/{kpi_id}`)
+- **KPI Anchor:** `-$1.23M (-7.97% vs Last Quarter)`
+- **Operational Drivers:** Atlanta DC Stockout (`94.0% Conf`), SKU-8821 Volume (`-$340K`), Distributor Orders (`-$240K`)
+- **External Market Driver:** Horizon Foods Pricing (`Price -15%, -$144K`)
+- **Evidence Layer:** `EVID_ZND_TKT_SURGE_001`, `EVID_CRM_PO_DEFERRAL_001`, `EVID_MKT_COMP_INTEL_001`
+- **Actions & Outcome:** Emergency Inventory Transfer (`$484K`), Targeted Outreach (`$180K`) $\to$ Projected Recovery `$757.6K` (`$729.6K` Net Benefit)
+- **Interactive Node Details Panel:** Dynamic node inspection for KPI, Drivers 1–4 with evidence and AI synthesis.
+
 ---
 
 ## 6. Phased Implementation Roadmap
 
 1. **Step 10B (Complete):** Frontend Foundation, API Client, and Screen 1 Integration.
 2. **Step 10C (Complete):** AI Investigation Activity (Screen 2) & Root Cause Investigation (Screen 3) Integration.
-3. **Step 10D:** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
+3. **Step 10D (Complete):** Decision Graph (Screen 4) Dynamic SVG & Node Topology.
 4. **Step 10E:** Evidence Explorer (Screen 5) & Cryptographic Lineage Drawer.
 5. **Step 10F:** Recommendations & What-If Simulation (Screen 6) Live Slider.
 6. **Step 10G:** Executive Briefing (Screen 7) & Grounded Gemini Persona Narrative.
+
 

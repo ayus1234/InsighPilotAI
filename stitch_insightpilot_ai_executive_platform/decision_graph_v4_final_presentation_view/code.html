@@ -182,39 +182,44 @@
 </div>
 </div>
 <ul class="flex-1 px-3 space-y-1">
+<!-- 0: Executive Command Center -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../executive_command_center_v3_optimized_hierarchy/code.html">
 <span class="material-symbols-outlined">dashboard</span>
                     Executive Command Center
                 </a>
 </li>
+<!-- 1: Insights / Root Cause -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../root_cause_investigation_v2/code.html">
 <span class="material-symbols-outlined">analytics</span>
                     Insights
                 </a>
 </li>
-<!-- Active Node -->
+<!-- 2: Decision Graph (ACTIVE) -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 active:scale-[0.99] transition-transform duration-150" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/10 active:scale-[0.99] transition-transform duration-150" href="../decision_graph_v4_final_presentation_view/code.html">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_tree</span>
                     Decision Graph
                 </a>
 </li>
+<!-- 3: Recommendations -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../recommendations_simulation_v3_decision_ready/code.html">
 <span class="material-symbols-outlined">auto_awesome</span>
                     Recommendations
                 </a>
 </li>
+<!-- 4: Evidence Explorer -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../evidence_explorer_v2/code.html">
 <span class="material-symbols-outlined">travel_explore</span>
                     Evidence Explorer
                 </a>
 </li>
+<!-- 5: Executive Briefings -->
 <li>
-<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="#">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant font-medium hover:bg-surface-bright/10 hover:text-primary transition-colors duration-200" href="../executive_briefing_v3_boardroom_ready/code.html">
 <span class="material-symbols-outlined">description</span>
                     Executive Briefings
                 </a>
@@ -227,7 +232,7 @@
 </li>
 </ul>
 <div class="px-4 mt-4">
-<button class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps font-bold py-2 px-4 rounded hover:bg-primary transition-colors duration-200 flex items-center justify-center gap-2">
+<button onclick="window.location.href='../executive_briefing_v3_boardroom_ready/code.html'" class="w-full bg-primary-container text-on-primary-container font-label-caps text-label-caps font-bold py-2 px-4 rounded hover:bg-primary transition-colors duration-200 flex items-center justify-center gap-2 cursor-pointer">
 <span class="material-symbols-outlined text-[16px]">bolt</span>
                 Generate Briefing
             </button>
@@ -282,11 +287,11 @@
                             Validated
                         </span>
 <span class="px-2 py-1 rounded-sm bg-surface-container text-on-surface-variant border border-outline-variant/30">
-                            Confidence: <span class="text-on-surface ml-1 font-bold">87.4%</span>
+                            Confidence: <span id="graph-confidence-val" class="text-on-surface ml-1 font-bold">89.0%</span>
 </span>
 <span class="px-2 py-1 rounded-sm bg-surface-container text-on-surface-variant border border-outline-variant/30 flex items-center gap-1">
 <span class="material-symbols-outlined text-[14px]">schedule</span>
-                            Updated: 2m ago
+                            Updated: Live
                         </span>
 </div>
 </div>
@@ -306,9 +311,9 @@
 <button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">fit_screen</span></button>
 <button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright rounded transition-colors"><span class="material-symbols-outlined text-[20px]">zoom_in</span></button>
 </div>
-<button class="px-4 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container transition-colors flex items-center gap-2">
-<span class="material-symbols-outlined text-[16px]">filter_list</span>
-                    Filter Graph
+<button onclick="window.location.href='../root_cause_investigation_v2/code.html'" class="px-4 py-2 rounded-lg border border-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps hover:bg-surface-container transition-colors flex items-center gap-2 cursor-pointer">
+<span class="material-symbols-outlined text-[16px]">analytics</span>
+                    Diagnosis View
                 </button>
 </div>
 </div>
@@ -333,7 +338,7 @@
 <div class="flex-1 overflow-visible p-6 flex items-center justify-start gap-6 z-10 w-full h-full">
 <!-- Column 1: KPI Anchor -->
 <div class="flex flex-col gap-6 w-60 justify-center z-20">
-<div class="node-base border-error/50 bg-error/10 rounded-2xl p-5 cursor-pointer shadow-[0_8px_32px_rgba(255,180,171,0.1)] relative">
+<div onclick="selectNode('kpi')" class="node-base border-error/50 bg-error/10 rounded-2xl p-5 cursor-pointer shadow-[0_8px_32px_rgba(255,180,171,0.1)] relative">
 <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 bg-surface-variant rounded-full border-[4px] border-[#0B0F19]"></div>
 <div class="flex items-center gap-2 mb-4">
 <span class="material-symbols-outlined text-error text-[24px]">warning</span>
@@ -341,10 +346,10 @@
 </div>
 <h3 class="font-headline-md text-[20px] leading-tight text-on-surface mb-4">North America East Revenue</h3>
 <div class="flex flex-col gap-2">
-<div class="font-display-kpi text-[36px] leading-none text-error font-bold">-$12.4M</div>
-<div class="flex items-center gap-1.5 text-error text-xs font-medium bg-error/10 w-fit px-2 py-1 rounded-lg border border-error/20">
+<div id="graph-kpi-val" class="font-display-kpi text-[36px] leading-none text-error font-bold">-$1.23M</div>
+<div id="graph-kpi-pct" class="flex items-center gap-1.5 text-error text-xs font-medium bg-error/10 w-fit px-2 py-1 rounded-lg border border-error/20">
 <span class="material-symbols-outlined text-[14px]">arrow_downward</span>
-                                8.0% vs Last Quarter
+                                -7.97% vs Last Quarter
                             </div>
 </div>
 </div>
@@ -352,58 +357,60 @@
 <!-- Column 2: Drivers & Factors -->
 <div class="flex flex-col gap-6 w-56">
 <div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Operational Drivers</div>
-<!-- Selected Active Node -->
-<div class="node-active rounded-xl p-4 cursor-pointer relative">
+<!-- Selected Active Node (Driver 1) -->
+<div id="node-driver-1" onclick="selectNode('driver-1')" class="node-active rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full border-[4px] border-[#0B0F19] shadow-[0_0_12px_rgba(20,184,166,0.8)] z-10"></div>
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
 <span class="material-symbols-outlined text-primary text-xl">warehouse</span>
 <span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-label-caps border border-primary/30">Primary</span>
 </div>
-<h4 class="font-body-lg font-medium text-on-surface leading-tight mb-2 text-sm">Atlanta DC Stockout</h4>
+<h4 id="graph-driver-1-name" class="font-body-lg font-medium text-on-surface leading-tight mb-2 text-sm">Atlanta DC Stockout</h4>
 <div class="flex items-center gap-2">
 <div class="h-1 flex-1 bg-surface-container rounded-full overflow-hidden">
-<div class="h-full bg-primary w-[91%]"></div>
+<div id="graph-driver-1-bar" class="h-full bg-primary w-[94%]"></div>
 </div>
-<span class="text-[10px] text-primary font-mono">91.2% Conf</span>
+<span id="graph-driver-1-conf" class="text-[10px] text-primary font-mono">94.0% Conf</span>
 </div>
 </div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<!-- Driver 2 -->
+<div id="node-driver-2" onclick="selectNode('driver-2')" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
 <span class="material-symbols-outlined text-error text-xl">trending_down</span>
 <span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">INT</span>
 </div>
-<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">SKU-8821 Sales Volume</h4>
-<div class="text-error font-mono text-base">-64%</div>
+<h4 id="graph-driver-2-name" class="font-body-sm font-medium text-on-surface leading-tight mb-1">SKU-8821 Sales Volume</h4>
+<div id="graph-driver-2-impact" class="text-error font-mono text-base">-$340K</div>
 </div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<!-- Driver 3 -->
+<div id="node-driver-3" onclick="selectNode('driver-3')" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
 <span class="material-symbols-outlined text-error text-xl">assignment_return</span>
 <span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">INT</span>
 </div>
-<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor Orders</h4>
-<div class="text-error font-mono text-base">-27%</div>
+<h4 id="graph-driver-3-name" class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor Orders Deferral</h4>
+<div id="graph-driver-3-impact" class="text-error font-mono text-base">-$240K</div>
 </div>
 </div>
 <!-- Column 3: External Factor -->
 <div class="flex flex-col gap-6 w-48 justify-center">
 <div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">External Factor</div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div id="node-driver-4" onclick="selectNode('driver-4')" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
 <span class="material-symbols-outlined text-tertiary-container text-xl">storefront</span>
 </div>
-<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Competitor: Horizon Foods</h4>
-<div class="text-on-surface-variant text-xs">Price <span class="text-error font-bold">-15%</span></div>
+<h4 id="graph-driver-4-name" class="font-body-sm font-medium text-on-surface leading-tight mb-1">Horizon Foods Pricing</h4>
+<div id="graph-driver-4-impact" class="text-on-surface-variant text-xs">Price <span class="text-error font-bold">-15%</span> (-$144K)</div>
 </div>
 </div>
 <!-- Column 4: Evidence -->
 <div class="flex flex-col gap-5 w-56">
 <div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Evidence Layer</div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div onclick="window.location.href='../evidence_explorer_v2/code.html'" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
@@ -411,19 +418,19 @@
 <span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">CRM</span>
 </div>
 <h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Zendesk Support Tickets</h4>
-<div class="text-error font-mono text-base">+310%</div>
+<div class="text-error font-mono text-base">+310% Out of Stock</div>
 </div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div onclick="window.location.href='../evidence_explorer_v2/code.html'" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
 <span class="material-symbols-outlined text-tertiary-container text-lg">mail</span>
 <span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">COMM</span>
 </div>
-<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor Email</h4>
-<div class="text-on-surface-variant text-xs truncate">35K-unit cancellation</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Distributor PO Deferrals</h4>
+<div class="text-on-surface-variant text-xs truncate">29 delayed PO orders</div>
 </div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div onclick="window.location.href='../evidence_explorer_v2/code.html'" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start justify-between mb-2">
@@ -431,13 +438,13 @@
 <span class="text-[10px] bg-surface-container px-2 py-0.5 rounded text-on-surface-variant font-label-caps border border-outline-variant/30">EXT</span>
 </div>
 <h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Market Intelligence</h4>
-<div class="text-on-surface-variant text-xs">15% discount observed</div>
+<div class="text-on-surface-variant text-xs">15% discount scrape</div>
 </div>
 </div>
 <!-- Column 5: Actions -->
 <div class="flex flex-col gap-6 w-56 justify-center">
 <div class="font-label-caps text-[10px] text-on-surface-variant/50 mb-1 tracking-widest uppercase">Proposed Actions</div>
-<div class="node-base border-primary-container/40 bg-primary-container/10 rounded-xl p-4 cursor-pointer hover:border-primary transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.1)] relative">
+<div onclick="window.location.href='../recommendations_simulation_v3_decision_ready/code.html'" class="node-base border-primary-container/40 bg-primary-container/10 rounded-xl p-4 cursor-pointer hover:border-primary transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.1)] relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-primary rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start gap-3">
@@ -446,11 +453,11 @@
 </div>
 <div>
 <h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Emergency Inventory Transfer</h4>
-<div class="text-primary text-xs flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[14px]">model_training</span> Operations</div>
+<div class="text-primary text-xs flex items-center gap-1 font-medium"><span class="material-symbols-outlined text-[14px]">model_training</span> Operations ($484K)</div>
 </div>
 </div>
 </div>
-<div class="node-base rounded-xl p-4 cursor-pointer relative">
+<div onclick="window.location.href='../recommendations_simulation_v3_decision_ready/code.html'" class="node-base rounded-xl p-4 cursor-pointer relative">
 <div class="absolute -left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="absolute -right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 bg-surface-variant rounded-full border-[4px] border-[#0B0F19] z-10"></div>
 <div class="flex items-start gap-3">
@@ -458,8 +465,8 @@
 <span class="material-symbols-outlined text-on-surface-variant text-[18px]">payments</span>
 </div>
 <div>
-<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Temporary Trade Allowance</h4>
-<div class="text-on-surface-variant text-xs">Sales</div>
+<h4 class="font-body-sm font-medium text-on-surface leading-tight mb-1">Targeted Distributor Outreach</h4>
+<div class="text-on-surface-variant text-xs">Sales ($180K)</div>
 </div>
 </div>
 </div>
@@ -473,12 +480,12 @@
 <span class="material-symbols-outlined text-primary text-[24px]">monitoring</span>
 <span class="font-label-caps text-[10px] text-on-surface-variant tracking-wider uppercase">Projected Recovery</span>
 </div>
-<div class="font-display-kpi text-[36px] leading-none text-primary mb-3 font-bold">$9.1M</div>
+<div id="graph-outcome-val" class="font-display-kpi text-[36px] leading-none text-primary mb-3 font-bold">$757.6K</div>
 <div class="text-xs text-on-surface-variant mb-4 bg-surface-container/50 p-3 rounded-lg border border-outline-variant/20">
-                            Recovers <span class="text-primary font-bold">73.4%</span> of projected loss within 14 days.<br/>
-<span class="text-on-surface mt-1 block">Net Benefit: <span class="font-bold text-primary">$8.68M</span></span>
+                            Recovers <span class="text-primary font-bold">61.6%</span> of addressable deficit within 14-45 days.<br/>
+<span class="text-on-surface mt-1 block">Net Benefit: <span id="graph-outcome-net" class="font-bold text-primary">$729.6K</span></span>
 </div>
-<button class="w-full py-2 bg-primary text-on-primary-fixed rounded-lg text-sm font-bold hover:bg-primary-fixed transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.3)]">
+<button onclick="window.location.href='../recommendations_simulation_v3_decision_ready/code.html'" class="w-full py-2 bg-primary text-on-primary-fixed rounded-lg text-sm font-bold hover:bg-primary-fixed transition-colors shadow-[0_4px_16px_rgba(20,184,166,0.3)] cursor-pointer">
                             Execute Strategy
                         </button>
 </div>
@@ -492,40 +499,40 @@
 <span class="material-symbols-outlined text-primary text-[20px]">hub</span>
                         Node Details
                     </h3>
-<button class="text-on-surface-variant hover:text-on-surface transition-colors p-1.5 rounded-lg hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">close</span></button>
+<button onclick="window.location.href='../root_cause_investigation_v2/code.html'" class="text-on-surface-variant hover:text-on-surface transition-colors p-1.5 rounded-lg hover:bg-surface-container"><span class="material-symbols-outlined text-[18px]">close</span></button>
 </div>
 <!-- Panel Content Scrollable -->
 <div class="flex-1 overflow-y-auto p-5 flex flex-col gap-6">
 <!-- Node Identity -->
 <div>
 <div class="flex items-center gap-2 mb-2">
-<span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-label-caps border border-primary/30 uppercase tracking-wider font-bold">Operational Driver</span>
+<span id="panel-node-badge" class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded font-label-caps border border-primary/30 uppercase tracking-wider font-bold">Operational Driver</span>
 </div>
-<h2 class="font-headline-md text-[20px] leading-tight text-on-surface mb-2">Atlanta DC Stockout</h2>
-<p class="text-sm text-on-surface-variant leading-relaxed">Critical inventory depletion for high-velocity SKUs in the Southeast region.</p>
+<h2 id="panel-node-title" class="font-headline-md text-[20px] leading-tight text-on-surface mb-2">Atlanta DC Stockout</h2>
+<p id="panel-node-desc" class="text-sm text-on-surface-variant leading-relaxed">Critical inventory depletion for high-velocity SKUs in the Southeast region.</p>
 </div>
 <!-- Key Metrics (Bento style mini-grid) -->
 <div class="grid grid-cols-2 gap-3">
 <div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/30">
 <div class="text-[10px] text-on-surface-variant font-label-caps mb-1 tracking-wider">Confidence</div>
-<div class="text-lg font-bold text-primary">91.2%</div>
+<div id="panel-node-conf" class="text-lg font-bold text-primary">94.0%</div>
 </div>
 <div class="bg-surface-container-high rounded-lg p-3 border border-outline-variant/30">
-<div class="text-[10px] text-on-surface-variant font-label-caps mb-1 tracking-wider">Impact Score</div>
-<div class="text-lg font-bold text-error">64%</div>
+<div class="text-[10px] text-on-surface-variant font-label-caps mb-1 tracking-wider">Impact Share</div>
+<div id="panel-node-impact" class="text-lg font-bold text-error">43.2%</div>
 </div>
 </div>
 <!-- Evidence Sources -->
 <div>
 <h4 class="font-label-caps text-xs text-on-surface-variant/70 mb-3 border-b border-outline-variant/20 pb-2 uppercase tracking-wider">Corroborating Evidence</h4>
-<div class="space-y-3">
+<div id="panel-node-evidence" class="space-y-3">
 <div class="flex items-start gap-3 bg-surface-container/30 p-3 rounded-lg">
 <div class="w-6 h-6 rounded bg-surface-bright flex items-center justify-center shrink-0 border border-outline-variant/50">
 <span class="material-symbols-outlined text-[14px] text-tertiary">database</span>
 </div>
 <div>
-<div class="text-sm font-medium text-on-surface mb-0.5">ERP System</div>
-<div class="text-[12px] text-on-surface-variant leading-tight">Inventory levels at 0 since Tuesday.</div>
+<div class="text-sm font-medium text-on-surface mb-0.5">ERP Daily Snapshot</div>
+<div class="text-[12px] text-on-surface-variant leading-tight">Stockout at Atlanta DC recorded in INV-SNAP-21971.</div>
 </div>
 </div>
 <div class="flex items-start gap-3 bg-surface-container/30 p-3 rounded-lg">
@@ -533,8 +540,8 @@
 <span class="material-symbols-outlined text-[14px] text-tertiary">headset_mic</span>
 </div>
 <div>
-<div class="text-sm font-medium text-on-surface mb-0.5">Support Tickets</div>
-<div class="text-[12px] text-on-surface-variant leading-tight">Spike in 'Where is my order?' from SE distributors.</div>
+<div class="text-sm font-medium text-on-surface mb-0.5">Support Ticket Cluster</div>
+<div class="text-[12px] text-on-surface-variant leading-tight">Zendesk surge (+310%) for out-of-stock unfulfilled orders.</div>
 </div>
 </div>
 </div>
@@ -542,16 +549,16 @@
 <!-- AI Analysis Text -->
 <div class="bg-primary-container/10 rounded-lg p-4 border border-primary-container/30">
 <div class="flex items-center gap-2 mb-2 text-primary">
-<span class="material-symbols-outlined text-[16px]">psychology</span>
+<span class="material-symbols-outlined text-16px">psychology</span>
 <span class="font-label-caps text-[10px] font-bold tracking-wider uppercase">AI Synthesis</span>
 </div>
-<p class="text-xs text-on-surface-variant leading-relaxed">
-                            The root cause of the revenue drop is directly linked to the stockout at the Atlanta facility, which handles 80% of SKU-8821 distribution for the impacted region. Resolving this node is on the critical path to revenue recovery.
+<p id="panel-node-synthesis" class="text-xs text-on-surface-variant leading-relaxed">
+                            The primary root cause of the -$1.23M revenue drop is directly linked to the stockout at the Atlanta facility, which handles regional distribution. Resolving this node is on the critical path to revenue recovery.
                         </p>
 </div>
 <!-- Actions specific to this node -->
 <div class="mt-auto pt-4">
-<button class="w-full py-2 bg-transparent border-2 border-outline text-on-surface rounded-lg text-sm font-bold hover:bg-surface-container hover:border-outline-variant transition-colors flex items-center justify-center gap-2">
+<button onclick="window.location.href='../root_cause_investigation_v2/code.html'" class="w-full py-2 bg-transparent border-2 border-outline text-on-surface rounded-lg text-sm font-bold hover:bg-surface-container hover:border-outline-variant transition-colors flex items-center justify-center gap-2 cursor-pointer">
 <span class="material-symbols-outlined text-[18px]">visibility</span>
                             View Root Cause Analysis
                         </button>
@@ -560,4 +567,142 @@
 </aside>
 </div>
 </main>
+
+<!-- Step 10D: Decision Graph Live Data Binding & Interaction -->
+<script type="module">
+    import { apiClient } from "../../frontend/api/client.js";
+    import { store } from "../../frontend/state/store.js";
+    import { formatCurrencyThousands, formatCurrencyMillions, formatPercent } from "../../frontend/utils/formatters.js";
+
+    let investigationData = null;
+
+    const NODE_DETAILS = {
+        "kpi": {
+            badge: "Target Metric",
+            title: "North America East Revenue",
+            desc: "Primary tracked revenue metric showing negative fiscal variance against Q2 baseline.",
+            conf: "100%",
+            impact: "-7.97%",
+            synthesis: "Quarterly revenue declined -$1.23M (-7.97%) due to a combination of supply chain disruption and commercial price competition."
+        },
+        "driver-1": {
+            badge: "Primary Operational Driver",
+            title: "Atlanta DC Stockout",
+            desc: "Prolonged inventory depletion for high-velocity SKUs in the Southeast region.",
+            conf: "94.0%",
+            impact: "43.2%",
+            synthesis: "The stockout at Atlanta DC accounts for -$550K (43.2%) of the revenue loss, representing the single highest-impact bottleneck."
+        },
+        "driver-2": {
+            badge: "Internal Operational Driver",
+            title: "SKU-8821 Sales Volume Deficit",
+            desc: "Product velocity drop resulting from inventory unavailability during peak demand.",
+            conf: "89.0%",
+            impact: "26.7%",
+            synthesis: "SKU-8821 volume contraction represents -$340K in lost demand directly tied to unfulfilled customer purchase requests."
+        },
+        "driver-3": {
+            badge: "Commercial Partner Driver",
+            title: "Distributor Orders Deferral",
+            desc: "Regional distributor partners postponed purchase order submissions due to fulfillment lag.",
+            conf: "85.0%",
+            impact: "18.8%",
+            synthesis: "29 delayed distributor purchase orders caused -$240K in deferred replenishment orders."
+        },
+        "driver-4": {
+            badge: "External Market Driver",
+            title: "Horizon Foods Pricing Pressure",
+            desc: "Competitor executed targeted 15% discount promotions in key regional markets.",
+            conf: "78.0%",
+            impact: "11.3%",
+            synthesis: "Competitive price cuts exacerbated customer deferrals, representing -$144K in market share deflection."
+        }
+    };
+
+    window.selectNode = function(nodeKey) {
+        const details = NODE_DETAILS[nodeKey];
+        if (!details) return;
+
+        const elBadge = document.getElementById("panel-node-badge");
+        const elTitle = document.getElementById("panel-node-title");
+        const elDesc = document.getElementById("panel-node-desc");
+        const elConf = document.getElementById("panel-node-conf");
+        const elImpact = document.getElementById("panel-node-impact");
+        const elSynth = document.getElementById("panel-node-synthesis");
+
+        if (elBadge) elBadge.textContent = details.badge;
+        if (elTitle) elTitle.textContent = details.title;
+        if (elDesc) elDesc.textContent = details.desc;
+        if (elConf) elConf.textContent = details.conf;
+        if (elImpact) elImpact.textContent = details.impact;
+        if (elSynth) elSynth.textContent = details.synthesis;
+    };
+
+    async function initDecisionGraph() {
+        try {
+            investigationData = store.getCache("active_investigation");
+            if (!investigationData) {
+                investigationData = await apiClient.getInvestigation();
+                if (investigationData) store.setCache("active_investigation", investigationData);
+            }
+
+            if (investigationData) {
+                // Confidence Header
+                if (investigationData.overall && investigationData.overall.overall_confidence !== undefined) {
+                    const elConf = document.getElementById("graph-confidence-val");
+                    if (elConf) elConf.textContent = `${(investigationData.overall.overall_confidence * 100).toFixed(1)}%`;
+                }
+
+                // KPI Column
+                if (investigationData.kpi_state) {
+                    const elVal = document.getElementById("graph-kpi-val");
+                    const elPct = document.getElementById("graph-kpi-pct");
+                    if (elVal) elVal.textContent = formatCurrencyMillions(investigationData.kpi_state.variance_usd);
+                    if (elPct) elPct.innerHTML = `<span class="material-symbols-outlined text-[14px]">arrow_downward</span> ${formatPercent(investigationData.kpi_state.percent_change)} vs Last Quarter`;
+                }
+
+                // Drivers Column
+                if (investigationData.drivers && investigationData.drivers.length) {
+                    const d1 = investigationData.drivers[0];
+                    const d2 = investigationData.drivers[1];
+                    const d3 = investigationData.drivers[2];
+                    const d4 = investigationData.drivers[3];
+
+                    if (d1) {
+                        const elName = document.getElementById("graph-driver-1-name");
+                        const elConf = document.getElementById("graph-driver-1-conf");
+                        if (elName) elName.textContent = d1.driver_name;
+                        if (elConf) elConf.textContent = `${(d1.confidence_score * 100).toFixed(1)}% Conf`;
+                    }
+                    if (d2) {
+                        const elName = document.getElementById("graph-driver-2-name");
+                        const elImpact = document.getElementById("graph-driver-2-impact");
+                        if (elName) elName.textContent = d2.driver_name;
+                        if (elImpact) elImpact.textContent = formatCurrencyThousands(d2.impact_usd);
+                    }
+                    if (d3) {
+                        const elName = document.getElementById("graph-driver-3-name");
+                        const elImpact = document.getElementById("graph-driver-3-impact");
+                        if (elName) elName.textContent = d3.driver_name;
+                        if (elImpact) elImpact.textContent = formatCurrencyThousands(d3.impact_usd);
+                    }
+                    if (d4) {
+                        const elName = document.getElementById("graph-driver-4-name");
+                        const elImpact = document.getElementById("graph-driver-4-impact");
+                        if (elName) elName.textContent = d4.driver_name;
+                        if (elImpact) elImpact.innerHTML = `Price <span class="text-error font-bold">-15%</span> (${formatCurrencyThousands(d4.impact_usd)})`;
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn("[InsightPilot UI] Decision Graph live fetch fallback:", err.message);
+        }
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initDecisionGraph);
+    } else {
+        initDecisionGraph();
+    }
+</script>
 </body></html>
