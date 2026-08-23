@@ -7,6 +7,11 @@
 .env.*
 !.env.example
 
+# Database Files
+*.db
+*.sqlite
+*.sqlite3
+
 # Python Bytecode & Cache
 __pycache__/
 *.py[cod]
@@ -58,9 +63,3 @@ Thumbs.db
 *~
 *.sublime-project
 *.sublime-workspace
-
-# Runtime / Temporary Logs
-*.log
-logs/
-tmp/
-temp/
