@@ -86,7 +86,17 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(data["drivers"][0]["driver_id"], "atlanta_dc_stockout")
         self.assertEqual(data["drivers"][0]["rank"], 1)
 
-    # 7. Investigation Evidence List
+    # 7. Decision Graph Endpoint
+    def test_decision_graph_endpoint(self):
+        response = self.client.get("/api/v1/investigations/north_america_east_revenue/decision-graph")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["kpi_id"], "north_america_east_revenue")
+        self.assertEqual(data["total_columns"], 6)
+        self.assertGreaterEqual(data["total_nodes_count"], 10)
+        self.assertGreaterEqual(data["total_edges_count"], 10)
+
+    # 8. Investigation Evidence List
     def test_investigation_evidence_endpoint(self):
         response = self.client.get("/api/v1/investigations/north_america_east_revenue/evidence")
         self.assertEqual(response.status_code, 200)
@@ -96,7 +106,25 @@ class TestAPIEndpoints(unittest.TestCase):
         ev_ids = [e["evidence_id"] for e in data["evidence"]]
         self.assertIn("EVID_ERP_ATL_STOCKOUT_001", ev_ids)
 
-    # 8. Single Evidence Node Lookup
+    # 9. Global Evidence List & Filters
+    def test_get_all_evidence_list(self):
+        response = self.client.get("/api/v1/evidence")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["total_evidence_count"], 9)
+        self.assertEqual(len(data["evidence"]), 9)
+
+        # Domain filter
+        erp_res = self.client.get("/api/v1/evidence?domain=ERP")
+        self.assertEqual(erp_res.status_code, 200)
+        self.assertGreater(erp_res.json()["total_evidence_count"], 0)
+
+        # Search filter
+        search_res = self.client.get("/api/v1/evidence?q=Atlanta")
+        self.assertEqual(search_res.status_code, 200)
+        self.assertGreater(search_res.json()["total_evidence_count"], 0)
+
+    # 10. Single Evidence Node Lookup
     def test_single_evidence_endpoint(self):
         response = self.client.get("/api/v1/evidence/EVID_ERP_ATL_STOCKOUT_001")
         self.assertEqual(response.status_code, 200)
@@ -107,7 +135,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertIn("lineage", data)
         self.assertTrue(data["lineage"]["verification_hash"].startswith("sha256:"))
 
-    # 9. Unknown Evidence 404
+    # 11. Unknown Evidence 404
     def test_unknown_evidence_404(self):
         response = self.client.get("/api/v1/evidence/EVID_NON_EXISTENT")
         self.assertEqual(response.status_code, 404)
@@ -115,7 +143,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertIn("error", data)
         self.assertEqual(data["error"]["code"], "EVIDENCE_NOT_FOUND")
 
-    # 10. Evidence Lineage Trace
+    # 12. Evidence Lineage Trace
     def test_evidence_lineage_endpoint(self):
         response = self.client.get("/api/v1/evidence/EVID_ERP_ATL_STOCKOUT_001/lineage")
         self.assertEqual(response.status_code, 200)
@@ -125,14 +153,14 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(data["driver"], "atlanta_dc_stockout")
         self.assertTrue(data["verification_hash"].startswith("sha256:"))
 
-    # 11. Unknown Evidence Lineage 404
+    # 13. Unknown Evidence Lineage 404
     def test_unknown_evidence_lineage_404(self):
         response = self.client.get("/api/v1/evidence/EVID_INVALID/lineage")
         self.assertEqual(response.status_code, 404)
         data = response.json()
         self.assertEqual(data["error"]["code"], "EVIDENCE_NOT_FOUND")
 
-    # 12. Recommendations List
+    # 14. Recommendations List
     def test_get_recommendations_endpoint(self):
         response = self.client.get("/api/v1/recommendations/north_america_east_revenue")
         self.assertEqual(response.status_code, 200)
@@ -142,7 +170,12 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(data["recommendations"][0]["recommendation_id"], "REC-2026-NAE-001")
         self.assertEqual(data["recommendations"][0]["priority"], "CRITICAL")
 
-    # 13. Single Recommendation Detail
+        # Default route test
+        def_res = self.client.get("/api/v1/recommendations")
+        self.assertEqual(def_res.status_code, 200)
+        self.assertEqual(def_res.json()["kpi_id"], "north_america_east_revenue")
+
+    # 15. Single Recommendation Detail
     def test_get_single_recommendation_endpoint(self):
         response = self.client.get("/api/v1/recommendations/north_america_east_revenue/REC-2026-NAE-001")
         self.assertEqual(response.status_code, 200)
@@ -151,7 +184,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(data["driver_id"], "atlanta_dc_stockout")
         self.assertIn("Emergency Inventory Transfer", data["action"])
 
-    # 14. Simulation Baseline State
+    # 16. Simulation Baseline State
     def test_simulation_baseline_endpoint(self):
         response = self.client.get("/api/v1/simulations/baseline")
         self.assertEqual(response.status_code, 200)
@@ -159,7 +192,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(data["baseline_availability_pct"], 79.4)
         self.assertEqual(data["baseline_revenue_usd"], 14200000.05)
 
-    # 15. Simulation Inventory Availability Execution
+    # 17. Simulation Inventory Availability Execution
     def test_simulation_execution_endpoint(self):
         response = self.client.post(
             "/api/v1/simulations/inventory-availability",
@@ -173,7 +206,15 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertGreater(data["estimated_recovery"]["revenue_recovery_usd"], 300000.0)
         self.assertEqual(data["confidence"]["label"], "HIGH")
 
-    # 16. Simulation Invalid Input 400
+        # Test unified alias /api/v1/simulations/run
+        alias_res = self.client.post(
+            "/api/v1/simulations/run",
+            json={"target_availability_pct": 90.0}
+        )
+        self.assertEqual(alias_res.status_code, 200)
+        self.assertEqual(alias_res.json()["scenario_value"], 90.0)
+
+    # 18. Simulation Invalid Input 400
     def test_simulation_invalid_input_400(self):
         response = self.client.post(
             "/api/v1/simulations/inventory-availability",
@@ -183,7 +224,7 @@ class TestAPIEndpoints(unittest.TestCase):
         data = response.json()
         self.assertEqual(data["error"]["code"], "INVALID_SIMULATION_INPUT")
 
-    # 17. Deterministic Repeated Requests
+    # 19. Deterministic Repeated Requests
     def test_investigation_determinism(self):
         res1 = self.client.get("/api/v1/investigations/north_america_east_revenue").json()
         res2 = self.client.get("/api/v1/investigations/north_america_east_revenue").json()
@@ -193,7 +234,7 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertEqual(res1["overall"]["overall_confidence"], res2["overall"]["overall_confidence"])
         self.assertEqual(len(res1["drivers"]), len(res2["drivers"]))
 
-    # 18. OpenAPI Docs Availability
+    # 20. OpenAPI Docs Availability
     def test_openapi_docs_endpoint(self):
         response = self.client.get("/openapi.json")
         self.assertEqual(response.status_code, 200)
@@ -202,10 +243,13 @@ class TestAPIEndpoints(unittest.TestCase):
         self.assertIn("/health", data["paths"])
         self.assertIn("/api/v1/kpis", data["paths"])
         self.assertIn("/api/v1/investigations/{kpi_id}", data["paths"])
+        self.assertIn("/api/v1/investigations/{kpi_id}/decision-graph", data["paths"])
+        self.assertIn("/api/v1/evidence", data["paths"])
         self.assertIn("/api/v1/recommendations/{kpi_id}", data["paths"])
         self.assertIn("/api/v1/simulations/inventory-availability", data["paths"])
+        self.assertIn("/api/v1/simulations/run", data["paths"])
 
-    # 19. CORS Options Preflight
+    # 21. CORS Options Preflight
     def test_cors_preflight(self):
         response = self.client.options(
             "/api/v1/kpis",

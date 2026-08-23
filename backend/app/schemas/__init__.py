@@ -11,11 +11,15 @@ from backend.app.schemas.investigation import (
     KPIBlock,
     EvidenceSummaryBlock,
     OverallConfidenceBlock,
-    LineageGraphBlock
+    LineageGraphBlock,
+    DecisionGraphNode,
+    DecisionGraphEdge,
+    DecisionGraphResponse,
 )
 from backend.app.schemas.evidence import (
     EvidenceItemResponse,
     EvidenceListResponse,
+    AllEvidenceListResponse,
     LineageTraceResponse
 )
 from backend.app.schemas.recommendation import (
@@ -46,8 +50,12 @@ __all__ = [
     "EvidenceSummaryBlock",
     "OverallConfidenceBlock",
     "LineageGraphBlock",
+    "DecisionGraphNode",
+    "DecisionGraphEdge",
+    "DecisionGraphResponse",
     "EvidenceItemResponse",
     "EvidenceListResponse",
+    "AllEvidenceListResponse",
     "LineageTraceResponse",
     "ExpectedImpactModel",
     "RecommendationConfidenceModel",

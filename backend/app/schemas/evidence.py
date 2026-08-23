@@ -46,6 +46,11 @@ class EvidenceListResponse(BaseModel):
     total_evidence_count: int = Field(..., example=9)
     evidence: List[EvidenceItemResponse]
 
+class AllEvidenceListResponse(BaseModel):
+    region: str = Field("NA-East", example="NA-East")
+    total_evidence_count: int = Field(..., example=9)
+    evidence: List[EvidenceItemResponse]
+
 class LineageTraceResponse(BaseModel):
     evidence_id: str = Field(..., example="EVID_ERP_ATL_STOCKOUT_001")
     kpi: str = Field(..., example="north_america_east_revenue")

@@ -54,3 +54,34 @@ class InvestigationResponse(BaseModel):
     evidence_summary: EvidenceSummaryBlock
     overall: OverallConfidenceBlock
     lineage_graph: LineageGraphBlock
+
+class DecisionGraphNode(BaseModel):
+    id: str = Field(..., example="drv-1")
+    column: int = Field(..., example=2)
+    column_title: str = Field(..., example="2. Causal Drivers")
+    title: str = Field(..., example="Atlanta DC Stockout")
+    node_type: str = Field(..., example="DRIVER")
+    category: str = Field(..., example="Supply Chain")
+    primary_metric: str = Field(..., example="43.2% Share")
+    secondary_metric: Optional[str] = Field(None, example="-$550K Impact")
+    confidence: int = Field(..., example=94)
+    description: str = Field(...)
+    status: str = Field(..., example="CRITICAL")
+    evidence_id: Optional[str] = Field(None, example="EVID_ERP_ATL_STOCKOUT_001")
+    linked_parents: List[str] = Field(default_factory=list)
+    linked_children: List[str] = Field(default_factory=list)
+    hash: Optional[str] = Field(None)
+
+class DecisionGraphEdge(BaseModel):
+    source: str = Field(..., example="kpi-1")
+    target: str = Field(..., example="drv-1")
+    relationship_type: str = Field(..., example="DECOMPOSED_TO")
+
+class DecisionGraphResponse(BaseModel):
+    kpi_id: str = Field(..., example="north_america_east_revenue")
+    region: str = Field(..., example="NA-East")
+    total_columns: int = Field(6, example=6)
+    total_nodes_count: int = Field(..., example=12)
+    total_edges_count: int = Field(..., example=15)
+    nodes: List[DecisionGraphNode]
+    edges: List[DecisionGraphEdge]

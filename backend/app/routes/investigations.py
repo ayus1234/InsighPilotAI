@@ -1,11 +1,15 @@
 """
 InsightPilot AI — Investigation Routes
-Exposes full root cause investigations, ranked driver breakdowns, and supporting evidence summaries.
+Exposes full root cause investigations, ranked driver breakdowns, decision graph topology, and supporting evidence summaries.
 """
 
 from typing import Optional
 from fastapi import APIRouter, Depends, Query, Path
-from backend.app.schemas.investigation import InvestigationResponse, DriverListResponse
+from backend.app.schemas.investigation import (
+    InvestigationResponse,
+    DriverListResponse,
+    DecisionGraphResponse
+)
 from backend.app.schemas.evidence import EvidenceListResponse
 from backend.app.schemas.common import ErrorResponse
 from backend.app.services.investigation_service import InvestigationService
@@ -54,6 +58,28 @@ async def get_investigation_drivers(
 ) -> DriverListResponse:
     """Returns the list of ranked drivers for the specified KPI investigation."""
     return investigation_service.get_drivers(
+        kpi_id=kpi_id,
+        region=region,
+        prev_period_id=prev_period_id,
+        curr_period_id=curr_period_id
+    )
+
+@router.get(
+    "/{kpi_id}/decision-graph",
+    response_model=DecisionGraphResponse,
+    responses={404: {"model": ErrorResponse, "description": "KPI not found"}},
+    summary="Get 6-column decision graph topology",
+    description="Returns the complete causal topology connecting KPI Anomaly -> Causal Drivers -> Empirical Evidence -> Causal Mechanics -> Action Levers -> Predicted Outcome."
+)
+async def get_decision_graph(
+    kpi_id: str = Path(..., description="Target KPI identifier (e.g. north_america_east_revenue)"),
+    region: str = Query("NA-East", description="Target geographical region"),
+    prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
+    curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
+    investigation_service: InvestigationService = Depends(get_investigation_service)
+) -> DecisionGraphResponse:
+    """Returns the typed decision graph topology for the specified KPI investigation."""
+    return investigation_service.get_decision_graph(
         kpi_id=kpi_id,
         region=region,
         prev_period_id=prev_period_id,

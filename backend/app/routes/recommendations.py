@@ -12,6 +12,26 @@ from backend.app.dependencies import get_recommendation_service
 router = APIRouter(prefix="/recommendations", tags=["Recommendations"])
 
 @router.get(
+    "",
+    response_model=RecommendationListResponse,
+    summary="Get all prioritized recommendations",
+    description="Returns prioritized recommendations for the primary KPI (north_america_east_revenue)."
+)
+async def list_default_recommendations(
+    region: str = Query("NA-East", description="Target geographical region"),
+    prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
+    curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
+    recommendation_service: RecommendationService = Depends(get_recommendation_service)
+) -> RecommendationListResponse:
+    """Returns prioritized recommendations for the default KPI."""
+    return recommendation_service.get_recommendations(
+        kpi_id="north_america_east_revenue",
+        region=region,
+        prev_period_id=prev_period_id,
+        curr_period_id=curr_period_id
+    )
+
+@router.get(
     "/{kpi_id}",
     response_model=RecommendationListResponse,
     responses={404: {"model": ErrorResponse, "description": "KPI not found"}},

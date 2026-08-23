@@ -41,7 +41,29 @@ async def simulate_inventory_availability(
     simulation_service: SimulationService = Depends(get_simulation_service)
 ) -> SimulationResponse:
     """Runs deterministic simulation on inventory availability slider parameter."""
+    avail_val = request.inventory_availability if request.inventory_availability is not None else (request.target_availability_pct or 90.0)
+    target_region = request.region or region
     return simulation_service.simulate_availability(
-        inventory_availability=request.inventory_availability,
-        region=region
+        inventory_availability=avail_val,
+        region=target_region
+    )
+
+@router.post(
+    "/run",
+    response_model=SimulationResponse,
+    responses={400: {"model": ErrorResponse, "description": "Invalid simulation parameter"}},
+    summary="Run what-if simulation (Unified alias)",
+    description="Unified simulation runner accepting target availability percentage or ratio."
+)
+async def run_simulation(
+    request: SimulationRequest,
+    region: str = Query("NA-East", description="Target geographical region"),
+    simulation_service: SimulationService = Depends(get_simulation_service)
+) -> SimulationResponse:
+    """Unified simulation runner endpoint."""
+    avail_val = request.inventory_availability if request.inventory_availability is not None else (request.target_availability_pct or 90.0)
+    target_region = request.region or region
+    return simulation_service.simulate_availability(
+        inventory_availability=avail_val,
+        region=target_region
     )

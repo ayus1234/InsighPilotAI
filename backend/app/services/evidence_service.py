@@ -8,6 +8,7 @@ from analytics.data_loader import DataLoader
 from evidence.evidence_engine import EvidenceEngine
 from backend.app.schemas.evidence import (
     EvidenceListResponse,
+    AllEvidenceListResponse,
     EvidenceItemResponse,
     LineageTraceResponse,
     FreshnessModel,
@@ -44,6 +45,42 @@ class EvidenceService:
             lineage=LineageMetadataModel(**item["lineage"]),
             evidence_rank=item.get("evidence_rank"),
             ranking_score=item.get("ranking_score")
+        )
+
+    def get_all_evidence(
+        self,
+        domain: Optional[str] = None,
+        search: Optional[str] = None,
+        region: str = "NA-East"
+    ) -> AllEvidenceListResponse:
+        """Returns all verified evidence nodes across all domains with optional filtering."""
+        evidence_bundle = self.evidence_engine.get_all_evidence_for_investigation(region)
+        formatted_list = [
+            self._format_evidence_item(node)
+            for node in evidence_bundle["all_evidence_nodes"]
+        ]
+
+        if domain and domain.upper() != "ALL":
+            domain_upper = domain.upper()
+            formatted_list = [
+                e for e in formatted_list
+                if domain_upper in e.source_domain.upper() or domain_upper in e.source.upper()
+            ]
+
+        if search:
+            q = search.lower()
+            formatted_list = [
+                e for e in formatted_list
+                if q in e.evidence_id.lower()
+                or (e.finding_summary and q in e.finding_summary.lower())
+                or q in e.source.lower()
+                or q in e.supports_driver.lower()
+            ]
+
+        return AllEvidenceListResponse(
+            region=region,
+            total_evidence_count=len(formatted_list),
+            evidence=formatted_list
         )
 
     def get_investigation_evidence(self, kpi_id: str, region: str = "NA-East") -> EvidenceListResponse:

@@ -1,15 +1,40 @@
 """
 InsightPilot AI — Evidence Routes
-Exposes individual evidence items and complete 5-layer cryptographic lineage traces.
+Exposes verified evidence items, global domain filtering, and complete 5-layer cryptographic lineage traces.
 """
 
+from typing import Optional
 from fastapi import APIRouter, Depends, Path, Query
-from backend.app.schemas.evidence import EvidenceItemResponse, LineageTraceResponse
+from backend.app.schemas.evidence import (
+    EvidenceItemResponse,
+    EvidenceListResponse,
+    AllEvidenceListResponse,
+    LineageTraceResponse
+)
 from backend.app.schemas.common import ErrorResponse
 from backend.app.services.evidence_service import EvidenceService
 from backend.app.dependencies import get_evidence_service
 
 router = APIRouter(prefix="/evidence", tags=["Evidence"])
+
+@router.get(
+    "",
+    response_model=AllEvidenceListResponse,
+    summary="Get all verified empirical evidence nodes",
+    description="Returns all 9 verified evidence items across ERP, CRM, Support, and Market Intel with optional domain and search query filtering."
+)
+async def list_all_evidence(
+    domain: Optional[str] = Query(None, description="Optional domain filter (e.g. ERP, CRM, Support, Market)"),
+    q: Optional[str] = Query(None, description="Optional search term matching ID, text, or driver"),
+    region: str = Query("NA-East", description="Target geographical region"),
+    evidence_service: EvidenceService = Depends(get_evidence_service)
+) -> AllEvidenceListResponse:
+    """Returns global verified evidence list across all domains."""
+    return evidence_service.get_all_evidence(
+        domain=domain,
+        search=q,
+        region=region
+    )
 
 @router.get(
     "/{evidence_id}",

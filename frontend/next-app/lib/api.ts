@@ -78,13 +78,36 @@ class APIClient {
     return this.request<InvestigationResponse>(`/api/v1/investigations/${kpiId}?${query}`);
   }
 
-  // 3. Evidence Endpoints
-  async getEvidence(evidenceId: string): Promise<EvidenceRecord> {
-    return this.request<EvidenceRecord>(`/api/v1/evidence/${encodeURIComponent(evidenceId)}`);
+  async getDecisionGraph(
+    kpiId: string = "north_america_east_revenue",
+    region: string = "NA-East",
+    prevPeriod: string = "2026-Q2",
+    currPeriod: string = "2026-Q3"
+  ): Promise<any> {
+    const query = new URLSearchParams({ region, prev_period_id: prevPeriod, curr_period_id: currPeriod }).toString();
+    return this.request<any>(`/api/v1/investigations/${kpiId}/decision-graph?${query}`);
   }
 
-  async getEvidenceLineage(evidenceId: string): Promise<EvidenceLineage> {
-    return this.request<EvidenceLineage>(`/api/v1/evidence/${encodeURIComponent(evidenceId)}/lineage`);
+  // 3. Evidence Endpoints
+  async getEvidenceList(
+    options: { domain?: string; q?: string; region?: string } = {}
+  ): Promise<any> {
+    const params = new URLSearchParams();
+    if (options.domain) params.set("domain", options.domain);
+    if (options.q) params.set("q", options.q);
+    if (options.region) params.set("region", options.region);
+    const queryString = params.toString();
+    return this.request<any>(`/api/v1/evidence${queryString ? `?${queryString}` : ""}`);
+  }
+
+  async getEvidence(evidenceId: string, region: string = "NA-East"): Promise<EvidenceRecord> {
+    const query = new URLSearchParams({ region }).toString();
+    return this.request<EvidenceRecord>(`/api/v1/evidence/${encodeURIComponent(evidenceId)}?${query}`);
+  }
+
+  async getEvidenceLineage(evidenceId: string, region: string = "NA-East"): Promise<EvidenceLineage> {
+    const query = new URLSearchParams({ region }).toString();
+    return this.request<EvidenceLineage>(`/api/v1/evidence/${encodeURIComponent(evidenceId)}/lineage?${query}`);
   }
 
   // 4. Recommendations Endpoints
