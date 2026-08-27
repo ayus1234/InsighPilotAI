@@ -17,7 +17,8 @@ from ai.langgraph.nodes.investigation_nodes import (
     ai_invocation_node,
     ai_explanation_node,
     executive_synthesis_node,
-    recommendations_context_node
+    recommendations_context_node,
+    generate_decision_graph_node
 )
 
 __all__ = [
@@ -35,5 +36,6 @@ __all__ = [
     "ai_invocation_node",
     "ai_explanation_node",
     "executive_synthesis_node",
-    "recommendations_context_node"
+    "recommendations_context_node",
+    "generate_decision_graph_node"
 ]

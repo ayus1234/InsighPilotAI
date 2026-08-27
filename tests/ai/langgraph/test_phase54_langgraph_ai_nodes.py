@@ -196,11 +196,13 @@ class TestPhase54LangGraphAINodes(unittest.TestCase):
     # -------------------------------------------------------------------------
     def test_low_confidence_routes_to_abstention(self):
         """When analytical confidence is below 65%, workflow routes strictly to abstention node."""
-        with patch("analytics.confidence_engine.ConfidenceEngine.calculate_overall_confidence") as mock_conf:
+        with patch("analytics.confidence_engine.ConfidenceEngine.evaluate_investigation_confidence") as mock_conf:
             mock_conf.return_value = {
                 "overall_confidence": 42,
                 "confidence_label": "LOW",
+                "tier": "LOW",
                 "abstention": True,
+                "abstain": True,
                 "abstention_reason": "Insufficient verified inventory logs."
             }
 

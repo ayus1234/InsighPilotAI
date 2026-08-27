@@ -28,6 +28,7 @@ class InvestigationState(TypedDict, total=False):
     confidence: Optional[Dict[str, Any]]
     recommendations: Optional[List[Dict[str, Any]]]
     simulation: Optional[Dict[str, Any]]
+    decision_graph: Optional[Dict[str, Any]]
 
     # 3. Grounding & Abstention Guard
     grounding_context: Optional[Dict[str, Any]]

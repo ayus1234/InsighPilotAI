@@ -77,6 +77,7 @@ async def get_decision_graph(
     region: str = Query("NA-East", description="Target geographical region"),
     prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
     curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
+    persona: str = Query("CFO", description="Executive persona context"),
     investigation_service: InvestigationService = Depends(get_investigation_service)
 ) -> DecisionGraphResponse:
     """Returns the typed decision graph topology for the specified KPI investigation."""
@@ -84,7 +85,8 @@ async def get_decision_graph(
         kpi_id=kpi_id,
         region=region,
         prev_period_id=prev_period_id,
-        curr_period_id=curr_period_id
+        curr_period_id=curr_period_id,
+        persona=persona
     )
 
 @router.get(
