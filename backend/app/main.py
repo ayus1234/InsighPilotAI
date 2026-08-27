@@ -14,6 +14,7 @@ from backend.app.routes.evidence import router as evidence_router
 from backend.app.routes.ai import router as ai_router
 from backend.app.routes.recommendations import router as recommendations_router
 from backend.app.routes.simulations import router as simulations_router
+from backend.app.routes.demo import router as demo_router
 
 def create_app() -> FastAPI:
     """Factory creating and configuring the FastAPI application."""
@@ -35,7 +36,7 @@ def create_app() -> FastAPI:
         CORSMiddleware,
         allow_origins=settings.CORS_ORIGINS,
         allow_credentials=True,
-        allow_methods=["GET", "POST", "OPTIONS"],
+        allow_methods=["*"],
         allow_headers=["*"],
     )
 
@@ -50,6 +51,7 @@ def create_app() -> FastAPI:
     app.include_router(ai_router, prefix=settings.API_PREFIX)
     app.include_router(recommendations_router, prefix=settings.API_PREFIX)
     app.include_router(simulations_router, prefix=settings.API_PREFIX)
+    app.include_router(demo_router, prefix=settings.API_PREFIX)
 
     return app
 
