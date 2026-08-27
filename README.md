@@ -1,242 +1,173 @@
 # InsightPilot AI
 
-> **Enterprise Decision-Intelligence Prototype**  
+> **Enterprise Decision-Intelligence Platform**  
 > Accenture Innovation Challenge 2026 — Track 3: BusinessIntelligence.ai  
-> **Status:** Working Prototype — Complete End-to-End Decision Intelligence Pipeline
+> **Status:** Production-Grade Working Prototype — End-to-End Multi-Agent Decision Intelligence Pipeline
 
 ---
 
-InsightPilot AI is an enterprise decision-intelligence platform that automates the transition from descriptive anomaly detection to prescriptive action. Traditional dashboards reveal *what* changed, but investigating *why* it changed requires manually joining siloed enterprise systems. InsightPilot AI decomposes metric movements, traces findings to cryptographically verified evidence, generates persona-grounded AI explanations with Google Gemini, prioritizes prescriptive interventions, and runs deterministic what-if simulations.
+InsightPilot AI is an enterprise decision-intelligence platform that automates the transition from descriptive anomaly detection to prescriptive action. Traditional dashboards reveal *what* changed, but investigating *why* it changed requires manually joining siloed enterprise systems. InsightPilot AI combines **PostgreSQL persistence**, **deterministic analytics**, **LangGraph multi-agent orchestration**, and a **capability-aware multi-model AI layer (Groq + Gemini)** to investigate anomalies, verify empirical evidence, explain causal drivers, prioritize interventions, and simulate What-If scenarios.
 
 ---
 
-## The Problem
-
-Traditional Business Intelligence dashboards suffer from three critical bottlenecks:
-1. **Descriptive Limitation:** Dashboards display metric variance (e.g., revenue drops 8%) but cannot explain root causes across complex multi-echelon supply chains and sales channels.
-2. **Investigation Latency:** Root cause discovery requires data analysts to spend days manually correlating ERP tables, CRM tickets, EDI order logs, and market scraping feeds.
-3. **Action Uncertainty:** Decision-makers lack calibrated, risk-bounded forecasting tools to model the revenue recovery and margin trade-offs of corrective actions before deployment.
-
----
-
-## The Solution: Core Workflow
+## 1. Core Architectural Principle: Strict Quantitative Truth Boundary
 
 ```text
-Investigate ───► Explain ───► Recommend ───► Simulate
+PostgreSQL / SQLAlchemy Persistence
+                 │
+                 ▼
+Deterministic Analytical Engines (Python)
+(Revenue • Drivers • Evidence Lineage • Confidence • Recommendations • Simulation)
+                 │
+                 ▼ [Authoritative Quantitative Truth]
+     LangGraph Orchestration Pipeline
+                 │
+                 ▼ [Grounded Context Assembly]
+        AI Provider Router
+         ├── Groq (High-Speed Business Reasoning & Executive Synthesis)
+         └── Gemini (Multimodal Vision & Visual Document Analysis)
+                 │
+                 ▼ [Post-Generation Grounding Validator]
+       Next.js + TypeScript UI (7 Connected Screens)
 ```
 
-1. **Investigate:** Automatically detects anomalies and deterministically decomposes KPI variance into mathematically ranked causal drivers.
-2. **Explain:** Synthesizes multi-factor findings using grounded Google Gemini reasoning tailored to executive personas (CFO, Regional Sales Manager).
-3. **Recommend:** Ranks constraint-aware, high-impact operational interventions backed by verified empirical evidence.
-4. **Simulate:** Executes deterministic counterfactual what-if elasticity modeling to project revenue and margin recovery.
+**Cardinal Rule**: Large Language Models (LLMs) **never** generate, calculate, or alter quantitative business metrics (Revenue, Variances, Driver Contributions, Confidence Scores, Evidence Hashes, Simulation Recovery). Quantitative truth is computed strictly by deterministic engines from normalized PostgreSQL tables. LLMs provide grounded multi-agent reasoning, persona adaptation, and executive synthesis over verified evidence.
 
 ---
 
-## Core Capabilities
+## 2. Technical Stack
 
-- **Deterministic KPI Analytics:** Authoritative multi-period variance calculation, baseline state extraction, and multidimensional breakdowns.
-- **Mathematical Driver Ranking:** Multi-factor contribution scoring ($43.2\%$ Atlanta DC Stockout, $26.7\%$ SKU-8821 Volume, $18.8\%$ Order Deferral, $11.3\%$ Competitor Pricing).
-- **Interactive Decision Graph:** 6-column presentation topology linking KPIs → Causal Drivers → Empirical Evidence → Action Levers → Projected Outcomes.
-- **Evidence & Lineage Engine:** 9 cryptographically verified empirical evidence nodes linking ERP logs, Zendesk support tickets, CRM purchase orders, and market scrapes with 5-layer lineage tracking.
-- **Confidence & Abstention Framework:** Explicit confidence scoring ($89\%$ overall) with calibrated abstention boundaries ($<65\%$) that suppress speculative causal assertions when telemetry is insufficient.
-- **Persona-Aware Insights:** Dynamic narrative tailoring for **CFO** (financial exposure, margin, EBITDA) and **Regional Sales Manager** (distribution logistics, stockouts, customer fulfillment) without altering underlying quantitative truth.
-- **Prescriptive Recommendation Engine:** Ranked action levers (Priority 1: Emergency Inventory Transfer, Priority 2: Distributor Recovery Outreach) with time horizons and recovery estimates.
-- **Deterministic What-If Simulation:** Live supply-chain elasticity engine modeling recovery across availability scenarios ($79.4\% \rightarrow 90.0\% \rightarrow +\$341.4\text{K}$ projected revenue recovery).
-- **Boardroom Executive Briefing:** 5-section executive slide deck (Situation, Diagnosis, Evidence, Recommendation, Expected Impact) ready for executive decision-making.
+| Layer | Technologies | Role |
+| :--- | :--- | :--- |
+| **Frontend UI** | Next.js 14 (App Router), TypeScript, Tailwind CSS, Lucide Icons, Recharts | Interactive 7-screen presentation layer with glassmorphism aesthetics and live API feeds |
+| **API Layer** | FastAPI, Pydantic v2, Uvicorn, Python 3.13 | High-performance async REST API with standardized schema contracts |
+| **Persistence Layer** | PostgreSQL, SQLAlchemy 2.0 ORM, Alembic, SQLite fallback | Normalized enterprise tables (12,322+ revenue records, 13,710+ inventory snapshots, etc.) |
+| **Agent Orchestration** | LangGraph (`StateGraph`) | Multi-agent investigation workflow with conditional confidence & abstention routing |
+| **Reasoning Engine** | Groq SDK (`llama-3.3-70b-versatile`) | Ultra-fast structured business reasoning, executive synthesis, and persona narratives |
+| **Multimodal Engine** | Google GenAI SDK (`gemini-2.5-flash`) | Visual analysis, chart interpretation, and multimodal evidence processing |
+| **Deterministic Analytics** | NumPy, Python Standard Library | Exact variance math, driver decomposition, SHA-256 evidence lineage, Monte Carlo elasticity |
 
 ---
 
-## Technical Architecture
+## 3. Multi-Model AI Provider & Failover Architecture
+
+InsightPilot AI utilizes **capability-based routing** with request-level dual key pool failover:
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   Synthetic Enterprise Datasets                        │
-│   (ERP Inventory, Sales, Margin, Support CRM, EDI Orders, Market Intel) │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│            Authoritative Deterministic Engines (Python)                │
-│    • KPI Analytics Engine       • Evidence & Lineage Validator         │
-│    • Driver Decomposition       • Prescriptive Recommendation Engine   │
-│    • Confidence Scorer          • Supply Chain Simulation Engine       │
-└──────────────────┬───────────────────────────────┬─────────────────────┘
-                   │                               │
-                   │ (Authoritative Truth)         │ (Structured Context)
-                   ▼                               ▼
-┌──────────────────────────────────────┐   ┌─────────────────────────────┐
-│       FastAPI REST Endpoints         │   │   Grounded Gemini Layer     │
-│   • /api/v1/kpis                     │   │   • Structured Explanations │
-│   • /api/v1/investigations/{id}      │   │   • Persona Adaptation      │
-│   • /api/v1/evidence/{id}            │   │   • Grounding Validator     │
-│   • /api/v1/recommendations/{id}     │   │   • Abstention Boundary     │
-│   • /api/v1/simulations/run          │   └──────────────┬──────────────┘
-│   • /api/v1/ai/explain/{id}          │                  │ (Validated Narrative)
-└──────────────────┬───────────────────┘                  │
-                   │                                      │
-                   └───────────────────┬──────────────────┘
-                                       │
-                                       ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                  7-Screen Stitch Executive UI Platform                 │
-│   1. Executive Command Center         5. Evidence Explorer             │
-│   2. AI Investigation Activity        6. Recommendations & What-If     │
-│   3. Root Cause Investigation         7. Executive Decision Briefing   │
-│   4. Interactive Decision Graph                                        │
-└────────────────────────────────────────────────────────────────────────┘
+                          AI Task Arrives
+                                 │
+                                 ▼
+                     Task Classification & Capability
+                                 │
+        ┌────────────────────────┴────────────────────────┐
+        ▼                                                 ▼
+[Business Reasoning / Synthesis]               [Multimodal / Vision]
+        │                                                 │
+        ▼                                                 ▼
+   Groq Pool 1                                      Gemini Pool 1
+        │ (Rate limit / Quota)                            │ (Rate limit / Quota)
+        ▼                                                 ▼
+   Groq Pool 2                                      Gemini Pool 2
+        │ (Both unavailable)                              │ (Both unavailable)
+        ▼                                                 ▼
+Cross-Provider Fallback (Gemini Pool 1/2)          Graceful Degradation Notice
 ```
 
-> **Critical Architectural Contract:**
-> - **Deterministic Python engines are the sole authority for all quantitative numbers** (KPIs, variances, driver contributions, dollar impacts, confidence ratings, and simulation math).
-> - **Google Gemini is isolated behind server-side APIs** to provide contextual reasoning, synthesis, and narrative explanation grounded strictly on pre-computed evidence.
+- **Groq Primary**: Fast reasoning, executive synthesis, persona adaptation (CFO vs. Regional Sales Manager), decision narratives.
+- **Gemini Primary**: Multimodal vision, chart analysis, screenshot understanding, document intelligence.
+- **Graceful Degradation**: If all external AI providers are offline, deterministic analytics complete seamlessly and generate grounded rule-based synthesis without crashing.
 
 ---
 
-## Locked Demonstration Scenario
+## 4. The 7 Connected Product Screens
 
-- **KPI:** North America East Revenue (`north_america_east_revenue`)
-- **Period Comparison:** 2026-Q2 ($\$15.43\text{M}$) $\rightarrow$ 2026-Q3 ($\$14.20\text{M}$)
-- **Total Variance:** $-\$1.23\text{M}$ ($-7.97\% \approx -8.0\%$)
-- **Primary Decomposed Drivers:**
-  1. **Atlanta DC Stockout:** $43.2\%$ contribution ($-\$550\text{K}$, $94\%$ confidence)
-  2. **SKU-8821 Sales Volume:** $26.7\%$ contribution ($-\$340\text{K}$, $89\%$ confidence)
-  3. **Distributor Orders Deferral:** $18.8\%$ contribution ($-\$240\text{K}$, $85\%$ confidence)
-  4. **Competitor Horizon Pricing:** $11.3\%$ contribution ($-\$144\text{K}$, $78\%$ confidence)
-- **Deterministic Recommendations:**
-  - **Emergency Inventory Transfer:** $+\$484\text{K}$ recovery, $91\%$ confidence, 14-day execution.
-  - **Distributor Recovery Outreach:** $+\$180\text{K}$ recovery, $85\%$ confidence, 21-day execution.
-- **Live What-If Simulation:**
-  - **Baseline Availability:** $79.4\%$
-  - **Target Scenario:** $90.0\%$
-  - **Projected Recovery:** $+\$341.4\text{K}$ ($\$14.54\text{M}$ revenue, $+1.4\text{ pts}$ margin, $91\%$ confidence).
+1. **Executive Command Center (`/`)**: High-level anomaly detection, multi-period KPI cards, sparklines, regional overview ($15.43\text{M} \to \$14.20\text{M}$, $-7.97\%$).
+2. **AI Investigation Activity (`/investigation`)**: Live agentic timeline, multi-step node execution traces, telemetry tracking, persona selector.
+3. **Root Cause Investigation (`/root-cause`)**: Ranked causal driver contribution bars (Atlanta Stockout $43.2\%$, SKU-8821 $26.7\%$, PO Deferrals $18.8\%$, Horizon Pricing $11.3\%$).
+4. **Decision Graph (`/decision-graph`)**: Interactive topological graph linking KPI Anomaly $\to$ Drivers $\to$ Evidence $\to$ Levers $\to$ Outcomes.
+5. **Evidence Explorer (`/evidence`)**: Cryptographically verified empirical records with 5-layer lineage traces and SHA-256 verification hashes.
+6. **Recommendations & What-If Simulation (`/recommendations`)**: Ranked interventions (Atlanta transfer $+\$484\text{K}$) and live inventory availability slider ($79.4\% \to 90\% \to +\$341.4\text{K}$).
+7. **Executive Briefing (`/briefing`)**: Boardroom-ready slide presentation (Situation, Diagnosis, Evidence, Action Plan, Projected ROI).
 
 ---
 
-## Technology Stack
+## 5. Getting Started & Installation
 
-- **Backend:** Python 3.10+, FastAPI, Uvicorn, Pydantic v2, HTTPX, python-dotenv
-- **AI Intelligence:** Google GenAI SDK (`gemini-2.5-flash`), server-side prompt versioning, structured JSON schema validation, evidence grounding validator
-- **Frontend:** Semantic HTML5, Tailwind CSS CDN (Material 3 Dark tokens), Vanilla JavaScript (ES Modules), Material Symbols Outlined, Manrope & Inter Typography
-- **Testing:** Python `unittest` suite (109 unit, integration, and UI contract tests), dataset schema validator
+### Prerequisites
+- Python 3.11+ (Python 3.13 recommended)
+- Node.js 18+ and npm
 
----
-
-## Repository Structure
-
-```text
-insightpilot-ai/
-├── backend/
-│   └── app/
-│       ├── main.py                  # FastAPI application entrypoint & middleware
-│       ├── config.py                # App configuration & CORS settings
-│       ├── schemas.py               # Pydantic API response contracts
-│       ├── routes/                  # Modular API endpoints (kpis, investigations, etc.)
-│       └── services/                # Backend services & GeminiService
-├── analytics/                       # Deterministic KPI & driver decomposition engines
-├── evidence/                        # Evidence extraction, ranking, validation & lineage
-├── recommendations/                 # Prescriptive recommendation engine
-├── simulation/                      # Supply chain what-if elasticity engine
-├── ai/                              # Prompt templates & grounding validator
-├── data/
-│   ├── raw/                         # 9 synthetic enterprise CSV datasets
-│   ├── schemas/                     # JSON schema definitions
-│   └── DATASET_README.md            # Dataset specification documentation
-├── frontend/
-│   ├── api/client.js                # Browser fetch API client
-│   ├── state/store.js               # Persona-aware state store & caching
-│   ├── utils/formatters.js          # Financial & metric formatters
-│   └── config/config.js             # API base URL configuration
-├── stitch_insightpilot_ai_executive_platform/
-│   ├── executive_command_center_v3_optimized_hierarchy/   # Screen 1
-│   ├── ai_investigation_activity_v2/                       # Screen 2
-│   ├── root_cause_investigation_v2/                        # Screen 3
-│   ├── decision_graph_v4_final_presentation_view/         # Screen 4
-│   ├── evidence_explorer_v2/                               # Screen 5
-│   ├── recommendations_simulation_v3_decision_ready/       # Screen 6
-│   └── executive_briefing_v3_boardroom_ready/              # Screen 7
-├── tests/                           # 109 unit, integration & UI contract tests
-├── docs/
-│   ├── DEMO_FLOW.md                 # 10-step boardroom walkthrough guide
-│   ├── ROUND2_REQUIREMENTS.md       # Round 2 technical architecture spec
-│   └── architecture/                # Data contracts & economic reconciliation
-├── requirements.txt                 # Minimal Python dependencies
-├── .env.example                     # Environment template (no secrets)
-└── README.md                        # Root product documentation
-```
-
----
-
-## Running Locally
-
-### 1. Prerequisites
-- Python 3.10+
-- Optional: Google Gemini API key (system gracefully runs in offline deterministic mode if key is omitted).
-
-### 2. Setup Environment
+### 1. Clone & Set Up Environment
 ```bash
-# Clone the repository
 git clone https://github.com/ayus1234/InsighPilotAI.git
 cd InsighPilotAI
 
-# Create and activate virtual environment
+# Create and activate Python virtual environment
 python -m venv venv
-# On Windows:
+# Windows:
 .\venv\Scripts\activate
-# On Linux/macOS:
+# Linux/macOS:
 source venv/bin/activate
 
-# Install dependencies
+# Install Python dependencies
 pip install -r requirements.txt
+```
 
-# Configure environment (optional)
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env`:
+```bash
 cp .env.example .env
 ```
+Configure your optional Gemini and Groq API keys:
+```env
+GEMINI_API_KEY_1=your_gemini_key_here
+GEMINI_API_KEY_2=your_secondary_gemini_key_here
+GROQ_API_KEY_1=your_groq_key_here
+GROQ_API_KEY_2=your_secondary_groq_key_here
+```
 
-### 3. Start Backend Server (Port 8000)
+### 3. Initialize & Seed Database
 ```bash
-python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+python scripts/seed_db.py
 ```
-- API Documentation: `http://localhost:8000/docs`
-- Health Check: `http://localhost:8000/api/v1/health`
 
-### 4. Start Frontend Server (Port 8080)
-In a separate terminal:
+### 4. Run Backend & Frontend Servers
+**Terminal 1 (FastAPI Backend):**
 ```bash
-python -m http.server 8080
+python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000 --reload
 ```
-- Open in browser:
-```text
-http://localhost:8080/stitch_insightpilot_ai_executive_platform/executive_command_center_v3_optimized_hierarchy/code.html
+
+**Terminal 2 (Next.js Frontend):**
+```bash
+cd frontend/next-app
+npm install
+npm run dev
 ```
+Open **http://localhost:3000** in your browser.
 
 ---
 
-## Running Test Suites
+## 6. Verification & Test Suite
 
-Execute the comprehensive test suite across all subsystems:
-
+Run the full automated test suite (133+ tests passing with 100% regression coverage):
 ```bash
-# 1. Validate dataset integrity
+# Run all Python tests
 python tests/validate_dataset.py
+python -m unittest discover -s tests -p "test_*.py" -v
 
-# 2. Run unit and integration tests
-python -m unittest discover -s tests/analytics -p "test_*.py" -v
-python -m unittest discover -s tests/evidence -p "test_*.py" -v
-python -m unittest discover -s tests/ai -p "test_*.py" -v
-python -m unittest discover -s tests/recommendations -p "test_*.py" -v
-python -m unittest discover -s tests/simulation -p "test_*.py" -v
-python -m unittest discover -s tests/api -p "test_*.py" -v
+# Run Next.js production build check
+cd frontend/next-app
+npm run build
 ```
-**Result:** 109 / 109 tests passing (100%).
 
 ---
 
-## Demonstration Walkthrough
-
-For a step-by-step presentation script covering the entire 7-screen executive flow, see [DEMO_FLOW.md](docs/DEMO_FLOW.md).
+## 7. Security & Compliance Boundary
+- **Zero Secret Exposure**: API keys are loaded strictly from environment variables and never logged or exposed to the client.
+- **Deterministic Immutability**: LLM prompts receive read-only grounded contexts.
+- **Calibrated Abstention**: Investigations below 65% analytical confidence trigger mandatory abstention to prevent speculative assertions.
 
 ---
 
-## Project Status
-
-This repository is an evaluation prototype developed for the **Accenture Innovation Challenge 2026 (Track 3 — BusinessIntelligence.ai)**.
+## License
+MIT License. Developed for the Accenture Innovation Challenge 2026.
