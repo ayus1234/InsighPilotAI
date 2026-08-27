@@ -22,6 +22,10 @@ class AIConfig:
     GROQ_API_KEY_2: str = os.getenv("GROQ_API_KEY_2", "").strip()
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
 
+    # Provider Routing Priorities
+    AI_PRIMARY_PROVIDER: str = os.getenv("AI_PRIMARY_PROVIDER", "groq").lower().strip()
+    AI_FALLBACK_PROVIDER: str = os.getenv("AI_FALLBACK_PROVIDER", "gemini").lower().strip()
+
     # Shared Parameters
     TEMPERATURE: float = float(os.getenv("AI_TEMPERATURE", "0.1"))
     TIMEOUT_SECONDS: int = int(os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "30"))

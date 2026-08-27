@@ -62,3 +62,4 @@ class AIProviderRouter:
         }
 
 provider_router = AIProviderRouter()
+ProviderRouter = AIProviderRouter

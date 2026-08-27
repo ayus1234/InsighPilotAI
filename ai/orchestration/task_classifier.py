@@ -4,6 +4,7 @@ Maps task types to primary and fallback providers and required model capabilitie
 """
 
 from typing import Dict, Any, Optional, Tuple, List
+from ai.config import ai_config
 from ai.providers.types import TaskType, Capability
 
 class TaskClassifier:
@@ -24,19 +25,12 @@ class TaskClassifier:
         TaskType.IMAGE_GENERATION: [Capability.IMAGE_GENERATION]
     }
 
-    # Primary and fallback provider mappings
-    _PROVIDER_ROUTING: Dict[TaskType, Tuple[str, Optional[str]]] = {
-        TaskType.BUSINESS_REASONING: ("groq", "gemini"),
-        TaskType.EXECUTIVE_SYNTHESIS: ("groq", "gemini"),
-        TaskType.PERSONA_ADAPTATION: ("groq", "gemini"),
-        TaskType.INVESTIGATION_EXPLANATION: ("groq", "gemini"),
-        TaskType.RECOMMENDATION_NARRATIVE: ("groq", "gemini"),
-        TaskType.DECISION_NARRATIVE: ("groq", "gemini"),
-        TaskType.MULTIMODAL_ANALYSIS: ("gemini", None),
-        TaskType.IMAGE_ANALYSIS: ("gemini", None),
-        TaskType.VISUAL_DOCUMENT_ANALYSIS: ("gemini", None),
-        TaskType.CHART_ANALYSIS: ("gemini", None),
-        TaskType.IMAGE_GENERATION: ("gemini", None)
+    _MULTIMODAL_TASKS = {
+        TaskType.MULTIMODAL_ANALYSIS,
+        TaskType.IMAGE_ANALYSIS,
+        TaskType.VISUAL_DOCUMENT_ANALYSIS,
+        TaskType.CHART_ANALYSIS,
+        TaskType.IMAGE_GENERATION
     }
 
     @classmethod
@@ -51,6 +45,13 @@ class TaskClassifier:
     def get_provider_routing(cls, task_type: TaskType) -> Tuple[str, Optional[str]]:
         """
         Returns (primary_provider_name, fallback_provider_name) for a task type.
-        If fallback_provider_name is None, cross-provider fallback is forbidden.
+        If task requires Gemini-specific multimodal capabilities, fallback to Groq is forbidden (None).
         """
-        return cls._PROVIDER_ROUTING.get(task_type, ("groq", "gemini"))
+        if task_type in cls._MULTIMODAL_TASKS:
+            return ("gemini", None)
+
+        primary = ai_config.AI_PRIMARY_PROVIDER or "groq"
+        fallback = ai_config.AI_FALLBACK_PROVIDER or "gemini"
+        if fallback == primary:
+            fallback = "gemini" if primary == "groq" else "groq"
+        return (primary, fallback)

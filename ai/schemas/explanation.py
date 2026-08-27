@@ -1,13 +1,13 @@
 """
 InsightPilot AI — AI Explanation Output Schemas
-Typed Pydantic models for structured Gemini responses, reasoning traces, and telemetry metadata.
+Typed Pydantic models for structured Gemini & Groq responses, reasoning traces, and telemetry metadata.
 """
 
 from typing import List, Dict, Any, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 class AIResponseMetadata(BaseModel):
-    model: str = Field(..., example="gemini-2.5-flash", description="Gemini model identifier")
+    model: str = Field(..., example="gemini-2.5-flash", description="AI model identifier")
     generated_at: str = Field(..., description="UTC ISO generation timestamp")
     latency_ms: float = Field(..., example=842.5, description="End-to-end execution time in milliseconds")
     prompt_tokens: Optional[int] = Field(None, example=450, description="Input tokens consumed")
@@ -15,6 +15,9 @@ class AIResponseMetadata(BaseModel):
     total_tokens: Optional[int] = Field(None, example=660, description="Total tokens consumed")
     grounded_evidence_count: int = Field(..., example=9, description="Number of verified evidence nodes grounded in narrative")
     validation_status: str = Field(..., example="VERIFIED_GROUNDED", description="Post-generation grounding check status")
+    provider: Optional[str] = Field(None, example="groq", description="Provider identifier")
+    key_pool_id: Optional[str] = Field(None, example="groq_pool_1", description="Logical key pool identifier")
+    fallback_used: Optional[bool] = Field(False, description="True if failover occurred")
 
 class ReasoningStatement(BaseModel):
     statement: str = Field(..., description="Factual analytical deduction grounded in deterministic evidence")
@@ -22,16 +25,60 @@ class ReasoningStatement(BaseModel):
     confidence: int = Field(..., example=94, description="Deterministic confidence score associated with this finding")
 
 class StructuredInvestigationExplanation(BaseModel):
-    """Canonical structured response contract for Gemini reasoning layer."""
+    """Canonical structured response contract for Gemini and Groq reasoning layers."""
     summary: str = Field(..., description="Concise 1-2 sentence executive summary of the KPI movement and main driver")
-    reasoning: List[ReasoningStatement] = Field(default_factory=list, description="Step-by-step evidence-grounded reasoning statements")
+    executive_summary: Optional[str] = Field(None, description="Alias for summary")
     primary_driver_explanation: str = Field(..., description="Detailed diagnosis of the rank #1 primary driver")
+    primary_explanation: Optional[str] = Field(None, description="Alias for primary_driver_explanation")
     secondary_driver_explanation: Optional[str] = Field(None, description="Diagnosis of the secondary contributing driver(s)")
+    supporting_driver_ids: List[str] = Field(default_factory=list, description="IDs of drivers substantiated in this explanation")
+    supporting_evidence_ids: List[str] = Field(default_factory=list, description="Direct list of all cited evidence IDs")
+    business_implications: List[str] = Field(default_factory=list, description="Strategic and business impacts derived from findings")
+    risks: List[str] = Field(default_factory=list, description="Downside risks if no corrective intervention is executed")
+    recommended_next_actions: List[str] = Field(default_factory=list, description="Prioritized operational next actions")
     uncertainty: str = Field(..., description="Explicit acknowledgement of analytical limits, assumptions, or residual risk")
+    uncertainty_statement: Optional[str] = Field(None, description="Alias for uncertainty")
     recommended_next_step: Optional[str] = Field(None, description="Executive takeaway or recommended operational next step")
     abstained: bool = Field(False, description="True if low confidence triggered mandatory analytical abstention")
     abstention_reason: Optional[str] = Field(None, description="Explanation of why the engine abstained from definitive attribution")
     grounded_evidence_ids: List[str] = Field(default_factory=list, description="Complete list of all verified evidence IDs referenced")
+    reasoning: List[ReasoningStatement] = Field(default_factory=list, description="Step-by-step evidence-grounded reasoning statements")
+    headline: Optional[str] = Field(None, description="High-impact title summarizing the investigation outcome")
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_aliases_and_defaults(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            # Sync summary and executive_summary
+            if "executive_summary" in data and "summary" not in data:
+                data["summary"] = data["executive_summary"]
+            elif "summary" in data and "executive_summary" not in data:
+                data["executive_summary"] = data["summary"]
+
+            # Sync primary_driver_explanation and primary_explanation
+            if "primary_explanation" in data and "primary_driver_explanation" not in data:
+                data["primary_driver_explanation"] = data["primary_explanation"]
+            elif "primary_driver_explanation" in data and "primary_explanation" not in data:
+                data["primary_explanation"] = data["primary_driver_explanation"]
+
+            # Sync uncertainty and uncertainty_statement
+            if "uncertainty_statement" in data and "uncertainty" not in data:
+                data["uncertainty"] = data["uncertainty_statement"]
+            elif "uncertainty" in data and "uncertainty_statement" not in data:
+                data["uncertainty_statement"] = data["uncertainty"]
+
+            # Combine supporting_evidence_ids and grounded_evidence_ids
+            all_evidence = set(data.get("grounded_evidence_ids", []))
+            all_evidence.update(data.get("supporting_evidence_ids", []))
+            for item in data.get("reasoning", []):
+                if isinstance(item, dict):
+                    all_evidence.update(item.get("supporting_evidence_ids", []))
+            data["grounded_evidence_ids"] = list(all_evidence)
+            data["supporting_evidence_ids"] = list(all_evidence)
+        return data
+
+# AIExplanation alias for the unified structured output model
+AIExplanation = StructuredInvestigationExplanation
 
 class ExecutiveExplanation(BaseModel):
     """Legacy/executive view model for boardroom briefings."""
