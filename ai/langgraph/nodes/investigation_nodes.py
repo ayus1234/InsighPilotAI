@@ -548,7 +548,15 @@ def ai_invocation_node(state: InvestigationState) -> Dict[str, Any]:
 
     try:
         response = provider_router.route_and_execute(ai_req)
-        raw_json = response.parsed_json or {}
+        raw_json = response.parsed_json
+        if raw_json is None and response.content:
+            try:
+                import json
+                raw_json = json.loads(response.content)
+            except Exception:
+                raise GroundingValidationError("Model returned non-JSON / unparseable content.")
+        if not raw_json:
+            raise GroundingValidationError("Model returned empty structured content.")
         validated_json = _validator.validate_grounding(raw_json, context)
 
         provider_events.append({

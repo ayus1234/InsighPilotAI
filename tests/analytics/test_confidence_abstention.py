@@ -13,10 +13,10 @@ class TestConfidenceAbstention(unittest.TestCase):
 
     def test_high_confidence_scenario(self):
         drivers = [
-            {"driver_id": "d1", "contribution_pct": 44.0, "confidence_score": 94},
-            {"driver_id": "d2", "contribution_pct": 26.0, "confidence_score": 89},
-            {"driver_id": "d3", "contribution_pct": 18.0, "confidence_score": 85},
-            {"driver_id": "d4", "contribution_pct": 12.0, "confidence_score": 78}
+            {"driver_id": "d1", "contribution_pct": 44.0, "confidence_score": 94, "evidence_ids": ["EVID_ERP_ATL_STOCKOUT_001", "EVID_ERP_TRANSFER_LOG_002"]},
+            {"driver_id": "d2", "contribution_pct": 26.0, "confidence_score": 89, "evidence_ids": ["EVID_CRM_SKU8821_SALES_004"]},
+            {"driver_id": "d3", "contribution_pct": 18.0, "confidence_score": 85, "evidence_ids": ["EVID_CRM_PO_DEF_006"]},
+            {"driver_id": "d4", "contribution_pct": 12.0, "confidence_score": 78, "evidence_ids": ["EVID_MKT_HORIZON_PROMO_008"]}
         ]
         res = self.engine.calculate_overall_confidence(drivers)
         self.assertGreaterEqual(res["overall_confidence"], 80)
@@ -35,7 +35,7 @@ class TestConfidenceAbstention(unittest.TestCase):
         self.assertLess(res["overall_confidence"], 65)
         self.assertEqual(res["confidence_label"], "LOW")
         self.assertTrue(res["abstention"])
-        self.assertIn("No reliable primary driver identified", res["abstention_reason"])
+        self.assertIn("Attribution suspended", res["abstention_reason"])
 
     def test_synthetic_abstention_method(self):
         res = self.engine.evaluate_synthetic_low_confidence_scenario()
