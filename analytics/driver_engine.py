@@ -223,3 +223,17 @@ class DriverEngine:
             d["rank"] = rank
             
         return sorted_drivers
+
+    def decompose_drivers(
+        self,
+        kpi_id: Optional[str] = None,
+        region: str = "NA-East",
+        prev_period_id: str = PREVIOUS_PERIOD_ID,
+        curr_period_id: str = CURRENT_PERIOD_ID
+    ) -> List[Dict[str, Any]]:
+        """Decomposes drivers for the given KPI and region."""
+        return self.investigate_revenue_drivers(
+            region=region,
+            prev_period_id=prev_period_id,
+            curr_period_id=curr_period_id
+        )

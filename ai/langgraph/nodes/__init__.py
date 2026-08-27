@@ -12,8 +12,10 @@ from ai.langgraph.nodes.investigation_nodes import (
     confidence_router,
     abstention_node,
     prepare_grounding_node,
+    build_grounded_context_node,
     route_ai_capability_node,
     ai_invocation_node,
+    ai_explanation_node,
     executive_synthesis_node,
     recommendations_context_node
 )
@@ -28,8 +30,10 @@ __all__ = [
     "confidence_router",
     "abstention_node",
     "prepare_grounding_node",
+    "build_grounded_context_node",
     "route_ai_capability_node",
     "ai_invocation_node",
+    "ai_explanation_node",
     "executive_synthesis_node",
     "recommendations_context_node"
 ]

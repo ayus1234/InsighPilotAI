@@ -20,7 +20,7 @@ class EvidenceEngine:
         self.validator = EvidenceValidator(self.loader)
         self.lineage_tracker = LineageTracker()
 
-    def get_evidence_for_driver(self, driver_id: str, region: str = "NA-East") -> List[Dict[str, Any]]:
+    def get_evidence_for_driver(self, driver_id: str, region: str = "NA-East", kpi_id: Optional[str] = None) -> List[Dict[str, Any]]:
         """Retrieves, validates, and ranks evidence items for a specific driver."""
         if driver_id == "atlanta_dc_stockout":
             raw_items = self.retriever.retrieve_atlanta_stockout_evidence(region)
