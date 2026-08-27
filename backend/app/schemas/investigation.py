@@ -1,6 +1,6 @@
 """
 InsightPilot AI — Investigation API Schemas
-Models matching data/schemas/investigation_result.json for structured investigation responses.
+Models matching data/schemas/investigation_result.json and live LangGraph multi-agent trace models.
 """
 
 from typing import List, Dict, Any, Optional
@@ -85,3 +85,54 @@ class DecisionGraphResponse(BaseModel):
     total_edges_count: int = Field(..., example=15)
     nodes: List[DecisionGraphNode]
     edges: List[DecisionGraphEdge]
+
+# ==============================================================================
+# Phase 5.2 — LangGraph Live Execution Trace Schemas
+# ==============================================================================
+
+class LangGraphNodeMetric(BaseModel):
+    label: str = Field(..., example="Shortfall")
+    value: str = Field(..., example="-$1.23M")
+
+class LangGraphNodeTrace(BaseModel):
+    node_name: str = Field(..., example="load_kpi_node")
+    display_name: str = Field(..., example="Load KPI Context")
+    role: str = Field(..., example="Time-Series Telemetry & Target KPI Loading")
+    status: str = Field("COMPLETED", example="COMPLETED")
+    started_at: Optional[str] = Field(None, example="2026-08-28T02:45:00Z")
+    completed_at: Optional[str] = Field(None, example="2026-08-28T02:45:01Z")
+    duration_ms: float = Field(..., example=12.4)
+    summary: str = Field(..., example="Loaded baseline ($15.43M) and target ($14.20M) revenue data.")
+    details: List[str] = Field(default_factory=list)
+    metrics: List[LangGraphNodeMetric] = Field(default_factory=list)
+    metadata: Dict[str, Any] = Field(default_factory=dict)
+
+class ProviderEventTrace(BaseModel):
+    provider: str = Field(..., example="groq")
+    key_pool: str = Field(..., example="groq_pool_1")
+    task_type: str = Field(..., example="INVESTIGATION_EXPLANATION")
+    model: str = Field(..., example="llama-3.3-70b-versatile")
+    status: str = Field(..., example="SUCCESS")
+    fallback_from: Optional[str] = Field(None, example=None)
+    duration_ms: float = Field(..., example=180.5)
+
+class LangGraphTraceResponse(BaseModel):
+    investigation_id: str = Field(..., example="INV-north_america_east_revenue-1787426800")
+    kpi_id: str = Field(..., example="north_america_east_revenue")
+    region: str = Field(..., example="NA-East")
+    prev_period_id: str = Field(..., example="2026-Q2")
+    curr_period_id: str = Field(..., example="2026-Q3")
+    persona_id: str = Field(..., example="CFO")
+    status: str = Field("COMPLETED", example="COMPLETED")
+    started_at: str = Field(...)
+    completed_at: str = Field(...)
+    total_duration_ms: float = Field(..., example=450.2)
+    nodes: List[LangGraphNodeTrace] = Field(default_factory=list)
+    provider_events: List[ProviderEventTrace] = Field(default_factory=list)
+    confidence: Dict[str, Any] = Field(default_factory=dict)
+    abstention: bool = Field(False, example=False)
+    abstention_reason: Optional[str] = Field(None, example=None)
+    ai_explanation: Optional[Dict[str, Any]] = Field(None)
+    deterministic_summary: Dict[str, Any] = Field(default_factory=dict)
+    recommendations: List[Dict[str, Any]] = Field(default_factory=list)
+    telemetry: Dict[str, Any] = Field(default_factory=dict)

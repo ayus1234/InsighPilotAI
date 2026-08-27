@@ -42,8 +42,13 @@ class InvestigationState(TypedDict, total=False):
     ai_response: Optional[Dict[str, Any]]
     ai_explanation: Optional[Dict[str, Any]]
     provider_metadata: Optional[Dict[str, Any]]
+    provider_events: List[Dict[str, Any]]
 
     # 5. Telemetry & Execution Trace
+    started_at: str
+    completed_at: str
+    total_duration_ms: float
     telemetry: Dict[str, Any]
     nodes_executed: List[str]
+    node_traces: List[Dict[str, Any]]
     errors: List[str]

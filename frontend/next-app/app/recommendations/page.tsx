@@ -319,7 +319,7 @@ export default function RecommendationsPage() {
                     {formatCurrencyThousands(simulation.projected_recovery_usd)}
                   </div>
                   <div className="text-[10px] text-primary/80 font-bold">
-                    +{simulation.availability_delta_pts > 0 ? simulation.availability_delta_pts : 0} pts Avail
+                    +{(simulation.availability_delta_pts ?? 0) > 0 ? simulation.availability_delta_pts : 0} pts Avail
                   </div>
                 </div>
 

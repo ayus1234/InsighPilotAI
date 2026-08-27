@@ -8,7 +8,8 @@ from fastapi import APIRouter, Depends, Query, Path
 from backend.app.schemas.investigation import (
     InvestigationResponse,
     DriverListResponse,
-    DecisionGraphResponse
+    DecisionGraphResponse,
+    LangGraphTraceResponse
 )
 from backend.app.schemas.evidence import EvidenceListResponse
 from backend.app.schemas.common import ErrorResponse
@@ -103,3 +104,28 @@ async def get_investigation_evidence(
         kpi_id=kpi_id,
         region=region
     )
+
+@router.get(
+    "/{kpi_id}/langgraph-trace",
+    response_model=LangGraphTraceResponse,
+    responses={404: {"model": ErrorResponse, "description": "KPI not found"}},
+    summary="Get live LangGraph multi-agent execution trace",
+    description="Executes or retrieves the LangGraph investigation workflow, returning fine-grained node transition timings, provider events, confidence progression, and grounded synthesis."
+)
+async def get_langgraph_trace(
+    kpi_id: str = Path(..., description="Target KPI identifier (e.g. north_america_east_revenue)"),
+    region: str = Query("NA-East", description="Target geographical region"),
+    prev_period_id: str = Query("2026-Q2", description="Baseline comparison fiscal period"),
+    curr_period_id: str = Query("2026-Q3", description="Current target fiscal period"),
+    persona_id: str = Query("CFO", description="Executive user persona (e.g. CFO or REGIONAL_SALES_MANAGER)"),
+    investigation_service: InvestigationService = Depends(get_investigation_service)
+) -> LangGraphTraceResponse:
+    """Executes the live LangGraph multi-agent investigation workflow and returns the full typed execution trace."""
+    return investigation_service.run_langgraph_investigation(
+        kpi_id=kpi_id,
+        region=region,
+        prev_period_id=prev_period_id,
+        curr_period_id=curr_period_id,
+        persona_id=persona_id
+    )
+

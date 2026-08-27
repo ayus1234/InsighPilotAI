@@ -3,6 +3,8 @@ InsightPilot AI — LangGraph Investigation Workflow Graph
 Compiles and executes the multi-agent deterministic + AI investigation pipeline.
 """
 
+import time
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from langgraph.graph import StateGraph, START, END
 from ai.langgraph.state import InvestigationState
@@ -90,6 +92,9 @@ def run_investigation_workflow(
     include_simulation: bool = False
 ) -> Dict[str, Any]:
     """Executes the full compiled LangGraph investigation workflow."""
+    start_time = time.perf_counter()
+    started_iso = datetime.now(timezone.utc).isoformat()
+
     initial_state: InvestigationState = {
         "kpi_id": kpi_id,
         "region": region,
@@ -99,8 +104,18 @@ def run_investigation_workflow(
         "include_recommendations": include_recommendations,
         "include_simulation": include_simulation,
         "nodes_executed": [],
+        "node_traces": [],
+        "provider_events": [],
         "errors": []
     }
 
     final_state = investigation_graph_app.invoke(initial_state)
+
+    total_duration_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
+    completed_iso = datetime.now(timezone.utc).isoformat()
+
+    final_state["started_at"] = started_iso
+    final_state["completed_at"] = completed_iso
+    final_state["total_duration_ms"] = total_duration_ms
+
     return final_state

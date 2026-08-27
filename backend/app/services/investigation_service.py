@@ -6,6 +6,7 @@ Orchestrates deterministic root cause investigations, driver decomposition, and 
 from typing import Dict, Any, Optional, List
 from analytics.data_loader import DataLoader
 from analytics.investigation_engine import InvestigationEngine
+from ai.langgraph.graph import run_investigation_workflow
 from backend.app.schemas.investigation import (
     InvestigationResponse,
     DriverListResponse,
@@ -17,6 +18,10 @@ from backend.app.schemas.investigation import (
     DecisionGraphNode,
     DecisionGraphEdge,
     DecisionGraphResponse,
+    LangGraphTraceResponse,
+    LangGraphNodeTrace,
+    LangGraphNodeMetric,
+    ProviderEventTrace,
 )
 from backend.app.errors import KPINotFoundError
 
@@ -58,6 +63,99 @@ class InvestigationService:
             evidence_summary=EvidenceSummaryBlock(**raw_result["evidence_summary"]),
             overall=OverallConfidenceBlock(**raw_result["overall"]),
             lineage_graph=LineageGraphBlock(**raw_result["lineage_graph"])
+        )
+
+    def run_langgraph_investigation(
+        self,
+        kpi_id: str,
+        region: str = "NA-East",
+        prev_period_id: str = "2026-Q2",
+        curr_period_id: str = "2026-Q3",
+        persona_id: str = "CFO",
+        include_recommendations: bool = True,
+        include_simulation: bool = False
+    ) -> LangGraphTraceResponse:
+        """Executes the compiled LangGraph multi-agent workflow and returns typed trace data."""
+        if kpi_id not in self.SUPPORTED_KPIS:
+            raise KPINotFoundError(kpi_id)
+
+        final_state = run_investigation_workflow(
+            kpi_id=kpi_id,
+            region=region,
+            prev_period_id=prev_period_id,
+            curr_period_id=curr_period_id,
+            persona=persona_id,
+            include_recommendations=include_recommendations,
+            include_simulation=include_simulation
+        )
+
+        nodes: List[LangGraphNodeTrace] = []
+        for n in final_state.get("node_traces", []):
+            metrics_list = [LangGraphNodeMetric(**m) for m in n.get("metrics", [])]
+            nodes.append(LangGraphNodeTrace(
+                node_name=n["node_name"],
+                display_name=n.get("display_name", n["node_name"]),
+                role=n.get("role", "Investigation Node"),
+                status=n.get("status", "COMPLETED"),
+                started_at=n.get("started_at"),
+                completed_at=n.get("completed_at"),
+                duration_ms=float(n.get("duration_ms", 0.0)),
+                summary=n.get("summary", ""),
+                details=n.get("details", []),
+                metrics=metrics_list,
+                metadata=n.get("metadata", {})
+            ))
+
+        provider_events: List[ProviderEventTrace] = []
+        for pe in final_state.get("provider_events", []):
+            provider_events.append(ProviderEventTrace(
+                provider=pe.get("provider", "groq"),
+                key_pool=pe.get("key_pool", "none"),
+                task_type=pe.get("task_type", "INVESTIGATION_EXPLANATION"),
+                model=pe.get("model", "llama-3.3-70b-versatile"),
+                status=pe.get("status", "SUCCESS"),
+                fallback_from=pe.get("fallback_from"),
+                duration_ms=float(pe.get("duration_ms", 0.0))
+            ))
+
+        is_abstained = final_state.get("abstention", False)
+        status_str = "ABSTAINED" if is_abstained else "COMPLETED"
+
+        kpi_movement = final_state.get("kpi_movement", {})
+        drivers = final_state.get("drivers", [])
+
+        deterministic_summary = {
+            "kpi_id": kpi_id,
+            "region": region,
+            "previous_value": kpi_movement.get("previous_value", 15430000.06),
+            "current_value": kpi_movement.get("current_value", 14200000.05),
+            "variance_amount": kpi_movement.get("variance_amount", -1230000.01),
+            "percent_change": kpi_movement.get("percent_change", -7.97),
+            "materiality_status": kpi_movement.get("materiality_status", "CRITICAL_NEGATIVE_VARIANCE"),
+            "drivers_count": len(drivers),
+            "top_driver": drivers[0]["driver_name"] if drivers else None
+        }
+
+        return LangGraphTraceResponse(
+            investigation_id=final_state.get("investigation_id", f"INV-{kpi_id}"),
+            kpi_id=kpi_id,
+            region=region,
+            prev_period_id=prev_period_id,
+            curr_period_id=curr_period_id,
+            persona_id=persona_id,
+            status=status_str,
+            started_at=final_state.get("started_at", ""),
+            completed_at=final_state.get("completed_at", ""),
+            total_duration_ms=float(final_state.get("total_duration_ms", 0.0)),
+            nodes=nodes,
+            provider_events=provider_events,
+            confidence=final_state.get("confidence", {}),
+            abstention=is_abstained,
+            abstention_reason=final_state.get("abstention_reason"),
+            ai_explanation=final_state.get("ai_explanation"),
+            deterministic_summary=deterministic_summary,
+            recommendations=final_state.get("recommendations", []),
+            telemetry=final_state.get("telemetry", {})
         )
 
     def get_drivers(

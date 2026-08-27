@@ -13,6 +13,7 @@ import {
   SimulationResult,
   AIExplanationResponse,
   PersonaType,
+  LangGraphTraceResponse,
 } from "./types";
 
 const API_BASE_URL =
@@ -86,6 +87,30 @@ class APIClient {
   ): Promise<any> {
     const query = new URLSearchParams({ region, prev_period_id: prevPeriod, curr_period_id: currPeriod }).toString();
     return this.request<any>(`/api/v1/investigations/${kpiId}/decision-graph?${query}`);
+  }
+
+  async getLangGraphTrace(
+    kpiId: string = "north_america_east_revenue",
+    options: {
+      region?: string;
+      prevPeriod?: string;
+      currPeriod?: string;
+      persona?: PersonaType | string;
+    } = {}
+  ): Promise<LangGraphTraceResponse> {
+    const region = options.region || "NA-East";
+    const prevPeriod = options.prevPeriod || "2026-Q2";
+    const currPeriod = options.currPeriod || "2026-Q3";
+    const persona = options.persona || "CFO";
+
+    const query = new URLSearchParams({
+      region,
+      prev_period_id: prevPeriod,
+      curr_period_id: currPeriod,
+      persona_id: persona,
+    }).toString();
+
+    return this.request<LangGraphTraceResponse>(`/api/v1/investigations/${kpiId}/langgraph-trace?${query}`);
   }
 
   // 3. Evidence Endpoints

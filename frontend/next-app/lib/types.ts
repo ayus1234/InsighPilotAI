@@ -98,55 +98,69 @@ export interface ActionLever {
   estimated_recovery_usd: number;
   estimated_timeframe_days: number;
   owner_role: string;
+  priority_rank: number;
 }
 
-export interface RecommendationRecord {
-  recommendation_id: string;
-  priority_rank: number;
-  title: string;
-  summary: string;
-  rationale: string;
-  target_driver_id: string;
-  levers: ActionLever[];
-  projected_financial_recovery_usd: number;
-  projected_margin_lift_pts: number;
-  overall_confidence_score: number;
-  overall_confidence_level: "HIGH" | "MEDIUM" | "LOW";
-  controllability: "HIGH" | "MEDIUM" | "LOW";
-  risk_level: "LOW" | "MEDIUM" | "HIGH";
-  owner_role: string;
-  implementation_timeframe_days: number;
-  supporting_evidence_ids: string[];
-  overlap_group_id: string;
-  status: "ACTIVE" | "PENDING" | "EXECUTED";
+export interface ExpectedImpact {
+  revenue_recovery_usd: number;
+  margin_impact_pct: number;
+  recovery_timeframe_days: number;
 }
+
+export interface ConfidenceData {
+  score: number;
+  label: "HIGH" | "MEDIUM" | "LOW";
+}
+
+export interface RecommendationItem {
+  recommendation_id: string;
+  kpi_id: string;
+  driver_id: string;
+  driver_name: string;
+  controllability: string;
+  controllable_lever: string;
+  action: string;
+  rationale: string;
+  expected_impact: ExpectedImpact;
+  owner: string;
+  priority: string;
+  priority_rank: number;
+  confidence: ConfidenceData;
+  supporting_evidence_ids: string[];
+  assumptions: string[];
+  constraints: string[];
+  overlap_group: string;
+}
+
+export type RecommendationRecord = RecommendationItem;
 
 export interface RecommendationsResponse {
   kpi_id: string;
-  region: string;
-  recommendations: RecommendationRecord[];
+  total_recommendations: number;
   total_projected_recovery_usd: number;
-  total_recommendations_count: number;
-  timestamp: string;
+  recommendations: RecommendationItem[];
 }
 
 export interface SimulationBaseline {
   kpi_id: string;
   region: string;
-  baseline_revenue_usd: number;
-  current_revenue_usd: number;
-  revenue_deficit_usd: number;
-  baseline_inventory_availability_pct: number;
-  current_inventory_availability_pct: number;
-  availability_deficit_pts: number;
+  current_availability_pct: number;
+  stockout_revenue_loss_usd: number;
+  gross_margin_pct: number;
+  total_shortfall_usd: number;
+  baseline_timestamp: string;
 }
 
 export interface SimulationResult {
-  scenario_name: string;
-  region: string;
-  input_availability_pct: number;
-  baseline_availability_pct: number;
-  availability_delta_pts: number;
+  simulation_id?: string;
+  scenario_name?: string;
+  kpi_id?: string;
+  region?: string;
+  input_availability_pct?: number;
+  baseline_availability_pct?: number;
+  availability_delta_pts?: number;
+  target_availability_pct?: number;
+  availability_lift_pct?: number;
   projected_recovery_usd: number;
   projected_total_revenue_usd: number;
   projected_margin_impact_pts: number;
@@ -162,12 +176,16 @@ export interface ReasoningStatement {
 }
 
 export interface StructuredInvestigationExplanation {
+  headline?: string;
   summary: string;
-  reasoning: ReasoningStatement[];
-  primary_driver_explanation: string;
+  situation?: string;
+  primary_driver?: string;
+  reasoning?: ReasoningStatement[];
+  primary_driver_explanation?: string;
   secondary_driver_explanation?: string;
-  uncertainty: string;
+  uncertainty?: string;
   recommended_next_step?: string;
+  strategic_recommendation?: string;
   abstained: boolean;
   abstention_reason?: string | null;
   grounded_evidence_ids: string[];
@@ -203,3 +221,57 @@ export interface AIExplanationResponse {
   model_provider?: string;
 }
 
+// ==============================================================================
+// Phase 5.2 — LangGraph Live Execution Trace Types
+// ==============================================================================
+
+export interface LangGraphNodeMetric {
+  label: string;
+  value: string;
+}
+
+export interface LangGraphNodeTrace {
+  node_name: string;
+  display_name: string;
+  role: string;
+  status: "COMPLETED" | "RUNNING" | "PENDING" | "SKIPPED" | "ABSTAINED" | string;
+  started_at?: string;
+  completed_at?: string;
+  duration_ms: number;
+  summary: string;
+  details: string[];
+  metrics: LangGraphNodeMetric[];
+  metadata?: Record<string, any>;
+}
+
+export interface ProviderEventTrace {
+  provider: string;
+  key_pool: string;
+  task_type: string;
+  model: string;
+  status: string;
+  fallback_from?: string | null;
+  duration_ms: number;
+}
+
+export interface LangGraphTraceResponse {
+  investigation_id: string;
+  kpi_id: string;
+  region: string;
+  prev_period_id: string;
+  curr_period_id: string;
+  persona_id: string;
+  status: string;
+  started_at: string;
+  completed_at: string;
+  total_duration_ms: number;
+  nodes: LangGraphNodeTrace[];
+  provider_events: ProviderEventTrace[];
+  confidence: Record<string, any>;
+  abstention: boolean;
+  abstention_reason?: string | null;
+  ai_explanation?: StructuredInvestigationExplanation | Record<string, any> | null;
+  deterministic_summary: Record<string, any>;
+  recommendations: RecommendationItem[] | any[];
+  telemetry?: Record<string, any>;
+}
