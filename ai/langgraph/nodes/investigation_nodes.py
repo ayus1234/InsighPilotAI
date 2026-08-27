@@ -295,13 +295,23 @@ def calculate_confidence_node(state: InvestigationState) -> Dict[str, Any]:
     """Node 6: Deterministically calculates multi-factor analytical confidence and checks abstention."""
     t0 = time.perf_counter()
     drivers = state.get("drivers", [])
+    evidence = state.get("evidence", [])
+    validated = state.get("validated_evidence", [])
+    kpi_movement = state.get("kpi_movement", {})
 
-    conf = _confidence_engine.calculate_overall_confidence(drivers=drivers)
+    conf = _confidence_engine.evaluate_investigation_confidence(
+        drivers=drivers,
+        evidence_items=evidence,
+        validated_evidence=validated,
+        lineage_valid=True,
+        kpi_movement=kpi_movement
+    )
 
     is_abstained = conf.get("abstention", False)
     abstention_reason = conf.get("abstention_reason") if is_abstained else None
     conf_score = conf.get("overall_confidence", 88)
     conf_label = conf.get("confidence_label", "HIGH")
+    tier = conf.get("tier", "HIGH")
 
     nodes_executed = list(state.get("nodes_executed", []))
     nodes_executed.append("calculate_confidence_node")
@@ -309,9 +319,9 @@ def calculate_confidence_node(state: InvestigationState) -> Dict[str, Any]:
     traces = list(state.get("node_traces", []))
     status_label = "ABSTAINED" if is_abstained else "COMPLETED"
     summary_text = (
-        f"Confidence below threshold ({conf_score}% < 65%). Attribution suspended."
+        f"Confidence below threshold or critical safety gate failed ({conf_score}% < 65% or safety failure). Attribution suspended."
         if is_abstained
-        else f"Calculated weighted overall confidence of {conf_score}% ({conf_label}). Abstention threshold (65%) passed."
+        else f"Calculated multi-factor overall confidence of {conf_score}% ({tier}). Abstention threshold (65%) passed."
     )
 
     traces.append(_make_trace(
@@ -322,14 +332,20 @@ def calculate_confidence_node(state: InvestigationState) -> Dict[str, Any]:
         start_t=t0,
         summary=summary_text,
         details=[
-            f"Weighted multi-driver analytical confidence score: {conf_score}% ({conf_label}).",
-            f"Evaluated mandatory abstention threshold (65.0%).",
+            f"Multi-factor analytical confidence score: {conf_score}% ({tier}).",
+            f"Evidence Sufficiency: {conf.get('factors', {}).get('evidence_sufficiency', 0)}%, Driver Coverage: {conf.get('factors', {}).get('driver_coverage', 0)}%.",
+            f"Cross-Source Corroboration: {conf.get('factors', {}).get('cross_source_corroboration', 0)}%, Lineage: {conf.get('factors', {}).get('lineage_integrity', 0)}%.",
             "Gate decision: " + ("TRIGGER ABSTENTION" if is_abstained else f"PASSED (+{conf_score-65:.1f} pts margin). Proceed to AI reasoning.")
         ],
         metrics=[
-            {"label": "Overall Score", "value": f"{conf_score}% ({conf_label})"},
-            {"label": "Abstention Gate", "value": "PASSED (>=65%)" if not is_abstained else "ABSTAINED (<65%)"}
-        ]
+            {"label": "Overall Score", "value": f"{conf_score}% ({tier})"},
+            {"label": "Abstention Gate", "value": "PASSED (>=65%)" if not is_abstained else "ABSTAINED"}
+        ],
+        metadata={
+            "factors": conf.get("factors", {}),
+            "reason_codes": conf.get("reason_codes", []),
+            "evidence_sufficiency": conf.get("evidence_sufficiency", {})
+        }
     ))
 
     return {
@@ -402,6 +418,14 @@ def abstention_node(state: InvestigationState) -> Dict[str, Any]:
     return {
         "ai_explanation": explanation,
         "telemetry": telemetry,
+        "provider_metadata": {
+            "provider": None,
+            "model": None,
+            "key_pool_id": "none",
+            "latency_ms": 0.0,
+            "fallback_used": False,
+            "provider_called": False
+        },
         "nodes_executed": nodes_executed,
         "node_traces": traces
     }
