@@ -199,8 +199,10 @@ export default function InvestigationActivityPage() {
     ? `${primaryProviderEvent.provider.toUpperCase()} (${primaryProviderEvent.key_pool})`
     : "GROQ (groq_pool_1)";
 
-  const confScore = traceData?.confidence?.overall_confidence || 88;
-  const confLabel = traceData?.confidence?.confidence_label || "HIGH";
+  const confScore = traceData?.confidence?.overall_confidence || investigation?.overall?.overall_confidence || 89;
+  const confLabel = traceData?.confidence?.confidence_label || investigation?.overall?.confidence_label || "HIGH";
+  const isAbstained = traceData?.abstention || investigation?.overall?.abstention || false;
+  const abstentionReason = traceData?.abstention_reason || investigation?.overall?.abstention_reason;
 
   return (
     <div className="flex min-h-screen bg-background text-on-surface">
@@ -248,6 +250,19 @@ export default function InvestigationActivityPage() {
               </Link>
             </div>
           </div>
+
+          {/* Abstention Banner if Active */}
+          {isAbstained && (
+            <div className="p-4 rounded-xl border border-warning/40 bg-warning/10 flex items-start gap-3 text-xs font-mono">
+              <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-warning block text-sm mb-1">Mandatory Abstention Guard Active</strong>
+                <p className="text-on-surface-variant">
+                  {abstentionReason || "Analytical confidence is below the required 65% safety threshold. LLM causal reasoning has been bypassed."}
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Quick Metrics KPI Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

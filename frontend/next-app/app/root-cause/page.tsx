@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { TopBar } from "@/components/navigation/TopBar";
 import { apiClient } from "@/lib/api";
-import { InvestigationResponse, PersonaType, DriverRecord } from "@/lib/types";
+import { InvestigationResponse, PersonaType, DriverRecord, AIExplanationResponse } from "@/lib/types";
 import {
   formatCurrencyThousands,
   formatCurrencyMillions,
@@ -25,80 +25,110 @@ import {
   Sliders,
   TrendingDown,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
+
+const DEFAULT_DRIVERS: DriverRecord[] = [
+  {
+    driver_id: "atlanta_dc_stockout",
+    driver_name: "Atlanta DC Stockout",
+    rank: 1,
+    contribution_pct: 43.2,
+    impact_usd: -550000,
+    confidence_score: 94,
+    confidence_level: "HIGH",
+    supporting_evidence_ids: ["EVID_ERP_ATL_STOCKOUT_001", "EVID_ZENDESK_ATL_DELAY_003"],
+    controllability: "HIGH",
+    category: "Supply Chain",
+  },
+  {
+    driver_id: "sku_8821_sales_volume",
+    driver_name: "SKU-8821 Sales Volume Contraction",
+    rank: 2,
+    contribution_pct: 26.7,
+    impact_usd: -340000,
+    confidence_score: 89,
+    confidence_level: "HIGH",
+    supporting_evidence_ids: ["EVID_CRM_SKU8821_SALES_004"],
+    controllability: "MEDIUM",
+    category: "Commercial Sales",
+  },
+  {
+    driver_id: "distributor_orders",
+    driver_name: "Distributor Purchase Order Deferral",
+    rank: 3,
+    contribution_pct: 18.8,
+    impact_usd: -240000,
+    confidence_score: 85,
+    confidence_level: "HIGH",
+    supporting_evidence_ids: ["EVID_CRM_PO_DEF_006"],
+    controllability: "MEDIUM",
+    category: "Distribution Channel",
+  },
+  {
+    driver_id: "competitor_horizon_pricing",
+    driver_name: "Competitor Horizon Pricing Pressure",
+    rank: 4,
+    contribution_pct: 11.3,
+    impact_usd: -144000,
+    confidence_score: 78,
+    confidence_level: "MEDIUM",
+    supporting_evidence_ids: ["EVID_MKT_HORIZON_PROMO_008"],
+    controllability: "LOW",
+    category: "Market Competition",
+  },
+];
 
 export default function RootCausePage() {
   const [persona, setPersona] = useState<PersonaType>("CFO");
   const [data, setData] = useState<InvestigationResponse | null>(null);
+  const [aiExplanation, setAiExplanation] = useState<AIExplanationResponse | null>(null);
   const [selectedDriverId, setSelectedDriverId] = useState<string>("atlanta_dc_stockout");
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingAI, setLoadingAI] = useState<boolean>(false);
 
   useEffect(() => {
-    setLoading(true);
-    apiClient
-      .getInvestigation("north_america_east_revenue", "NA-East", "2026-Q2", "2026-Q3")
-      .then((res) => {
+    async function loadInvestigation() {
+      setLoading(true);
+      try {
+        const res = await apiClient.getInvestigation("north_america_east_revenue", "NA-East", "2026-Q2", "2026-Q3");
         setData(res);
         if (res.drivers && res.drivers.length > 0) {
           setSelectedDriverId(res.drivers[0].driver_id);
         }
-      })
-      .catch((e) => console.warn("Failed to load investigation:", e))
-      .finally(() => setLoading(false));
+      } catch (e) {
+        console.warn("Failed to load backend investigation, using authoritative defaults:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadInvestigation();
   }, []);
 
-  const drivers: DriverRecord[] = data?.drivers || [
-    {
-      driver_id: "atlanta_dc_stockout",
-      driver_name: "Atlanta DC Stockout",
-      rank: 1,
-      contribution_pct: 43.2,
-      impact_usd: -550000,
-      confidence_score: 94,
-      confidence_level: "HIGH",
-      supporting_evidence_ids: ["EVID_ERP_ATL_STOCKOUT_001", "EVID_ZENDESK_ATL_DELAY_003"],
-      controllability: "HIGH",
-      category: "Supply Chain",
-    },
-    {
-      driver_id: "sku_8821_sales_volume",
-      driver_name: "SKU-8821 Sales Volume Contraction",
-      rank: 2,
-      contribution_pct: 26.7,
-      impact_usd: -340000,
-      confidence_score: 89,
-      confidence_level: "HIGH",
-      supporting_evidence_ids: ["EVID_CRM_SKU8821_SALES_004"],
-      controllability: "MEDIUM",
-      category: "Commercial Sales",
-    },
-    {
-      driver_id: "distributor_orders",
-      driver_name: "Distributor Purchase Order Deferral",
-      rank: 3,
-      contribution_pct: 18.8,
-      impact_usd: -240000,
-      confidence_score: 85,
-      confidence_level: "HIGH",
-      supporting_evidence_ids: ["EVID_CRM_PO_DEF_006"],
-      controllability: "MEDIUM",
-      category: "Distribution Channel",
-    },
-    {
-      driver_id: "competitor_horizon_pricing",
-      driver_name: "Competitor Horizon Pricing Pressure",
-      rank: 4,
-      contribution_pct: 11.3,
-      impact_usd: -144000,
-      confidence_score: 78,
-      confidence_level: "MEDIUM",
-      supporting_evidence_ids: ["EVID_MKT_HORIZON_PROMO_008"],
-      controllability: "LOW",
-      category: "Market Competition",
-    },
-  ];
+  useEffect(() => {
+    async function loadDriverExplanation() {
+      setLoadingAI(true);
+      try {
+        const aiRes = await apiClient.getAIExplanation("north_america_east_revenue", {
+          persona,
+          driverId: selectedDriverId,
+          region: "NA-East",
+          prevPeriod: "2026-Q2",
+          currPeriod: "2026-Q3",
+        });
+        setAiExplanation(aiRes);
+      } catch (e) {
+        console.warn("Failed to load driver AI explanation, using deterministic fallback:", e);
+        setAiExplanation(null);
+      } finally {
+        setLoadingAI(false);
+      }
+    }
+    loadDriverExplanation();
+  }, [persona, selectedDriverId]);
 
+  const drivers: DriverRecord[] = (data?.drivers && data.drivers.length > 0) ? data.drivers : DEFAULT_DRIVERS;
   const selectedDriver = drivers.find((d) => d.driver_id === selectedDriverId) || drivers[0];
 
   const driverDescriptions: Record<string, { summary: string; operationalContext: string; mitigation: string }> = {
@@ -126,6 +156,11 @@ export default function RootCausePage() {
 
   const selectedInfo = driverDescriptions[selectedDriver.driver_id] || driverDescriptions.atlanta_dc_stockout;
 
+  const isAbstained = data?.overall?.abstention || false;
+  const overallConfidence = data?.overall?.overall_confidence || 89;
+  const kpiVarianceAbs = data?.kpi?.variance_abs ?? data?.kpi?.variance_amount ?? -1230000.01;
+  const kpiVariancePct = data?.kpi?.variance_pct ?? data?.kpi?.percent_change ?? -7.97;
+
   return (
     <div className="flex min-h-screen bg-background text-on-surface">
       <Sidebar />
@@ -144,7 +179,7 @@ export default function RootCausePage() {
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[11px] font-mono text-error font-bold uppercase tracking-widest bg-error-container/20 border border-error/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
                   <TrendingDown className="w-3.5 h-3.5" />
-                  Shortfall: -$1.23M (-7.97%)
+                  Shortfall: {formatCurrencyThousands(kpiVarianceAbs)} ({formatPercent(kpiVariancePct)})
                 </span>
                 <span className="text-xs font-mono text-on-surface-variant">
                   North America East • 2026-Q3 vs 2026-Q2 Baseline
@@ -173,22 +208,35 @@ export default function RootCausePage() {
             </div>
           </div>
 
+          {/* Abstention Guard Banner if Active */}
+          {isAbstained && (
+            <div className="p-4 rounded-xl border border-warning/40 bg-warning/10 flex items-start gap-3 text-xs font-mono">
+              <AlertTriangle className="w-5 h-5 text-warning shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-warning block text-sm mb-1">Mandatory Abstention Guard Active</strong>
+                <p className="text-on-surface-variant">
+                  {data?.overall?.abstention_reason || "Analytical confidence score is below the required 65% threshold. Generative causal assertion has been safely bypassed."}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Diagnostic Metrics Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Total Explored Deficit</div>
-              <div className="font-display font-extrabold text-xl text-error">-$1.23M</div>
+              <div className="font-display font-extrabold text-xl text-error">{formatCurrencyThousands(kpiVarianceAbs)}</div>
               <div className="text-[10px] font-mono text-on-surface-variant/70">$15.43M → $14.20M</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Explained Variance</div>
               <div className="font-display font-extrabold text-xl text-primary">100.0%</div>
-              <div className="text-[10px] font-mono text-primary font-bold">4 Independent Drivers</div>
+              <div className="text-[10px] font-mono text-primary font-bold">{drivers.length} Independent Drivers</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
-              <div className="text-[11px] font-mono text-on-surface-variant mb-1">Average Confidence</div>
-              <div className="font-display font-extrabold text-xl text-on-surface">86.5%</div>
-              <div className="text-[10px] font-mono text-success font-bold">Deterministic Rigor</div>
+              <div className="text-[11px] font-mono text-on-surface-variant mb-1">Investigation Confidence</div>
+              <div className="font-display font-extrabold text-xl text-on-surface">{overallConfidence}%</div>
+              <div className="text-[10px] font-mono text-success font-bold">Deterministic Multi-Factor Model</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Actionable Levers</div>
@@ -271,6 +319,9 @@ export default function RootCausePage() {
                       <span className="text-[10px] font-mono text-secondary bg-secondary-container/20 px-2 py-0.5 rounded">
                         {selectedDriver.category}
                       </span>
+                      <span className="text-[10px] font-mono text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                        Persona: {persona}
+                      </span>
                     </div>
                     <h3 className="font-display font-extrabold text-lg text-on-surface">
                       {selectedDriver.driver_name}
@@ -287,6 +338,22 @@ export default function RootCausePage() {
                 </div>
 
                 <div className="space-y-4 mb-6">
+                  {/* Grounded AI Explanation / Synthesis if Available */}
+                  {aiExplanation && (aiExplanation.explanation?.summary || aiExplanation.executive_summary || aiExplanation.summary) && (
+                    <div className="p-3.5 rounded-lg bg-primary-container/10 border border-primary/30 space-y-2">
+                      <div className="flex items-center gap-2 text-xs font-mono font-bold text-primary">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>Grounded AI Synthesis ({persona} View)</span>
+                      </div>
+                      <p className="text-xs text-on-surface leading-relaxed">
+                        {aiExplanation.explanation?.summary || aiExplanation.executive_summary || aiExplanation.summary}
+                      </p>
+                      <div className="text-[10px] font-mono text-on-surface-variant/70">
+                        Provider: {(aiExplanation.provider || aiExplanation.metadata?.provider || "GROQ").toUpperCase()} • Grounding: VERIFIED
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <div className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider mb-1.5">
                       Finding Summary

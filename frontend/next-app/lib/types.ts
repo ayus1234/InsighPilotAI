@@ -47,16 +47,51 @@ export interface DriverRecord {
   category: string;
 }
 
-export interface InvestigationResponse {
-  investigation_id: string;
+export interface KPIBlockType {
   kpi_id: string;
   region: string;
   prev_period_id: string;
   curr_period_id: string;
-  drivers: DriverRecord[];
-  total_drivers_count: number;
-  dominant_driver_id: string;
+  previous_value: number;
+  current_value: number;
+  variance_amount: number;
+  percent_change: number;
+  materiality_status: string;
+  currency?: string;
+  variance_abs?: number;
+  variance_pct?: number;
+}
+
+export interface OverallConfidenceType {
+  overall_confidence: number;
+  confidence_label: string;
+  abstention: boolean;
+  abstention_reason?: string | null;
+}
+
+export interface InvestigationResponse {
+  investigation_id: string;
+  kpi_id?: string;
+  region?: string;
+  prev_period_id?: string;
+  curr_period_id?: string;
+  persona_id?: string;
   timestamp: string;
+  kpi?: KPIBlockType;
+  drivers: DriverRecord[];
+  evidence_summary?: {
+    evidence_ids: string[];
+    source_count: number;
+    source_domains: string[];
+  };
+  overall?: OverallConfidenceType;
+  lineage_graph?: {
+    kpi_node: string;
+    driver_nodes: string[];
+    evidence_nodes: string[];
+  };
+  total_drivers_count?: number;
+  dominant_driver_id?: string;
 }
 
 export interface EvidenceRecord {
@@ -200,6 +235,9 @@ export interface AIResponseMetadata {
   total_tokens?: number;
   grounded_evidence_count: number;
   validation_status: string;
+  provider?: string;
+  key_pool_id?: string;
+  fallback_used?: boolean;
 }
 
 export interface AIExplanationResponse {
@@ -207,7 +245,10 @@ export interface AIExplanationResponse {
   persona?: PersonaType | string;
   explanation?: StructuredInvestigationExplanation;
   metadata?: AIResponseMetadata;
-  // Legacy / fallback flat properties
+  // Convenience & fallback properties
+  executive_summary?: string;
+  summary?: string;
+  provider?: string;
   kpi_id?: string;
   kpi_name?: string;
   region?: string;
@@ -215,7 +256,9 @@ export interface AIExplanationResponse {
   grounded_narrative?: string;
   confidence_assessment?: string;
   cited_evidence_ids?: string[];
+  grounded_evidence_ids?: string[];
   abstention?: boolean;
+  abstained?: boolean;
   abstention_reason?: string | null;
   generated_at?: string;
   model_provider?: string;
