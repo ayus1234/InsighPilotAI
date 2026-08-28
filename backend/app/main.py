@@ -32,13 +32,16 @@ def create_app() -> FastAPI:
     )
 
     # Configure CORS Middleware
+    cors_origins = settings.CORS_ORIGINS
+    allow_credentials = "*" not in cors_origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.CORS_ORIGINS,
-        allow_credentials=True,
+        allow_origins=cors_origins,
+        allow_credentials=allow_credentials,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
     # Register Error Handlers
     register_error_handlers(app)

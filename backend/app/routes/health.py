@@ -15,6 +15,12 @@ router = APIRouter(tags=["Health"])
     summary="Health check probe",
     description="Returns the operational health status and version identifier of the InsightPilot API service."
 )
+@router.get(
+    "/api/v1/health",
+    response_model=HealthResponse,
+    summary="Health check probe (prefixed)",
+    description="Returns the operational health status and version identifier of the InsightPilot API service."
+)
 async def get_health() -> HealthResponse:
     """Liveness probe returning operational status."""
     return HealthResponse(
@@ -22,3 +28,4 @@ async def get_health() -> HealthResponse:
         service="insightpilot-api",
         version=settings.APP_VERSION
     )
+
