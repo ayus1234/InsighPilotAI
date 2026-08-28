@@ -1,29 +1,39 @@
-# Competition Submission & Quality Assurance Audits
+# InsightPilot AI — Competition Submission Hub
 
-> **Accenture Innovation Challenge 2026 — Track 3: BusinessIntelligence.ai**  
-> *Authoritative submission audits, clean clone reproduction guides, security release checks, and final evaluation checklists for InsightPilot AI.*
-
----
-
-## 📑 Submission Audit Index
-
-| Document | Purpose | Status |
-| :--- | :--- | :---: |
-| [**Submission Link Audit**](SUBMISSION_LINK_AUDIT.md) | Exhaustive verification of all 46 internal Markdown links and cross-references. | ✅ **100% Passed (0 Broken)** |
-| [**Clean Clone Reproduction Guide**](CLEAN_CLONE_REPRODUCTION.md) | 10-step step-by-step reproduction guide for competition judges cloning from scratch. | ✅ **Verified & Tested** |
-| [**Security Release Audit**](SECURITY_RELEASE_AUDIT.md) | Pre-release audit verifying zero secret leakage, environment protection, and credential safety. | ✅ **Zero Defects Found** |
-| [**API Readiness Audit**](API_READINESS_AUDIT.md) | Full audit of FastAPI REST endpoints, Pydantic schemas, error handling, and demo readiness. | ✅ **100% Operational** |
-| [**Judge Evaluation Guide**](JUDGE_EVALUATION_GUIDE.md) | 2-minute executive overview and 5-minute technical jury evaluation path. | ✅ **Locked & Complete** |
-| [**Final Submission Checklist**](FINAL_SUBMISSION_CHECKLIST.md) | Comprehensive 5-category submission quality gate and compliance audit checklist. | ✅ **100% Complete** |
-| [**Final Machine-Readable Readiness Report**](FINAL_READINESS_REPORT.md) | Dynamic machine-readable audit report evaluating system health across 12 core subsystems. | ✅ **100% Ready (12/12)** |
+**Competition:** Accenture Innovation Challenge 2026  
+**Track:** Track 3 — BusinessIntelligence.ai  
+**Directory:** `docs/submission/`  
+**Status:** `🟢 READY FOR COMPETITION SUBMISSION`
 
 ---
 
-## 🏛️ Master Submission Documents
+## Overview
 
-* [**README.md**](../../README.md) — Comprehensive platform overview, architecture, and quickstart.
-* [**Master Architecture Specification**](../architecture/MASTER_ARCHITECTURE.md) — Deep 5-layer architecture blueprint and mathematical invariants.
-* [**Master Competition Narrative**](../MASTER_COMPETITION_NARRATIVE.md) — Foundational 10-beat narrative storyline and competitive positioning matrix.
-* [**Detailed Business Proposal**](../business-proposal/BUSINESS_PROPOSAL.md) — Complete 16-section submission-grade business proposal and commercial strategy.
-* [**Prototype Demonstration Storyboard**](../demo/DEMO_STORYBOARD.md) — 10-beat demonstration blueprint, 3-min script, and 5-min script.
-* [**Demo Video Production Assets**](../demo/assets/) — Presentation slide decks, recording plan, visual overlays, and submission assets.
+This directory contains the final submission audit reports, metric consistency verification matrices, judge onboarding blueprints, and reproducibility guides for **InsightPilot AI**.
+
+---
+
+## Directory Navigation
+
+| Document | Purpose |
+| :--- | :--- |
+| [`FINAL_SUBMISSION_AUDIT.md`](./FINAL_SUBMISSION_AUDIT.md) | Authoritative 19-category system verification report and final competition readiness verdict. |
+| [`METRIC_CONSISTENCY_AUDIT.md`](./METRIC_CONSISTENCY_AUDIT.md) | Repository-wide cross-metric consistency audit confirming 100% numerical parity. |
+| [`JUDGE_QUICKSTART.md`](./JUDGE_QUICKSTART.md) | 5-minute evaluation blueprint, core architectural tenets, and 7-screen narrative route mapping. |
+| [`REPRODUCIBILITY_GUIDE.md`](./REPRODUCIBILITY_GUIDE.md) | Clean-start reproduction workflow from clone to running prototype. |
+| [`COMPETITION_READINESS_CHECKLIST.md`](./COMPETITION_READINESS_CHECKLIST.md) | Comprehensive multi-category delivery assurance checklist. |
+| [`SUBMISSION_MANIFEST.md`](./SUBMISSION_MANIFEST.md) | Evaluator-friendly inventory of all submission documents and assets with links. |
+
+---
+
+## 7-Screen Judge Evaluation Sequence
+
+```text
+1. Command Center (/) ──────────────────> Problem: -$1.23M (-7.97%) Critical Deficit
+2. Root Cause (/root-cause) ────────────> Decomposition: 4 Factors, 43.2% Atlanta DC
+3. LangGraph Trace (/investigation) ────> Investigation: 11-Node Multi-Agent Lifecycle
+4. Decision Graph (/decision-graph) ────> Topology: 6-Column Causal Graph
+5. Evidence Explorer (/evidence) ───────> Lineage: 9 Nodes, SHA-256 Validated
+6. Recommendations (/recommendations) ──> Action: +$484K Lever, +$341.4K Simulation
+7. Executive Briefing (/briefing) ──────> Decision: Persona Synthesis & Sign-off
+```
