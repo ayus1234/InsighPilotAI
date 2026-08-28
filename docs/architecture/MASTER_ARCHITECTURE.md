@@ -236,17 +236,21 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
 
 InsightPilot AI provides role-tailored narratives while strictly maintaining **100% quantitative parity**:
 
-```mermaid
-graph TD
-    Data[Deterministic Investigation State] --> CFO[CFO Persona Synthesis]
-    Data --> RSM[Regional Sales Manager Persona]
-    
-    CFO --> CFO_View["Emphasis: Financial Exposure, Margins, Recovery ROI, Risk"]
-    RSM --> RSM_View["Emphasis: Stockout Duration, Affected SKU-8821, Transfer Logistics"]
-    
-    style Data fill:#1e293b,stroke:#38bdf8,color:#fff
-    style CFO fill:#0f172a,stroke:#10b981,color:#fff
-    style RSM fill:#0f172a,stroke:#6366f1,color:#fff
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   DETERMINISTIC INVESTIGATION STATE                         │
+│       (100% Locked Metrics, Drivers, Evidence Hashes & Confidence)          │
+└──────────────────────┬───────────────────────────────┬──────────────────────┘
+                       │                               │
+                       ▼                               ▼
+       ┌───────────────────────────────┐ ┌───────────────────────────────┐
+       │     CFO PERSONA SYNTHESIS     │ │   SALES MANAGER SYNTHESIS     │
+       ├───────────────────────────────┤ ├───────────────────────────────┤
+       │ • EBITDA & Financial Exposure │ │ • Atlanta DC Availability 79% │
+       │ • $1.23M Revenue Shortfall    │ │ • 29 Deferred Purchase Orders │
+       │ • Gross Margin Impact (+0.72%)│ │ • SKU-8821 Stockout Timeline  │
+       │ • Recovery ROI ($484K Target) │ │ • Charlotte Emergency Transfer│
+       └───────────────────────────────┘ └───────────────────────────────┘
 ```
 
 * **CFO Narrative Focus:** Focuses on EBITDA impact, $1.23M revenue exposure, margin recovery (+0.72%), and capital allocation.

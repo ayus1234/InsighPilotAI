@@ -75,23 +75,18 @@ To prove complete end-to-end viability, InsightPilot AI is demonstrated across a
 
 The InsightPilot AI narrative follows a cinematic 10-beat trajectory engineered for executive pitches and video storyboarding:
 
-```mermaid
-journey
-    title InsightPilot AI: 10-Beat Decision Journey
-    section Detection & Triage
-      1. Business Problem: 5: Executive
-      2. Automated KPI Anomaly: 5: Executive
-    section Agentic Investigation
-      3. LangGraph Multi-Agent Workflow: 5: System
-      4. Causal Driver Decomposition: 5: System
-      5. Cryptographic Evidence Lineage: 5: System
-    section Grounded Reasoning
-      6. Capability-Aware AI Explanation: 5: AI
-      7. Dynamic 6-Column Decision Graph: 5: AI
-    section Prescriptive Action
-      8. Prioritized Action Levers: 5: Executive
-      9. What-If Simulation Sandbox: 5: Executive
-      10. Boardroom Decision Briefing: 5: Executive
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                   INSIGHTPILOT AI: 10-BEAT DECISION JOURNEY                 │
+├────────────────────────┬───────────────────────────┬────────────────────────┤
+│ 1. DETECTION & TRIAGE  │ 2. AGENTIC INVESTIGATION  │ 3. REASONING & ACTION  │
+├────────────────────────┼───────────────────────────┼────────────────────────┤
+│ [1] Business Problem   │ [3] LangGraph Pipeline    │ [6] Grounded AI Synth. │
+│ [2] Automated Anomaly  │ [4] Driver Decomposition  │ [7] 6-Col Decision Gr. │
+│                        │ [5] Evidence Lineage      │ [8] Action Levers      │
+│                        │                           │ [9] What-If Sandbox    │
+│                        │                           │ [10] Executive Brief   │
+└────────────────────────┴───────────────────────────┴────────────────────────┘
 ```
 
 ### Beat-by-Beat Narrative Breakdown:

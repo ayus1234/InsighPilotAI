@@ -69,24 +69,16 @@ Detailed technical specifications are available in the [Master Architecture Spec
 
 InsightPilot AI transitions seamlessly from anomaly detection to executive decision execution across 8 synchronized stages:
 
-```mermaid
-graph LR
-    A[1. DETECT] --> B[2. INVESTIGATE]
-    B --> C[3. EXPLAIN]
-    C --> D[4. PROVE]
-    D --> E[5. DECIDE]
-    E --> F[6. ACT]
-    F --> G[7. SIMULATE]
-    G --> H[8. BRIEF]
-
-    style A fill:#0f172a,stroke:#38bdf8,color:#fff
-    style B fill:#0f172a,stroke:#6366f1,color:#fff
-    style C fill:#0f172a,stroke:#a855f7,color:#fff
-    style D fill:#0f172a,stroke:#10b981,color:#fff
-    style E fill:#0f172a,stroke:#f59e0b,color:#fff
-    style F fill:#0f172a,stroke:#ec4899,color:#fff
-    style G fill:#0f172a,stroke:#14b8a6,color:#fff
-    style H fill:#0f172a,stroke:#3b82f6,color:#fff
+```text
+┌───────────┐     ┌─────────────────┐     ┌──────────────┐     ┌──────────────┐
+│ 1. DETECT │ ──► │ 2. INVESTIGATE  │ ──► │  3. EXPLAIN  │ ──► │   4. PROVE   │
+│ KPI Drop  │     │ LangGraph State │     │ Grounded AI  │     │ Evidence SHA │
+└─────┬─────┘     └─────────────────┘     └──────────────┘     └──────┬───────┘
+      │                                                               │
+┌─────▼─────┐     ┌─────────────────┐     ┌──────────────┐     ┌──────▼───────┐
+│  8. BRIEF │ ◄── │   7. SIMULATE   │ ◄── │    6. ACT    │ ◄── │  5. DECIDE   │
+│ Executive │     │ What-If Sandbox │     │ Action Lever │     │ Decision Gr. │
+└───────────┘     └─────────────────┘     └──────────────┘     └──────────────┘
 ```
 
 1. **DETECT:** Automated KPI anomaly triage triggers when variance exceeds the `-3.0%` materiality threshold.
