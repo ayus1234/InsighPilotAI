@@ -42,9 +42,14 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Configure Security Headers Middleware
+    from backend.app.security import SecurityHeadersMiddleware
+    app.add_middleware(SecurityHeadersMiddleware)
+
     # Configure Request Correlation & Telemetry Logging Middleware
     from backend.app.logging import RequestCorrelationMiddleware
     app.add_middleware(RequestCorrelationMiddleware)
+
 
     # Register Error Handlers
 
