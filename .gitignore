@@ -1,23 +1,46 @@
 # ==============================================================================
-# InsightPilot AI — Git Ignore Rules
+# InsightPilot AI — Comprehensive Git Ignore Rules
 # ==============================================================================
 
-# Environment & Secrets
+# Environment, Secrets & Local Overrides
 .env
 .env.*
 !.env.example
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
 
-# Database Files
+# Database Files & Local SQLite Instances
 *.db
 *.sqlite
 *.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
 
-# Python Bytecode & Cache
+# Python Bytecode, Caches & Wheels
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # Virtual Environments
 .venv/
@@ -27,24 +50,27 @@ ENV/
 env.bak/
 venv.bak/
 
-# Node / Frontend Build Artifacts
+# Node / Frontend Build Artifacts & Caches
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-build/
-dist/
+pnpm-debug.log*
 .next/
 out/
+.turbo/
+.vercel/
 
-# Testing & Coverage
+# Testing, Coverage & Profiling
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
 .tox/
 .nox/
 coverage.xml
 *.cover
+.hypothesis/
 
 # Operating System Files
 .DS_Store
@@ -55,7 +81,7 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
-# IDE & Editor Files
+# IDE, Editor & Workspace Files
 .idea/
 .vscode/
 *.swp
@@ -63,3 +89,13 @@ Thumbs.db
 *~
 *.sublime-project
 *.sublime-workspace
+.project
+.pydevproject
+.settings/
+
+# Local Logs & Scratch Files
+logs/
+*.log
+*.tmp
+scratch/
+.system_generated/
