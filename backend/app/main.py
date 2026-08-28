@@ -42,8 +42,12 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    # Configure Request Correlation & Telemetry Logging Middleware
+    from backend.app.logging import RequestCorrelationMiddleware
+    app.add_middleware(RequestCorrelationMiddleware)
 
     # Register Error Handlers
+
     register_error_handlers(app)
 
     # Register Routes
