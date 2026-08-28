@@ -1,39 +1,57 @@
-# Prototype Demonstration Assets & Storyboard
+# InsightPilot AI — Demonstration & Video Production Assets
 
-> **Accenture Innovation Challenge 2026 — Track 3: BusinessIntelligence.ai**  
-> *Authoritative demonstration scripts, timing tables, screen-by-screen click paths, slide decks, and video production assets for InsightPilot AI.*
-
----
-
-## 📑 Demonstration Asset Index
-
-| Document / Asset | Description | Format | Status |
-| :--- | :--- | :---: | :--- |
-| [**Demo Storyboard & Video Script**](DEMO_STORYBOARD.md) | Master 10-beat demonstration blueprint, 3-minute competition script, 5-minute technical script, persona guide, and pre-recording checklist. | Markdown / Script | ✅ **Complete & Locked** |
-| [**3-Minute Competition Slide Deck**](assets/3_MINUTE_DEMO_DECK.md) | High-impact 8-slide presentation deck designed for rapid video judging and pitch synchronization. | Markdown / Slides | ✅ **Complete & Locked** |
-| [**5-Minute Technical Deep-Dive Deck**](assets/5_MINUTE_DEMO_DECK.md) | Comprehensive 12-slide technical architecture deck detailing LangGraph, 5-tier failover, SHA-256 lineage, and confidence math. | Markdown / Slides | ✅ **Complete & Locked** |
-| [**Video Production & Recording Plan**](assets/VIDEO_PRODUCTION_PLAN.md) | Technical recording guide, OBS/recording presets (1080p60), audio pacing, cut list, and YouTube metadata. | Markdown / Guide | ✅ **Complete & Locked** |
-| [**Visual Overlays & Lower-Thirds Guide**](assets/VISUAL_OVERLAYS.md) | Timestamped lower-third cue sheet, highlight callout badges, zoom frames, and design system. | Markdown / Guide | ✅ **Complete & Locked** |
-| [**Submission Assets & Packaging Checklist**](assets/SUBMISSION_ASSETS.md) | Video thumbnail specification, master architecture poster, chapter timestamps, and final submission packaging checklist. | Markdown / Checklist | ✅ **Complete & Locked** |
+**Competition:** Accenture Innovation Challenge 2026  
+**Track:** Track 3 — BusinessIntelligence.ai  
+**Directory:** `docs/demo/`  
+**Status:** `PRODUCTION READY`
 
 ---
 
-## 🏛️ Related Master Documentation
+## Overview
 
-* [**Master Competition Narrative**](../MASTER_COMPETITION_NARRATIVE.md) — Foundational 10-beat narrative storyline and competitive positioning matrix.
-* [**Detailed Business Proposal**](../business-proposal/BUSINESS_PROPOSAL.md) — Complete 16-section submission-grade business proposal and commercial strategy.
-* [**Master Architecture Specification**](../architecture/MASTER_ARCHITECTURE.md) — 5-layer architectural blueprint, truth tables, and mathematical invariants.
+This directory contains the authoritative demonstration storyboards, time-stamped video production scripts, recording shot lists, visual overlay plans, and editing blueprints for **InsightPilot AI**.
 
 ---
 
-## 🎬 Quick Demonstration Highlights
+## Demonstration Document Navigation
 
-* **10-Beat Storyline Arc:** `Detect` $\to$ `Investigate` $\to$ `Explain` $\to$ `Prove` $\to$ `Decide` $\to$ `Act` $\to$ `Simulate` $\to$ `Brief`.
-* **Persona Invariance:** Demonstrates CFO vs Regional Sales Manager narrative adaptation over 100% invariant quantitative truth.
-* **Responsible AI Safeguards:** Showcases SHA-256 cryptographic evidence lineage, grounding validation, and the mandatory 65% confidence abstention gate.
-* **Locked Canonical Invariants:**
-  - Revenue Baseline: `$15,430,000.06` $\to$ Actual: `$14,200,000.05` (`-$1,230,000.01` / `-7.97%` drop).
-  - Primary Causal Driver: Atlanta DC Stockout (`43.2%` / `-$550,000.00` impact / `94%` confidence).
-  - Confidence Score: `89%` (`HIGH` tier, `abstention: false`).
-  - Priority 1 Action Lever: Charlotte $\to$ Atlanta 20,000-unit transfer (`+$484,000.00` recovery).
-  - What-If Simulation: 79.4% $\to$ 90.0% availability yields `+$341,422.91` recovery (`+0.72%` gross margin).
+### 1. Final Production Package (Phase 7.3 Deliverables)
+| Document | Purpose |
+| :--- | :--- |
+| [`FINAL_VIDEO_PRODUCTION_RUNBOOK.md`](./FINAL_VIDEO_PRODUCTION_RUNBOOK.md) | Complete step-by-step production runbook, server startup sequence, OS/browser setup, audio chain, and failover procedures. |
+| [`FINAL_3_MINUTE_VIDEO_SCRIPT.md`](./FINAL_3_MINUTE_VIDEO_SCRIPT.md) | Authoritative 180s (3:00) 10-beat production script with exact timestamps, UI routes, presenter actions, and word-for-word narration. |
+| [`FINAL_5_MINUTE_TECHNICAL_VIDEO_SCRIPT.md`](./FINAL_5_MINUTE_TECHNICAL_VIDEO_SCRIPT.md) | Extended 300s (5:00) technical deep-dive script emphasizing deterministic math, 11-node LangGraph lifecycle, and SHA-256 lineage. |
+| [`RECORDING_SHOT_LIST.md`](./RECORDING_SHOT_LIST.md) | 14-shot capture checklist detailing screen routes, recording types (A-Roll, B-Roll, Screen Recording, Motion Inserts), and trigger overlays. |
+| [`FINAL_VIDEO_OVERLAY_PLAN.md`](./FINAL_VIDEO_OVERLAY_PLAN.md) | Consolidated visual overlay package detailing 14 lower-third banners, verification chips, and badge placements. |
+| [`VIDEO_EDITING_BLUEPRINT.md`](./VIDEO_EDITING_BLUEPRINT.md) | Multi-track NLE timeline construction, scene-by-scene cut list, micro-zoom directives, audio mixing, and 1080p60 export specs. |
+| [`VIDEO_METRIC_VERIFICATION.md`](./VIDEO_METRIC_VERIFICATION.md) | Rigorous numerical consistency audit confirming 100% parity across spoken narration, overlays, and repository data. |
+| [`FINAL_RECORDING_CHECKLIST.md`](./FINAL_RECORDING_CHECKLIST.md) | 4-stage quality assurance checklist (Pre-Recording, Capture, Editing, Final Delivery Sign-Off). |
+
+---
+
+### 2. Storyboard & Baseline Production Assets
+| Document | Purpose |
+| :--- | :--- |
+| [`DEMO_STORYBOARD.md`](./DEMO_STORYBOARD.md) | Foundational 10-beat demonstration storyboard and narrative arc. |
+| [`assets/3_MINUTE_DEMO_DECK.md`](./assets/3_MINUTE_DEMO_DECK.md) | 6-slide visual deck supporting rapid demonstration delivery. |
+| [`assets/5_MINUTE_DEMO_DECK.md`](./assets/5_MINUTE_DEMO_DECK.md) | 10-slide extended visual presentation deck. |
+| [`assets/VIDEO_PRODUCTION_PLAN.md`](./assets/VIDEO_PRODUCTION_PLAN.md) | Baseline camera directives and cut lists. |
+| [`assets/VISUAL_OVERLAYS.md`](./assets/VISUAL_OVERLAYS.md) | Baseline graphic overlay design assets. |
+| [`assets/SUBMISSION_ASSETS.md`](./assets/SUBMISSION_ASSETS.md) | Competition asset packaging checklist. |
+
+---
+
+## 10-Beat Demonstration Narrative Progression
+
+```text
+1. Business Problem ──────────> The Enterprise BI Investigation Gap
+2. Anomaly Detection ─────────> NA-East Revenue -$1.23M (-7.97%) Critical Deficit
+3. Agentic Investigation ─────> 11-Node LangGraph Lifecycle & 89% Confidence
+4. Root Cause Attribution ────> 4-Factor Decomposition (43.2% Atlanta DC Stockout)
+5. Evidence Corroboration ────> 9 Empirical Records & SHA-256 Verification Hashes
+6. Grounded AI Explanation ───> Multi-Model Synthesis with Zero Hallucination
+7. Decision Graph ────────────> 6-Column Causal Topology Linking Anomaly to Action
+8. Prescriptive Action ───────> Priority 1 Stock Transfer (+$484K Recovery)
+9. What-If Simulation ────────> 90.0% Availability Yields +$341.4K Recovery
+10. Executive Briefing ───────> Boardroom Sign-off & Persona Adaptation
+```
