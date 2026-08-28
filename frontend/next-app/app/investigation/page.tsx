@@ -33,6 +33,7 @@ import {
   ChevronRight,
   Server,
   Zap,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,6 +42,7 @@ interface AgentStep {
   stepNumber: string;
   name: string;
   role: string;
+  nodeType: "DETERMINISTIC" | "SAFETY_GUARD" | "AI_ORCHESTRATION" | string;
   status: "COMPLETED" | "RUNNING" | "PENDING" | "ABSTAINED" | string;
   timestamp: string;
   duration: string;
@@ -54,7 +56,8 @@ const DEFAULT_STEPS: AgentStep[] = [
     id: "load_kpi_node",
     stepNumber: "01",
     name: "Load KPI Context",
-    role: "Time-Series Telemetry & Target KPI Loading",
+    role: "Time-Series Ingestion & Baseline Context Loading",
+    nodeType: "DETERMINISTIC",
     status: "COMPLETED",
     timestamp: "10:42:01 AM",
     duration: "12.4ms",
@@ -65,16 +68,38 @@ const DEFAULT_STEPS: AgentStep[] = [
       "Target flagged: 'north_america_east_revenue' ($14.20M vs $15.43M baseline).",
     ],
     metrics: [
-      { label: "KPI", value: "NA-East Revenue" },
-      { label: "Baseline", value: "$15.43M" },
-      { label: "Target", value: "$14.20M" },
+      { label: "Target KPI", value: "NA-East Revenue" },
+      { label: "Baseline Q2", value: "$15.43M" },
+      { label: "Actual Q3", value: "$14.20M" },
+    ],
+  },
+  {
+    id: "calculate_movement_node",
+    stepNumber: "02",
+    name: "Calculate Materiality",
+    role: "Variance Computation & Severity Classification",
+    nodeType: "DETERMINISTIC",
+    status: "COMPLETED",
+    timestamp: "10:42:02 AM",
+    duration: "8.6ms",
+    summary: "Computed exact -$1,230,000.01 (-7.97%) shortfall, triggering CRITICAL_NEGATIVE_VARIANCE.",
+    details: [
+      "Computed absolute delta: -$1,230,000.01.",
+      "Evaluated threshold condition: -7.97% exceeds materiality boundary of -3.0%.",
+      "Classified status: CRITICAL_NEGATIVE_VARIANCE.",
+    ],
+    metrics: [
+      { label: "Net Variance", value: "-$1.23M" },
+      { label: "Percentage", value: "-7.97%" },
+      { label: "Status", value: "CRITICAL" },
     ],
   },
   {
     id: "identify_drivers_node",
-    stepNumber: "02",
+    stepNumber: "03",
     name: "Identify Causal Drivers",
     role: "Multi-Factor Causal Attribution & Contribution Weighting",
+    nodeType: "DETERMINISTIC",
     status: "COMPLETED",
     timestamp: "10:42:04 AM",
     duration: "18.2ms",
@@ -92,31 +117,74 @@ const DEFAULT_STEPS: AgentStep[] = [
     ],
   },
   {
+    id: "retrieve_evidence_node",
+    stepNumber: "04",
+    name: "Retrieve Evidence Records",
+    role: "Empirical Ingestion from ERP, CRM, and Zendesk",
+    nodeType: "DETERMINISTIC",
+    status: "COMPLETED",
+    timestamp: "10:42:05 AM",
+    duration: "24.1ms",
+    summary: "Retrieved 9 corroborating records across ERP WMS, Salesforce, and Zendesk.",
+    details: [
+      "Extracted SAP ERP snapshot: 14 consecutive zero-stock days for SKU-8821.",
+      "Corroborated Zendesk Support: +310% surge in stockout-related ticket volume.",
+      "Extracted 29 deferred distributor POs from EDI Gateway.",
+    ],
+    metrics: [
+      { label: "Evidence Records", value: "9 Nodes" },
+      { label: "ERP Records", value: "4" },
+      { label: "CRM / Intel", value: "5" },
+    ],
+  },
+  {
     id: "validate_evidence_node",
-    stepNumber: "03",
-    name: "Validate Evidence Lineage",
-    role: "Cryptographic Hash & 5-Layer Lineage Verification",
+    stepNumber: "05",
+    name: "Validate Lineage & Cryptography",
+    role: "Cryptographic SHA-256 Digest Verification",
+    nodeType: "SAFETY_GUARD",
     status: "COMPLETED",
     timestamp: "10:42:06 AM",
     duration: "15.1ms",
-    summary: "Corroborated findings against 9 cryptographically verified empirical records across SAP ERP, Zendesk, and CRM.",
+    summary: "Validated cryptographic SHA-256 integrity hashes on all 9 empirical records.",
     details: [
-      "Extracted SAP ERP snapshot: 14 consecutive zero-stock days for SKU-8821 at Atlanta DC.",
-      "Corroborated Zendesk Support CRM: +310% surge in stockout-related ticket volume.",
-      "Verified 29 deferred distributor purchase orders via EDI gateway telemetry.",
-      "Validated SHA-256 integrity hashes on all 9 evidence nodes.",
+      "Verified SHA-256 digest on EVID_ERP_ATL_STOCKOUT_001.",
+      "Corroborated cross-dataset referential integrity across 5 dimensions.",
+      "Lineage quality score evaluated at 99.4%.",
     ],
     metrics: [
-      { label: "Verified Nodes", value: "9 Records" },
+      { label: "Verified Hashes", value: "9 / 9 (100%)" },
       { label: "Data Quality", value: "99.4%" },
-      { label: "Lineage Integrity", value: "100% SHA-256" },
+      { label: "Lineage Score", value: "HIGH" },
+    ],
+  },
+  {
+    id: "calculate_confidence_node",
+    stepNumber: "06",
+    name: "Calculate Analytical Confidence",
+    role: "6-Factor Confidence Scoring Model",
+    nodeType: "SAFETY_GUARD",
+    status: "COMPLETED",
+    timestamp: "10:42:07 AM",
+    duration: "11.8ms",
+    summary: "Calculated deterministic 6-factor confidence score of 89% (HIGH Tier).",
+    details: [
+      "Sufficiency (0.25): 90% | Quality (0.20): 95% | Coverage (0.20): 90%.",
+      "Corroboration (0.15): 85% | Lineage (0.10): 90% | Consistency (0.10): 80%.",
+      "Overall Score: 89% (HIGH) -> Abstention Gate: PASSED (Threshold: 65%).",
+    ],
+    metrics: [
+      { label: "Confidence", value: "89% (HIGH)" },
+      { label: "Abstention Gate", value: "PASSED" },
+      { label: "Safety Rule", value: "Score >= 65%" },
     ],
   },
   {
     id: "ai_invocation_node",
-    stepNumber: "04",
+    stepNumber: "07",
     name: "AI Grounded Reasoning",
     role: "Structured Multi-Model LLM Execution & Post-Generation Validation",
+    nodeType: "AI_ORCHESTRATION",
     status: "COMPLETED",
     timestamp: "10:42:08 AM",
     duration: "185.0ms",
@@ -160,24 +228,34 @@ export default function InvestigationActivityPage() {
         setTraceData(traceRes);
 
         if (traceRes && traceRes.nodes && traceRes.nodes.length > 0) {
-          const liveSteps: AgentStep[] = traceRes.nodes.map((node, idx) => ({
-            id: node.node_name,
-            stepNumber: String(idx + 1).padStart(2, "0"),
-            name: node.display_name,
-            role: node.role,
-            status: node.status || "COMPLETED",
-            timestamp: node.completed_at
-              ? new Date(node.completed_at).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                })
-              : `10:42:0${idx + 1} AM`,
-            duration: `${node.duration_ms.toFixed(1)}ms`,
-            summary: node.summary,
-            details: node.details && node.details.length > 0 ? node.details : [node.summary],
-            metrics: node.metrics || [],
-          }));
+          const liveSteps: AgentStep[] = traceRes.nodes.map((node, idx) => {
+            let nType: string = "DETERMINISTIC";
+            if (node.node_name.includes("confidence") || node.node_name.includes("validate") || node.node_name.includes("abstention")) {
+              nType = "SAFETY_GUARD";
+            } else if (node.node_name.includes("ai") || node.node_name.includes("route") || node.node_name.includes("synthesis")) {
+              nType = "AI_ORCHESTRATION";
+            }
+
+            return {
+              id: node.node_name,
+              stepNumber: String(idx + 1).padStart(2, "0"),
+              name: node.display_name,
+              role: node.role,
+              nodeType: nType,
+              status: node.status || "COMPLETED",
+              timestamp: node.completed_at
+                ? new Date(node.completed_at).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })
+                : `10:42:0${idx + 1} AM`,
+              duration: `${node.duration_ms.toFixed(1)}ms`,
+              summary: node.summary,
+              details: node.details && node.details.length > 0 ? node.details : [node.summary],
+              metrics: node.metrics || [],
+            };
+          });
           setAgentSteps(liveSteps);
           if (!liveSteps.some((s) => s.id === activeStep)) {
             setActiveStep(liveSteps[0].id);
@@ -219,7 +297,7 @@ export default function InvestigationActivityPage() {
           {/* Header Banner */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest bg-primary-container/20 border border-primary/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
                   LangGraph Agentic Pipeline Active
@@ -268,22 +346,22 @@ export default function InvestigationActivityPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Target Anomaly</div>
-              <div className="font-display font-extrabold text-xl text-error">-$1.23M</div>
+              <div className="font-display font-extrabold text-2xl text-error">-$1.23M</div>
               <div className="text-[10px] font-mono text-error font-bold">-7.97% Q3 Contraction</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Causal Resolution</div>
-              <div className="font-display font-extrabold text-xl text-primary">4 Drivers</div>
+              <div className="font-display font-extrabold text-2xl text-primary">4 Drivers</div>
               <div className="text-[10px] font-mono text-primary font-bold">100.0% Attributed</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Verified Evidence</div>
-              <div className="font-display font-extrabold text-xl text-secondary">9 Records</div>
+              <div className="font-display font-extrabold text-2xl text-secondary">9 Records</div>
               <div className="text-[10px] font-mono text-secondary font-bold">SHA-256 Corroborated</div>
             </div>
             <div className="glass-panel rounded-xl p-4 border-outline-variant">
               <div className="text-[11px] font-mono text-on-surface-variant mb-1">Pipeline Latency</div>
-              <div className="font-display font-extrabold text-xl text-success">
+              <div className="font-display font-extrabold text-2xl text-success">
                 {traceData?.total_duration_ms ? `${traceData.total_duration_ms.toFixed(0)}ms` : "380ms"}
               </div>
               <div className="text-[10px] font-mono text-success font-bold">
@@ -293,10 +371,10 @@ export default function InvestigationActivityPage() {
           </div>
 
           {/* Grounded AI Narrative Panel */}
-          <div className="glass-panel rounded-xl p-6 border-primary/30 bg-gradient-to-r from-primary-container/15 via-surface-container to-surface">
+          <div className="glass-panel rounded-2xl p-6 border-primary/30 bg-gradient-to-r from-primary-container/15 via-surface-container to-surface shadow-glow">
             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/60 mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center text-primary">
+                <div className="w-8 h-8 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center text-primary shadow-glow">
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
@@ -353,17 +431,22 @@ export default function InvestigationActivityPage() {
                 </span>
               </div>
 
-              <div className="space-y-2 max-h-[640px] overflow-y-auto pr-1">
+              <div className="space-y-2.5 max-h-[640px] overflow-y-auto pr-1">
                 {agentSteps.map((step) => {
                   const isSelected = activeStep === step.id;
                   const isAbstained = step.status === "ABSTAINED";
+
+                  let typeBadge = "badge-deterministic";
+                  if (step.nodeType === "SAFETY_GUARD") typeBadge = "badge-safety";
+                  if (step.nodeType === "AI_ORCHESTRATION") typeBadge = "badge-ai-grounded";
+
                   return (
                     <div
                       key={step.id}
                       onClick={() => setActiveStep(step.id)}
-                      className={`glass-panel rounded-xl p-3.5 border transition-all cursor-pointer ${
+                      className={`glass-panel rounded-xl p-4 border transition-all cursor-pointer ${
                         isSelected
-                          ? "border-primary bg-primary-container/10 ring-1 ring-primary/40 shadow-glow"
+                          ? "border-primary bg-primary-container/15 ring-2 ring-primary/40 shadow-glow scale-[1.01]"
                           : "border-outline-variant hover:border-primary/40"
                       }`}
                     >
@@ -375,27 +458,33 @@ export default function InvestigationActivityPage() {
                           <span className="text-xs font-bold text-on-surface">{step.name}</span>
                         </div>
                         <div
-                          className={`flex items-center gap-1 font-mono text-[9px] font-bold px-1.5 py-0.5 rounded ${
+                          className={`flex items-center gap-1 font-mono text-[9px] font-bold px-2 py-0.5 rounded ${
                             isAbstained
                               ? "text-error bg-error-container/20"
                               : "text-success bg-success-container/20"
                           }`}
                         >
-                          <CheckCircle2 className="w-2.5 h-2.5" />
+                          <CheckCircle2 className="w-3 h-3" />
                           <span>{step.status}</span>
                         </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded uppercase ${typeBadge}`}>
+                          {step.nodeType.replace("_", " ")}
+                        </span>
                       </div>
 
                       <p className="text-[11px] text-on-surface-variant line-clamp-2 leading-relaxed mb-2">
                         {step.summary}
                       </p>
 
-                      <div className="flex items-center justify-between text-[9px] font-mono text-on-surface-variant/70 pt-1.5 border-t border-outline-variant/30">
+                      <div className="flex items-center justify-between text-[9px] font-mono text-on-surface-variant/70 pt-2 border-t border-outline-variant/30">
                         <div className="flex items-center gap-1">
                           <Clock className="w-2.5 h-2.5" />
                           <span>{step.timestamp}</span>
                         </div>
-                        <span>Runtime: {step.duration}</span>
+                        <span className="text-primary font-semibold">Latency: {step.duration}</span>
                       </div>
                     </div>
                   );
@@ -404,17 +493,17 @@ export default function InvestigationActivityPage() {
             </div>
 
             {/* Selected Agent Step Deep Inspection (7 cols) */}
-            <div className="lg:col-span-7 glass-panel rounded-xl p-6 border-primary/40 flex flex-col justify-between">
+            <div className="lg:col-span-7 glass-panel rounded-2xl p-6 border-primary/40 flex flex-col justify-between shadow-glow bg-gradient-to-br from-surface-container via-surface to-surface-dim">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-outline-variant mb-5">
                   <div>
                     <div className="text-[10px] font-mono text-primary font-bold uppercase tracking-wider mb-1">
                       Step {selectedStepData.stepNumber} Execution Trace
                     </div>
-                    <h3 className="font-display font-extrabold text-lg text-on-surface">
+                    <h3 className="font-display font-extrabold text-xl text-on-surface">
                       {selectedStepData.name}
                     </h3>
-                    <div className="text-xs text-on-surface-variant">{selectedStepData.role}</div>
+                    <div className="text-xs text-on-surface-variant mt-0.5">{selectedStepData.role}</div>
                   </div>
                   <div className="text-right font-mono text-xs">
                     <div className="text-success font-bold flex items-center gap-1 justify-end">
@@ -437,9 +526,9 @@ export default function InvestigationActivityPage() {
                     }`}
                   >
                     {selectedStepData.metrics.map((m, idx) => (
-                      <div key={idx} className="p-3 rounded-lg bg-surface-dim border border-outline-variant">
+                      <div key={idx} className="p-3.5 rounded-xl bg-surface-dim border border-outline-variant">
                         <div className="text-[10px] text-on-surface-variant/70 mb-1">{m.label}</div>
-                        <div className="font-display font-extrabold text-base text-primary">{m.value}</div>
+                        <div className="font-display font-extrabold text-lg text-primary">{m.value}</div>
                       </div>
                     ))}
                   </div>
@@ -453,7 +542,7 @@ export default function InvestigationActivityPage() {
                   {selectedStepData.details.map((detail, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-lg bg-surface-dim/80 border border-outline-variant/60 flex items-start gap-3 text-xs leading-relaxed"
+                      className="p-3.5 rounded-xl bg-surface-dim/80 border border-outline-variant/60 flex items-start gap-3 text-xs leading-relaxed"
                     >
                       <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0"></div>
                       <span className="text-on-surface-variant">{detail}</span>
@@ -469,7 +558,7 @@ export default function InvestigationActivityPage() {
                 </span>
                 <Link
                   href="/root-cause"
-                  className="px-4 py-2 bg-primary text-background font-mono text-xs font-bold rounded-lg hover:bg-primary-dark transition-all flex items-center gap-2 shadow-glow"
+                  className="px-4 py-2 bg-primary text-background font-mono text-xs font-bold rounded-lg hover:bg-primary-dark transition-all flex items-center gap-2 shadow-glow active:scale-[0.98]"
                 >
                   <span>Explore Drivers</span>
                   <ArrowRight className="w-4 h-4" />

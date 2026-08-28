@@ -24,6 +24,7 @@ import {
   ExternalLink,
   AlertTriangle,
   RefreshCw,
+  GitFork,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -167,7 +168,7 @@ export default function ExecutiveBriefingPage() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] font-mono text-error font-bold uppercase tracking-widest bg-error-container/20 border border-error/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <ShieldAlert className="w-3.5 h-3.5" />
                   Boardroom Decision Briefing • {persona} View
@@ -195,7 +196,7 @@ export default function ExecutiveBriefingPage() {
                 className={`px-5 py-2 font-mono text-xs font-bold rounded-lg transition-all flex items-center gap-2 ${
                   approved
                     ? "bg-success-container/30 border border-success/40 text-success cursor-default"
-                    : "bg-primary text-background hover:bg-primary-dark shadow-glow"
+                    : "bg-primary text-background hover:bg-primary-dark shadow-glow active:scale-[0.98]"
                 }`}
               >
                 {approved ? <Check className="w-4 h-4" /> : <CheckCircle className="w-4 h-4" />}
@@ -219,7 +220,7 @@ export default function ExecutiveBriefingPage() {
 
           {/* AI Executive Synthesis Strip */}
           {aiExplanation && (aiExplanation.explanation?.summary || aiExplanation.executive_summary || aiExplanation.summary) && !isAbstained && (
-            <div className="glass-panel rounded-xl p-5 border-primary/40 bg-primary-container/10 space-y-2">
+            <div className="glass-panel rounded-2xl p-6 border-primary/40 bg-gradient-to-r from-primary-container/20 via-surface-container to-surface space-y-2.5 shadow-glow">
               <div className="flex items-center justify-between text-xs font-mono font-bold text-primary">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
@@ -229,7 +230,7 @@ export default function ExecutiveBriefingPage() {
                   Provider: {(aiExplanation.provider || aiExplanation.metadata?.provider || "GROQ").toUpperCase()} • Grounded
                 </span>
               </div>
-              <p className="text-xs text-on-surface leading-relaxed">
+              <p className="text-sm text-on-surface leading-relaxed font-sans">
                 {aiExplanation.explanation?.summary || aiExplanation.executive_summary || aiExplanation.summary}
               </p>
             </div>
@@ -238,7 +239,7 @@ export default function ExecutiveBriefingPage() {
           {/* Section 1 & 2: Situation & Diagnosis Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* 1. Situation (4 cols) */}
-            <div className="lg:col-span-4 glass-panel rounded-xl p-6 border-outline-variant flex flex-col justify-between">
+            <div className="lg:col-span-4 glass-panel rounded-2xl p-6 border-outline-variant flex flex-col justify-between">
               <div>
                 <div className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-outline-variant flex items-center justify-between">
                   <span>1. Situation Summary</span>
@@ -277,7 +278,7 @@ export default function ExecutiveBriefingPage() {
             </div>
 
             {/* 2. Diagnosis (8 cols) */}
-            <div className="lg:col-span-8 glass-panel rounded-xl p-6 border-outline-variant">
+            <div className="lg:col-span-8 glass-panel rounded-2xl p-6 border-outline-variant">
               <div className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-outline-variant flex items-center justify-between">
                 <span>2. Multi-Factor Causal Diagnosis (100% Explained)</span>
                 <span className="text-primary font-bold">{overallConfidence}% Overall Confidence</span>
@@ -287,7 +288,7 @@ export default function ExecutiveBriefingPage() {
                 {drivers.map((drv) => (
                   <div
                     key={drv.rank}
-                    className="p-3.5 rounded-lg bg-surface-dim border border-outline-variant flex flex-col justify-between"
+                    className="p-3.5 rounded-xl bg-surface-dim border border-outline-variant flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-1 mb-1">
@@ -322,7 +323,7 @@ export default function ExecutiveBriefingPage() {
           {/* Section 3 & 4: Evidence & Interventions Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* 3. Verified Evidence (5 cols) */}
-            <div className="lg:col-span-5 glass-panel rounded-xl p-6 border-outline-variant flex flex-col justify-between">
+            <div className="lg:col-span-5 glass-panel rounded-2xl p-6 border-outline-variant flex flex-col justify-between">
               <div>
                 <div className="text-xs font-mono font-bold text-on-surface-variant uppercase tracking-wider mb-3 pb-2 border-b border-outline-variant flex items-center justify-between">
                   <span>3. Verified Evidence Audit</span>
@@ -336,7 +337,7 @@ export default function ExecutiveBriefingPage() {
                   {DEFAULT_EVIDENCE.map((ev) => (
                     <div
                       key={ev.id}
-                      className="p-3 rounded-lg bg-surface-dim border border-outline-variant text-xs font-mono"
+                      className="p-3 rounded-xl bg-surface-dim border border-outline-variant text-xs font-mono"
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-primary font-bold">{ev.id}</span>
@@ -359,7 +360,7 @@ export default function ExecutiveBriefingPage() {
             </div>
 
             {/* 4. Strategic Actions & Recovery (7 cols) */}
-            <div className="lg:col-span-7 glass-panel rounded-xl p-6 border-primary/40 bg-gradient-to-r from-primary-container/15 via-surface-container to-surface flex flex-col justify-between">
+            <div className="lg:col-span-7 glass-panel rounded-2xl p-6 border-primary/40 bg-gradient-to-r from-primary-container/15 via-surface-container to-surface flex flex-col justify-between">
               <div>
                 <div className="text-xs font-mono font-bold text-primary uppercase tracking-wider mb-3 pb-2 border-b border-outline-variant flex items-center justify-between">
                   <span>4. Strategic Action Plan & Recovery Potential</span>
@@ -402,15 +403,15 @@ export default function ExecutiveBriefingPage() {
 
                 {/* Outcome Metrics Strip */}
                 <div className="grid grid-cols-3 gap-3 text-center font-mono pt-3 border-t border-outline-variant/40">
-                  <div className="p-2.5 rounded-lg bg-surface-dim border border-outline-variant">
+                  <div className="p-2.5 rounded-xl bg-surface-dim border border-outline-variant">
                     <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Combined Recovery</div>
                     <div className="font-display font-extrabold text-base text-primary">+$757.6K</div>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-dim border border-outline-variant">
+                  <div className="p-2.5 rounded-xl bg-surface-dim border border-outline-variant">
                     <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Projected Revenue</div>
                     <div className="font-display font-extrabold text-base text-on-surface">$14.54M</div>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-surface-dim border border-outline-variant">
+                  <div className="p-2.5 rounded-xl bg-surface-dim border border-outline-variant">
                     <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Gross Margin Lift</div>
                     <div className="font-display font-extrabold text-base text-success">+1.4 pts</div>
                   </div>

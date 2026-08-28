@@ -22,6 +22,7 @@ import {
   Copy,
   Check,
   RefreshCw,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { formatConfidence, formatPercent } from "@/lib/formatters";
@@ -272,7 +273,6 @@ function EvidenceContent() {
       try {
         const res = await apiClient.getEvidenceList({ region: "NA-East" });
         if (res && res.evidence && res.evidence.length > 0) {
-          // Merge live backend evidence with default rich lineage steps where applicable
           const liveItems: EvidenceItem[] = res.evidence.map((ev: any) => {
             const matchedDefault = DEFAULT_EVIDENCE_ITEMS.find((d) => d.id === ev.evidence_id);
             return {
@@ -349,7 +349,7 @@ function EvidenceContent() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest bg-primary-container/20 border border-primary/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Cryptographic Lineage Audit
@@ -382,7 +382,7 @@ function EvidenceContent() {
           </div>
 
           {/* Search & Domain Filter Toolbar */}
-          <div className="glass-panel rounded-xl p-4 border-outline-variant flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="glass-panel rounded-2xl p-4 border-outline-variant flex flex-col md:flex-row items-center justify-between gap-4">
             {/* Search Input */}
             <div className="relative w-full md:w-96">
               <Search className="w-4 h-4 text-on-surface-variant absolute left-3 top-1/2 -translate-y-1/2" />
@@ -391,7 +391,7 @@ function EvidenceContent() {
                 placeholder="Search by Evidence ID, system, finding, or driver..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 bg-surface-dim border border-outline-variant rounded-lg text-xs font-mono text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                className="w-full pl-9 pr-4 py-2 bg-surface-dim border border-outline-variant rounded-xl text-xs font-mono text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
               />
               {searchQuery && (
                 <button
@@ -422,17 +422,17 @@ function EvidenceContent() {
           </div>
 
           {/* Evidence Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="glass-panel rounded-xl p-5 border border-outline-variant hover:border-primary/50 transition-all flex flex-col justify-between"
+                className="glass-panel rounded-2xl p-5 border border-outline-variant hover:border-primary/50 transition-all flex flex-col justify-between shadow-sm hover:shadow-glow"
               >
                 <div>
                   {/* Top Bar: ID + Confidence */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded bg-primary-container/20 border border-primary/40 font-mono text-[11px] font-bold text-primary">
+                      <span className="px-2.5 py-0.5 rounded bg-primary-container/20 border border-primary/40 font-mono text-[11px] font-bold text-primary">
                         {item.id}
                       </span>
                       <span className="text-[10px] font-mono text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
@@ -454,7 +454,7 @@ function EvidenceContent() {
                   </p>
 
                   {/* Metadata Chips */}
-                  <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-on-surface-variant bg-surface-dim p-3 rounded-lg border border-outline-variant/60 mb-4">
+                  <div className="grid grid-cols-2 gap-2 text-[11px] font-mono text-on-surface-variant bg-surface-dim p-3 rounded-xl border border-outline-variant/60 mb-4">
                     <div>
                       <span className="text-[10px] text-on-surface-variant/70 block">Source System:</span>
                       <strong className="text-on-surface">{item.system}</strong>
@@ -474,14 +474,14 @@ function EvidenceContent() {
                   </div>
 
                   {/* SHA-256 Digest Box */}
-                  <div className="p-2.5 rounded bg-surface-container border border-outline-variant flex items-center justify-between text-[10px] font-mono text-on-surface-variant mb-4">
+                  <div className="p-2.5 rounded-xl bg-surface-container border border-outline-variant flex items-center justify-between text-[10px] font-mono text-on-surface-variant mb-4">
                     <div className="truncate mr-2">
                       <span className="text-primary font-bold mr-1.5">SHA-256:</span>
                       <code className="text-on-surface">{item.hash}</code>
                     </div>
                     <button
                       onClick={() => handleCopy(item.id, item.hash)}
-                      className="p-1 rounded hover:bg-surface-dim text-on-surface-variant hover:text-primary transition-all shrink-0"
+                      className="p-1.5 rounded-lg hover:bg-surface-dim text-on-surface-variant hover:text-primary transition-all shrink-0"
                       title="Copy SHA-256 Digest"
                     >
                       {copiedId === item.id ? (
@@ -501,7 +501,7 @@ function EvidenceContent() {
 
                   <button
                     onClick={() => setActiveLineageItem(item)}
-                    className="px-3 py-1.5 rounded-lg bg-surface-dim hover:bg-primary/10 border border-primary/40 text-primary font-mono text-xs font-bold transition-all flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 rounded-lg bg-surface-dim hover:bg-primary/10 border border-primary/40 text-primary font-mono text-xs font-bold transition-all flex items-center gap-1.5 active:scale-[0.98]"
                   >
                     <Layers className="w-3.5 h-3.5" />
                     <span>View Lineage</span>
@@ -512,7 +512,7 @@ function EvidenceContent() {
           </div>
 
           {filteredItems.length === 0 && (
-            <div className="text-center py-12 glass-panel rounded-xl border border-outline-variant">
+            <div className="text-center py-12 glass-panel rounded-2xl border border-outline-variant">
               <FileSearch className="w-10 h-10 text-on-surface-variant mx-auto mb-3 opacity-50" />
               <h3 className="font-display font-bold text-base text-on-surface mb-1">No Evidence Nodes Matched</h3>
               <p className="text-xs font-mono text-on-surface-variant">
@@ -523,8 +523,8 @@ function EvidenceContent() {
 
           {/* Lineage Modal Drawer */}
           {activeLineageItem && (
-            <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-              <div className="glass-panel border-primary rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="glass-panel border-primary rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95 bg-surface">
                 <div className="flex items-center justify-between border-b border-outline-variant pb-4">
                   <div className="flex items-center gap-2.5">
                     <span className="px-2.5 py-1 rounded bg-primary-container/20 border border-primary/40 font-mono text-xs font-bold text-primary">
@@ -541,7 +541,7 @@ function EvidenceContent() {
                 </div>
 
                 <div className="space-y-3 text-xs font-mono">
-                  <div className="grid grid-cols-2 gap-3 p-3.5 rounded-lg bg-surface-dim border border-outline-variant">
+                  <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-surface-dim border border-outline-variant">
                     <div>
                       <span className="text-[10px] text-on-surface-variant/70 block">ETL Pipeline:</span>
                       <strong className="text-primary">{activeLineageItem.lineage.pipeline}</strong>
@@ -568,7 +568,7 @@ function EvidenceContent() {
                       {activeLineageItem.lineage.steps.map((step, idx) => (
                         <div
                           key={idx}
-                          className="p-2.5 rounded bg-surface-dim border border-outline-variant/60 flex items-start gap-2.5"
+                          className="p-2.5 rounded-xl bg-surface-dim border border-outline-variant/60 flex items-start gap-2.5"
                         >
                           <span className="w-5 h-5 rounded-full bg-primary-container/20 text-primary border border-primary/30 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
                             {idx + 1}

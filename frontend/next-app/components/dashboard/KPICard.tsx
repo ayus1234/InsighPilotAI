@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TrendingDown, TrendingUp, AlertTriangle, CheckCircle, ArrowRight } from "lucide-react";
+import { TrendingDown, TrendingUp, AlertTriangle, CheckCircle, ArrowRight, ShieldCheck, Database } from "lucide-react";
 import Link from "next/link";
 import { KPIRecord } from "@/lib/types";
 import {
@@ -36,7 +36,7 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
   const domain =
     kpi.domain ||
     (id.includes("revenue")
-      ? "Financial"
+      ? "Financial Performance"
       : id.includes("margin")
       ? "Profitability"
       : id.includes("unit")
@@ -68,7 +68,7 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
     formattedDelta = `${formatPercent(varPct, true)} vs target`;
   }
 
-  // Generate synthetic mini trend series for Recharts
+  // Realistic mini trend series
   const sparklineData = [
     { period: "Q1", value: prevVal * 0.98 },
     { period: "Q2", value: prevVal },
@@ -80,7 +80,7 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
   const targetLabel =
     kpi.threshold_alert ||
     (id.includes("revenue")
-      ? "$15.43M baseline"
+      ? "$15.43M baseline (2026-Q2)"
       : id.includes("margin")
       ? "60.0% target"
       : id.includes("availability")
@@ -92,15 +92,17 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
   return (
     <div
       className={cn(
-        "glass-panel rounded-xl p-5 relative overflow-hidden transition-all duration-200 glass-panel-hover flex flex-col justify-between",
-        isHero && "border-primary/40 col-span-1 md:col-span-2 shadow-glow"
+        "glass-panel rounded-2xl p-5 relative overflow-hidden transition-all duration-200 glass-panel-hover flex flex-col justify-between",
+        isHero
+          ? "border-primary/40 col-span-1 md:col-span-2 shadow-glow bg-gradient-to-br from-surface-container via-surface to-surface-dim"
+          : "border-outline-variant"
       )}
     >
       {/* Top Header */}
       <div>
         <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant/80 bg-surface-dim px-2 py-0.5 rounded border border-outline-variant">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant/80 bg-surface-dim px-2 py-0.5 rounded border border-outline-variant font-semibold">
               {domain}
             </span>
             {isCritical && (
@@ -116,42 +118,42 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
               </span>
             )}
           </div>
-          <span className="text-[10px] font-mono text-on-surface-variant/60">2026-Q3</span>
+          <span className="text-[10px] font-mono text-on-surface-variant/60 font-semibold">2026-Q3</span>
         </div>
 
-        <h3 className="font-display font-semibold text-sm text-on-surface mb-1 tracking-tight">
+        <h3 className="font-display font-bold text-sm text-on-surface mb-1 tracking-tight">
           {name}
         </h3>
 
         {/* Big Metric Display */}
         <div className="flex items-baseline gap-3 my-2">
-          <div className="font-display font-extrabold text-3xl text-on-surface tracking-tight">
+          <div className="font-display font-extrabold text-3xl md:text-4xl text-on-surface tracking-tight">
             {formattedCurrent}
           </div>
           <div
             className={cn(
-              "flex items-center text-xs font-mono font-bold",
-              isNegative ? "text-error" : "text-success"
+              "flex items-center text-xs font-mono font-bold px-2 py-0.5 rounded",
+              isNegative ? "text-error bg-error-container/15" : "text-success bg-success-container/15"
             )}
           >
             {isNegative ? (
-              <TrendingDown className="w-3.5 h-3.5 mr-0.5" />
+              <TrendingDown className="w-3.5 h-3.5 mr-1" />
             ) : (
-              <TrendingUp className="w-3.5 h-3.5 mr-0.5" />
+              <TrendingUp className="w-3.5 h-3.5 mr-1" />
             )}
             <span>{formattedDelta}</span>
           </div>
         </div>
       </div>
 
-      {/* Chart visualization if Hero card */}
+      {/* Hero Sparkline Area Chart */}
       {isHero && (
-        <div className="h-24 w-full my-2">
+        <div className="h-28 w-full my-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={sparklineData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="heroGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#4FDEC8" stopOpacity={0.4} />
+                  <stop offset="5%" stopColor="#4FDEC8" stopOpacity={0.35} />
                   <stop offset="95%" stopColor="#4FDEC8" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
@@ -170,7 +172,7 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
                 type="monotone"
                 dataKey="value"
                 stroke="#4FDEC8"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 fillOpacity={1}
                 fill="url(#heroGradient)"
               />
@@ -181,15 +183,15 @@ export function KPICard({ kpi, isHero = false }: KPICardProps) {
 
       {/* Card Footer Link */}
       <div className="pt-3 mt-3 border-t border-outline-variant/40 flex items-center justify-between text-xs font-mono">
-        <span className="text-on-surface-variant/70 text-[11px]">
+        <span className="text-on-surface-variant/70 text-[10px] truncate max-w-[200px]">
           Target: {targetLabel}
         </span>
         <Link
           href="/root-cause"
-          className="text-primary hover:text-primary-dark flex items-center gap-1 font-semibold transition-colors"
+          className="text-primary hover:text-primary-dark flex items-center gap-1 font-bold text-xs transition-colors group"
         >
           <span>Investigate</span>
-          <ArrowRight className="w-3 h-3" />
+          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
     </div>

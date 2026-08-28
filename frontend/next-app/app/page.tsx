@@ -9,7 +9,7 @@ import { AlertFeed } from "@/components/dashboard/AlertFeed";
 import { RegionalHealthTable } from "@/components/dashboard/RegionalHealthTable";
 import { apiClient } from "@/lib/api";
 import { KPIRecord, AIExplanationResponse, PersonaType } from "@/lib/types";
-import { GitFork, Download, RefreshCw } from "lucide-react";
+import { GitFork, Download, RefreshCw, ShieldCheck, Database, Sparkles, Lock } from "lucide-react";
 import Link from "next/link";
 
 export default function CommandCenterPage() {
@@ -123,7 +123,6 @@ export default function CommandCenterPage() {
     kpis.find((k) => (k.id || k.kpi_id) === "north_america_east_revenue") || kpis[0];
   const secondaryKpis = kpis.filter((k) => (k.id || k.kpi_id) !== "north_america_east_revenue");
 
-
   return (
     <div className="flex min-h-screen bg-background text-on-surface">
       {/* Sidebar */}
@@ -142,10 +141,10 @@ export default function CommandCenterPage() {
           {/* Header Action Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] font-mono text-error font-bold uppercase tracking-widest bg-error-container/20 border border-error/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
-                  Active Anomaly Detected
+                  CRITICAL DEFICIT DETECTED
                 </span>
                 <span className="text-xs font-mono text-on-surface-variant">
                   Period: 2026-Q3 vs 2026-Q2 Baseline
@@ -159,7 +158,7 @@ export default function CommandCenterPage() {
             <div className="flex items-center gap-3">
               <button
                 onClick={() => fetchData(persona)}
-                className="p-2 rounded-lg bg-surface-container border border-outline-variant hover:bg-surface-bright/20 transition-colors text-on-surface-variant"
+                className="p-2 rounded-lg bg-surface-container border border-outline-variant hover:bg-surface-bright/30 transition-colors text-on-surface-variant"
                 title="Refresh Telemetry"
               >
                 <RefreshCw className="w-4 h-4" />
@@ -169,7 +168,7 @@ export default function CommandCenterPage() {
                 className="px-4 py-2 bg-surface-container border border-primary/40 hover:bg-primary/10 text-primary rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-2"
               >
                 <GitFork className="w-4 h-4" />
-                <span>Open Decision Graph</span>
+                <span>Decision Graph</span>
               </Link>
               <Link
                 href="/briefing"
@@ -178,6 +177,22 @@ export default function CommandCenterPage() {
                 <Download className="w-4 h-4" />
                 <span>Executive Briefing</span>
               </Link>
+            </div>
+          </div>
+
+          {/* Architectural Trust Indicators Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-dim border border-outline-variant">
+              <Database className="w-4 h-4 text-primary shrink-0" />
+              <span className="text-on-surface-variant">Truth: <strong className="text-primary font-bold">100% Deterministic Math</strong></span>
+            </div>
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-dim border border-outline-variant">
+              <ShieldCheck className="w-4 h-4 text-secondary shrink-0" />
+              <span className="text-on-surface-variant">Evidence: <strong className="text-secondary font-bold">SHA-256 Validated</strong></span>
+            </div>
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-dim border border-outline-variant">
+              <Sparkles className="w-4 h-4 text-tertiary shrink-0" />
+              <span className="text-on-surface-variant">Reasoning: <strong className="text-tertiary font-bold">Grounded Multi-Model AI</strong></span>
             </div>
           </div>
 

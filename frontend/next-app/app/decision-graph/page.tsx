@@ -19,6 +19,7 @@ import {
   ChevronRight,
   X,
   RefreshCw,
+  Lock,
 } from "lucide-react";
 import Link from "next/link";
 import { apiClient } from "@/lib/api";
@@ -368,10 +369,10 @@ export default function DecisionGraphPage() {
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest bg-primary-container/20 border border-primary/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                   <GitFork className="w-3.5 h-3.5" />
-                  {abstained ? "2-Column Safe Topology" : "6-Column Causal Topology"}
+                  {abstained ? "2-Column Safe Restricted Topology" : "6-Column Interactive Causal Topology"}
                 </span>
                 <span className="text-xs font-mono text-on-surface-variant">
                   {abstained
@@ -418,13 +419,13 @@ export default function DecisionGraphPage() {
           )}
 
           {/* Interactive Graph Grid */}
-          <div className={`grid grid-cols-1 ${abstained ? "md:grid-cols-2" : "md:grid-cols-6"} gap-3 overflow-x-auto pb-4`}>
+          <div className={`grid grid-cols-1 ${abstained ? "md:grid-cols-2" : "md:grid-cols-6"} gap-3.5 overflow-x-auto pb-4`}>
             {columns.map((col) => {
               const colNodes = filteredNodes.filter((n) => n.column === col.num);
               return (
-                <div key={col.num} className="space-y-3 min-w-[180px]">
+                <div key={col.num} className="space-y-3 min-w-[185px]">
                   {/* Column Header */}
-                  <div className="text-[11px] font-mono font-bold text-on-surface-variant/80 uppercase tracking-wider px-1 pb-1 border-b border-outline-variant/60">
+                  <div className="text-[11px] font-mono font-bold text-on-surface-variant/80 uppercase tracking-wider px-1 pb-1.5 border-b border-outline-variant/60">
                     {col.title}
                   </div>
 
@@ -448,11 +449,11 @@ export default function DecisionGraphPage() {
                         <div
                           key={node.id}
                           onClick={() => setSelectedNodeId(node.id)}
-                          className={`glass-panel rounded-xl p-3.5 border transition-all cursor-pointer relative ${
+                          className={`glass-panel rounded-xl p-4 border transition-all cursor-pointer relative ${
                             isSelected
                               ? "border-primary ring-2 ring-primary bg-primary-container/15 shadow-glow scale-[1.02]"
                               : isRelated
-                              ? "border-primary/60 bg-surface-dim/90 ring-1 ring-primary/30"
+                              ? "border-primary/60 bg-surface-dim/95 ring-1 ring-primary/30"
                               : "border-outline-variant/80 hover:border-primary/40 opacity-90 hover:opacity-100"
                           }`}
                         >
@@ -496,8 +497,8 @@ export default function DecisionGraphPage() {
 
           {/* Node Inspector Bottom Drawer */}
           {selectedNode && (
-            <div className="glass-panel rounded-xl p-5 border-primary/40 bg-surface-dim/95 space-y-4">
-              <div className="flex items-center justify-between border-b border-outline-variant pb-3">
+            <div className="glass-panel rounded-2xl p-6 border-primary/40 bg-surface-dim/95 space-y-4 shadow-glow">
+              <div className="flex items-center justify-between border-b border-outline-variant pb-3.5">
                 <div className="flex items-center gap-3">
                   <span className="px-2.5 py-1 rounded bg-primary-container/20 text-primary border border-primary/30 font-mono text-xs font-bold uppercase">
                     {selectedNode.type} Node • {selectedNode.columnTitle}
@@ -512,12 +513,12 @@ export default function DecisionGraphPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs font-mono">
-                <div className="md:col-span-6 space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-5 text-xs font-mono">
+                <div className="md:col-span-6 space-y-2.5">
                   <div className="text-[11px] text-on-surface-variant/80 uppercase font-bold">Node Narrative & Telemetry</div>
                   <p className="text-on-surface leading-relaxed">{selectedNode.description}</p>
                   {selectedNode.hash && (
-                    <div className="p-2 rounded bg-surface-container border border-outline-variant text-[10px] text-primary truncate">
+                    <div className="p-2.5 rounded bg-surface-container border border-outline-variant text-[10px] text-primary truncate">
                       SHA-256 Digest: <code>{selectedNode.hash}</code>
                     </div>
                   )}
@@ -531,7 +532,7 @@ export default function DecisionGraphPage() {
                         <button
                           key={pid}
                           onClick={() => setSelectedNodeId(pid)}
-                          className="w-full text-left p-1.5 rounded bg-surface-container hover:bg-primary/10 border border-outline-variant text-primary text-[11px] truncate flex items-center justify-between"
+                          className="w-full text-left p-2 rounded bg-surface-container hover:bg-primary/10 border border-outline-variant text-primary text-[11px] truncate flex items-center justify-between transition-colors"
                         >
                           <span>{pid}</span>
                           <ChevronRight className="w-3 h-3" />
@@ -551,7 +552,7 @@ export default function DecisionGraphPage() {
                         <button
                           key={cid}
                           onClick={() => setSelectedNodeId(cid)}
-                          className="w-full text-left p-1.5 rounded bg-surface-container hover:bg-primary/10 border border-outline-variant text-primary text-[11px] truncate flex items-center justify-between"
+                          className="w-full text-left p-2 rounded bg-surface-container hover:bg-primary/10 border border-outline-variant text-primary text-[11px] truncate flex items-center justify-between transition-colors"
                         >
                           <span>{cid}</span>
                           <ChevronRight className="w-3 h-3" />
