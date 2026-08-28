@@ -9,24 +9,29 @@
 
 ## Overview
 
-This directory contains the final submission audit reports, metric consistency verification matrices, judge onboarding blueprints, and reproducibility guides for **InsightPilot AI**.
+This directory houses the master competition submission package, evaluator navigation maps, asset manifests, portal metadata templates, and technical audit reports for **InsightPilot AI**.
 
 ---
 
-## Directory Navigation
+## Submission Package Directory Navigation
 
-| Document | Purpose |
-| :--- | :--- |
-| [`FINAL_SUBMISSION_AUDIT.md`](./FINAL_SUBMISSION_AUDIT.md) | Authoritative 19-category system verification report and final competition readiness verdict. |
-| [`METRIC_CONSISTENCY_AUDIT.md`](./METRIC_CONSISTENCY_AUDIT.md) | Repository-wide cross-metric consistency audit confirming 100% numerical parity. |
-| [`JUDGE_QUICKSTART.md`](./JUDGE_QUICKSTART.md) | 5-minute evaluation blueprint, core architectural tenets, and 7-screen narrative route mapping. |
-| [`REPRODUCIBILITY_GUIDE.md`](./REPRODUCIBILITY_GUIDE.md) | Clean-start reproduction workflow from clone to running prototype. |
-| [`COMPETITION_READINESS_CHECKLIST.md`](./COMPETITION_READINESS_CHECKLIST.md) | Comprehensive multi-category delivery assurance checklist. |
-| [`SUBMISSION_MANIFEST.md`](./SUBMISSION_MANIFEST.md) | Evaluator-friendly inventory of all submission documents and assets with links. |
+| # | Document | Purpose & Description |
+| :---: | :--- | :--- |
+| **1** | **[Start Here: Judge Quickstart](./JUDGE_QUICKSTART.md)** | 5-minute evaluator overview, foundational tenets, and 7-screen route map. |
+| **2** | **[Final Submission Package](./FINAL_SUBMISSION_PACKAGE.md)** | Master evaluator-facing project overview, technical differentiators, and entry points. |
+| **3** | **[Judge Submission Map](./JUDGE_SUBMISSION_MAP.md)** | Fast intent-based navigation guide ("If the judge wants to..."). |
+| **4** | **[Final Submission Manifest](./FINAL_SUBMISSION_MANIFEST.md)** | Complete 6-category inventory of all competition deliverables and repo paths. |
+| **5** | **[Final Asset Checklist](./FINAL_ASSET_CHECKLIST.md)** | Pre-submission quality assurance and delivery checklist across all subsystems. |
+| **6** | **[Portal Metadata Template](./SUBMISSION_PORTAL_METADATA_TEMPLATE.md)** | Clean copy-paste text and field templates for the official competition submission portal. |
+| **7** | **[External Asset Placeholders](./EXTERNAL_ASSET_PLACEHOLDERS.md)** | Registry tracking external assets requiring manual upload (video URLs, PDF decks). |
+| **8** | **[Final Delivery Matrix](./FINAL_DELIVERY_MATRIX.md)** | High-level status matrix tracking readiness, repo paths, and verification status. |
+| **9** | **[Final Submission Audit](./FINAL_SUBMISSION_AUDIT.md)** | Authoritative 19-category system verification report and readiness verdict. |
+| **10** | **[Metric Consistency Audit](./METRIC_CONSISTENCY_AUDIT.md)** | Repository-wide cross-metric consistency audit confirming 100% numerical parity. |
+| **11** | **[Clean-Start Reproducibility Guide](./REPRODUCIBILITY_GUIDE.md)** | Step-by-step reproduction blueprint from clean clone to running prototype. |
 
 ---
 
-## 7-Screen Judge Evaluation Sequence
+## 7-Screen Live Prototype Navigation
 
 ```text
 1. Command Center (/) ──────────────────> Problem: -$1.23M (-7.97%) Critical Deficit
