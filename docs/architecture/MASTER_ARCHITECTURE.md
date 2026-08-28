@@ -138,29 +138,29 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
 ---
 
 ### Layer 2: Deterministic Analytics & Inference Layer
-* **KPI Engine ([`analytics/kpi_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/analytics/kpi_engine.py)):**
+* **KPI Engine ([`analytics/kpi_engine.py`](../../analytics/kpi_engine.py)):**
   - Computes period-over-period variance: $\Delta V = V_{curr} - V_{prev}$.
   - Materiality classification: Flags $\le -3.0\%$ as `CRITICAL_NEGATIVE_VARIANCE`.
-* **Driver Engine ([`analytics/driver_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/analytics/driver_engine.py)):**
+* **Driver Engine ([`analytics/driver_engine.py`](../../analytics/driver_engine.py)):**
   - Performs multi-factor variance decomposition across 4 independent causal dimensions.
   - Normalizes raw unconstrained impact ($1.272M) to exact 100.0% variance allocation.
-* **Evidence Engine ([`evidence/evidence_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/evidence/evidence_engine.py)):**
+* **Evidence Engine ([`evidence/evidence_engine.py`](../../evidence/evidence_engine.py)):**
   - Retrieves empirical corroboration across ERP, CRM, Support, and Market Intel.
   - Calculates evidence ranking score $R = 0.40 \cdot \text{Relevance} + 0.35 \cdot \text{Reliability} + 0.25 \cdot \text{LineageQuality}$.
-* **Confidence Engine ([`analytics/confidence_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/analytics/confidence_engine.py)):**
+* **Confidence Engine ([`analytics/confidence_engine.py`](../../analytics/confidence_engine.py)):**
   - Deterministic 6-Factor Multi-Factor Confidence Scoring Model:
     $$\text{Score} = 0.25 \cdot \text{Sufficiency} + 0.20 \cdot \text{Quality} + 0.20 \cdot \text{DriverCoverage} + 0.15 \cdot \text{Corroboration} + 0.10 \cdot \text{Lineage} + 0.10 \cdot \text{Consistency}$$
   - Canonical calculation yields **89% (HIGH)**.
   - Mandatory Abstention Rule: If $\text{Score} < 65\%$, system activates `abstention_node` and suppresses generative LLM invocation.
-* **Recommendation Engine ([`analytics/recommendations.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/analytics/recommendations.py)):**
+* **Recommendation Engine ([`analytics/recommendations.py`](../../analytics/recommendations.py)):**
   - Generates 4 prioritized, actionable intervention levers with estimated recovery amounts ($484K, $180K, $238K, $93.6K).
-* **Simulation Engine ([`simulation/simulation_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/simulation/simulation_engine.py)):**
+* **Simulation Engine ([`simulation/simulation_engine.py`](../../simulation/simulation_engine.py)):**
   - Sandbox what-if model calculating revenue and gross margin recovery from parameter modifications (e.g. 79.4% $\to$ 90.0% inventory availability yields +$341,422.91).
 
 ---
 
 ### Layer 3: Agentic Orchestration Layer (LangGraph)
-* **11-Node LangGraph State Pipeline ([`ai/langgraph/workflow.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/ai/langgraph/workflow.py)):**
+* **11-Node LangGraph State Pipeline ([`ai/langgraph/graph.py`](../../ai/langgraph/graph.py)):**
   1. `load_kpi_node` (DETERMINISTIC): Ingests baseline and comparison period records.
   2. `calculate_movement_node` (DETERMINISTIC): Calculates exact numerical movement and threshold materiality.
   3. `identify_drivers_node` (DETERMINISTIC): Decomposes variance into 4 normalized causal drivers.
@@ -178,7 +178,7 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
 ---
 
 ### Layer 4: Capability-Aware AI & Safety Guard Layer
-* **Multi-Tier Provider Routing Matrix ([`ai/orchestration/provider_router.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/ai/orchestration/provider_router.py)):**
+* **Multi-Tier Provider Routing Matrix ([`ai/orchestration/provider_router.py`](../../ai/orchestration/provider_router.py)):**
   ```text
   STANDARD REASONING TASKS:
   [Groq Pool 1: llama-3.3-70b-versatile]
@@ -199,7 +199,7 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
   MULTIMODAL TASKS (Image / Chart / Vision):
   [Gemini Pool 1] ──(failover)──► [Gemini Pool 2] ──(fallback)──► [Deterministic Fallback]
   ```
-* **Grounding Validator ([`ai/langgraph/nodes/investigation_nodes.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/ai/langgraph/nodes/investigation_nodes.py)):**
+* **Grounding Validator ([`ai/langgraph/nodes/investigation_nodes.py`](../../ai/langgraph/nodes/investigation_nodes.py)):**
   - Inspects LLM JSON responses against the immutable context container.
   - Rejects any response citing unverified evidence IDs or hallucinated driver names.
   - Automatically activates deterministic synthesis if an LLM fails grounding validation.
@@ -209,7 +209,7 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
 ---
 
 ### Layer 5: Dynamic Decision Graph & Presentation Layer
-* **Dynamic Decision Graph Generator ([`ai/decision_graph/generator.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/ai/decision_graph/generator.py)):**
+* **Dynamic Decision Graph Generator ([`ai/decision_graph/generator.py`](../../ai/decision_graph/generator.py)):**
   - Dynamically synthesizes the authoritative 6-column causal topology:
     - **Col 1 (KPI Anomaly):** `kpi-1` (-$1.23M / -7.97%).
     - **Col 2 (Causal Drivers):** `drv-1` (Atlanta Stockout), `drv-2` (Horizon Pricing), `drv-3` (PO Deferrals), `drv-4` (SKU Mix Shift).
@@ -219,9 +219,9 @@ InsightPilot AI is organized into 5 modular, decoupled, and testable tiers:
     - **Col 6 (Predicted Outcome):** `out-1` (+$484K Revenue Recovery & Inventory Stabilization).
 * **Restricted 2-Column Graph on Abstention:**
   - If analytical confidence is below 65%, Columns 3–6 are suppressed to prevent speculative actions.
-* **FastAPI REST Service ([`backend/app/main.py`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/backend/app/main.py)):**
+* **FastAPI REST Service ([`backend/app/main.py`](../../backend/app/main.py)):**
   - Typed Pydantic v2 endpoints for `/kpis`, `/investigations`, `/evidence`, `/decision-graph`, `/recommendations`, `/simulations`, `/ai`, and `/demo`.
-* **Next.js 14 Interactive Web Application ([`frontend/next-app/`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/frontend/next-app)):**
+* **Next.js 14 Interactive Web Application ([`frontend/next-app/`](../../frontend/next-app)):**
   - **Screen 1:** Command Center (KPI anomaly triage & persona selector).
   - **Screen 2:** Root Cause Diagnosis (Driver decomposition & Grounded AI synthesis).
   - **Screen 3:** AI Investigation Activity (Live LangGraph node execution & latency telemetry).

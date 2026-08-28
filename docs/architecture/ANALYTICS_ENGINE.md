@@ -30,11 +30,11 @@ flowchart TD
 ```
 
 ### Module Responsibilities:
-- [`analytics/data_loader.py`](file:///c:/Users/hp/Downloads/New%20folder%20(11)/analytics/data_loader.py): Parses dates, validates required columns, enforces relational integrity, and caches in-memory structured records.
-- [`analytics/kpi_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20(11)/analytics/kpi_engine.py): Implements exact formulas for all 5 core KPIs, sequential period comparison, materiality status labeling, and sparse-history evaluation.
-- [`analytics/driver_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20(11)/analytics/driver_engine.py): Executes multi-factor operational analyses (inventory stockouts, SKU sales volumes, distributor purchase order deferrals, competitor price cuts) and normalizes contributions.
-- [`analytics/confidence_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20(11)/analytics/confidence_engine.py): Computes deterministic 0–100 confidence scores and enforces the mandatory abstention gate when confidence $<65\%$.
-- [`analytics/investigation_engine.py`](file:///c:/Users/hp/Downloads/New%20folder%20(11)/analytics/investigation_engine.py): Assembles the unified investigation output strictly adhering to `data/schemas/investigation_result.json`.
+- [`analytics/data_loader.py`](../../analytics/data_loader.py): Parses dates, validates required columns, enforces relational integrity, and caches in-memory structured records.
+- [`analytics/kpi_engine.py`](../../analytics/kpi_engine.py): Implements exact formulas for all 5 core KPIs, sequential period comparison, materiality status labeling, and sparse-history evaluation.
+- [`analytics/driver_engine.py`](../../analytics/driver_engine.py): Executes multi-factor operational analyses (inventory stockouts, SKU sales volumes, distributor purchase order deferrals, competitor price cuts) and normalizes contributions.
+- [`analytics/confidence_engine.py`](../../analytics/confidence_engine.py): Computes deterministic 0–100 confidence scores and enforces the mandatory abstention gate when confidence $<65\%$.
+- [`analytics/investigation_engine.py`](../../analytics/investigation_engine.py): Assembles the unified investigation output strictly adhering to `data/schemas/investigation_result.json`.
 
 ---
 

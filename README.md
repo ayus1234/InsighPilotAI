@@ -123,7 +123,7 @@ To guarantee 100% testable reproducibility, InsightPilot AI is benchmarked on a 
 ## 🧠 Core Engineering Highlights
 
 ### 1. LangGraph Multi-Agent Orchestration (11-Node Pipeline)
-The investigation pipeline ([`ai/langgraph/workflow.py`](ai/langgraph/workflow.py)) executes an 11-node deterministic state machine:
+The investigation pipeline ([`ai/langgraph/graph.py`](ai/langgraph/graph.py)) executes an 11-node deterministic state machine:
 * `load_kpi_node` $\to$ `calculate_movement_node` $\to$ `identify_drivers_node` $\to$ `retrieve_evidence_node` $\to$ `validate_evidence_node` $\to$ `calculate_confidence_node` $\to$ `confidence_router` (Abstain if score $< 65\%$) $\to$ `prepare_grounding_node` $\to$ `route_ai_capability_node` $\to$ `ai_invocation_node` $\to$ `executive_synthesis_node` $\to$ `recommendations_context_node`.
 
 ### 2. Multi-Tier AI Provider Routing & Failover Matrix
