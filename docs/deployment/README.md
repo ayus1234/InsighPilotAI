@@ -1,19 +1,33 @@
-# InsightPilot AI — Deployment & Production Operations Hub
+# InsightPilot AI — Deployment & Cloud Operations Hub
 
 **Project:** InsightPilot AI  
 **Competition:** Accenture Innovation Challenge 2026 (Track 3: BusinessIntelligence.ai)  
 **Directory:** `docs/deployment/`  
-**Status:** `🟢 PRODUCTION DEPLOYMENT READY`
+**Status:** `🟡 DEPLOYMENT READY — EXTERNAL PLATFORM ACTION REQUIRED`
 
 ---
 
 ## Overview
 
-This directory contains the production architecture blueprints, environment configuration guides, frontend and backend deployment manuals, CORS security audits, healthcheck specifications, security reviews, and operational runbooks for **InsightPilot AI**.
+This directory contains the production architecture blueprints, environment configuration guides, frontend and backend deployment manuals, cloud infrastructure specifications, live deployment reports, CORS security audits, healthcheck specifications, security reviews, and operational runbooks for **InsightPilot AI**.
 
 ---
 
-## Deployment Documentation Directory
+## 🚀 Phase 8.2 — Cloud Deployment Execution Deliverables
+
+| # | Document | Purpose & Description |
+| :---: | :--- | :--- |
+| **1** | **[Phase 8.2 Deployment Topology](./PHASE_82_DEPLOYMENT_TOPOLOGY.md)** | Selected platform topology (Vercel edge + Render API gateway + GitHub CI/CD). |
+| **2** | **[Backend Live Deployment Report](./BACKEND_LIVE_DEPLOYMENT_REPORT.md)** | FastAPI backend deployment audit, runtime specs, and cloud execution status. |
+| **3** | **[Frontend Live Deployment Report](./FRONTEND_LIVE_DEPLOYMENT_REPORT.md)** | Next.js 14 edge deployment audit, static page compilation, and route matrix. |
+| **4** | **[Production Secret Handoff](./PRODUCTION_SECRET_HANDOFF.md)** | Secure placeholder-only environment variable template for cloud platform configuration. |
+| **5** | **[Live CORS & API Validation](./LIVE_CORS_AND_API_VALIDATION.md)** | End-to-end CORS negotiation protocol and executable verification command sequence. |
+| **6** | **[Production Smoke Test Report](./PRODUCTION_SMOKE_TEST_REPORT.md)** | Comprehensive smoke test matrix across infrastructure, application, and trust tiers. |
+| **7** | **[Live Deployment Status Registry](./LIVE_DEPLOYMENT_STATUS.md)** | Authoritative master deployment status registry and `CONDITIONAL GO` verdict. |
+
+---
+
+## 📋 Phase 8.1 — Production Deployment Readiness Deliverables
 
 | # | Document | Purpose & Description |
 | :---: | :--- | :--- |
@@ -30,12 +44,8 @@ This directory contains the production architecture blueprints, environment conf
 
 ---
 
-## Core Deployment Invariants
+## Infrastructure as Code Files in Root Directory
 
-```text
-1. Mathematical Truth: Deterministic Python engines calculate 100% of figures.
-2. Canonical Metrics: $15.43M -> $14.20M (-$1.23M / -7.97%), 43.2% Atlanta DC, 89% Confidence, <65% Abstention.
-3. Secret Isolation: Zero API keys in frontend bundles or Git history.
-4. Health Probes: Dual lightweight liveness probes at /health and /api/v1/health.
-5. Production Build: 10/10 static pages compiled with zero build errors.
-```
+- **[`render.yaml`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/render.yaml)**: 1-click infrastructure blueprint for Render web service deployment.
+- **[`Dockerfile`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/Dockerfile)**: Multi-stage Python 3.11 container specification for containerized hosting.
+- **[`Procfile`](file:///c:/Users/hp/Downloads/New%20folder%20%2811%29/Procfile)**: Standard PaaS process execution manifest.
