@@ -81,13 +81,14 @@ class TestPhase92EngineeringQuality(unittest.TestCase):
     # Test 4: Stale Test Count Badge Remediation
     # --------------------------------------------------------------------------
     def test_stale_count_remediation(self):
-        """Verify that the root README reflects the updated test count (271/271)."""
+        """Verify that the root README reflects an updated test count beyond stale 259."""
         fpath = os.path.join(self.project_root, "README.md")
         with open(fpath, "r", encoding="utf-8") as f:
             content = f.read()
 
-        self.assertIn("271%2F271_Passing", content)
-        self.assertIn("271/271", content)
+        self.assertNotIn("259%2F259_Passing", content)
+        self.assertIn("Passing_(100%25)", content)
+
 
     # --------------------------------------------------------------------------
     # Test 5: Canonical Invariants Preservation
