@@ -10,8 +10,9 @@
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2_(App_Router)-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph_Multi--Agent-orange.svg?style=for-the-badge)](https://langchain-ai.github.io/langgraph/)
 [![AI Engines](https://img.shields.io/badge/AI_Engines-Groq_Llama_3.3_70B_%7C_Google_Gemini_2.5_Flash-purple.svg?style=for-the-badge)](https://groq.com)
-[![Tests Passing](https://img.shields.io/badge/Tests-279%2F279_Passing_(100%25)-success.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
+[![Tests Passing](https://img.shields.io/badge/Tests-287%2F287_Passing_(100%25)-success.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
 [![Build Status](https://img.shields.io/badge/Production_Build-10%2F10_Static_Routes_Passed-brightgreen.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
+
 
 
 [💼 Recruiter Overview (2 Mins)](docs/portfolio/RECRUITER_OVERVIEW.md) • [📖 Technical Case Study](docs/portfolio/CASE_STUDY.md) • [🗺️ System Walkthrough](docs/portfolio/TECHNICAL_WALKTHROUGH.md) • [🌟 Feature Showcase](docs/portfolio/FEATURE_SHOWCASE.md) • [🏗️ Engineering Hub](docs/engineering/README.md)
@@ -156,7 +157,7 @@ InsightPilot AI maintains a strict, zero-drift verification pipeline:
 # 1. Validate dataset integrity & referential constraints (6/6 checks)
 python tests/validate_dataset.py
 
-# 2. Run full backend test suite (279/279 tests passing)
+# 2. Run full backend test suite (287/287 tests passing)
 python -m unittest discover -s tests -t . -p "test_*.py"
 
 # 3. Build Next.js production bundle (10/10 static routes pre-rendered)
@@ -178,6 +179,8 @@ cd frontend/next-app && npm run build
 | **🎯 Pitch Deck Specification** | 12-slide executive presentation blueprint and visual layouts. | [`docs/presentation/`](docs/presentation/COMPETITION_PITCH_DECK_SPECIFICATION.md) |
 | **🎬 Demo Video Production** | 3-minute video recording script, cues, and storyboard beats. | [`docs/demo/`](docs/demo/DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md) |
 | **🎤 Judge Simulation & Defense** | Tough technical, business, and AI defense transcripts. | [`docs/rehearsal/`](docs/rehearsal/JUDGE_SIMULATION_AND_REHEARSAL_TRANSCRIPT.md) |
+| **🏛️ Project Closure & Handoff** | Final completion report, long-term handoff manual, and closure register. | [`docs/closure/`](docs/closure/README.md) |
+
 
 
 ---
@@ -186,7 +189,8 @@ cd frontend/next-app && npm run build
 
 | Status Scope | Verification Level | Current State |
 | :--- | :--- | :---: |
-| **Core Product & Analytics** | `VERIFIED LOCALLY` | 🟢 100% Complete & Tested (279/279 Tests) |
+| **Core Product & Analytics** | `VERIFIED LOCALLY` | 🟢 100% Complete & Tested (287/287 Tests) |
+
 
 
 | **Frontend Static Compilation** | `VERIFIED LOCALLY` | 🟢 10/10 Static Routes Compiled Cleanly |
