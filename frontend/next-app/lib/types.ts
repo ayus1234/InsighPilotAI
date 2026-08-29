@@ -3,7 +3,7 @@
  * Maps 1:1 with authoritative backend Pydantic API response schemas.
  */
 
-export type PersonaType = "CFO" | "REGIONAL_SALES_MANAGER";
+export type PersonaType = "CFO" | "REGIONAL_SALES_MANAGER" | "COO" | "SUPPLY_CHAIN_LEAD";
 
 export interface KPIRecord {
   id?: string;
@@ -41,11 +41,13 @@ export interface DriverRecord {
   contribution_pct: number;
   impact_usd: number;
   confidence_score: number;
-  confidence_level: "HIGH" | "MEDIUM" | "LOW";
-  supporting_evidence_ids: string[];
-  controllability: "HIGH" | "MEDIUM" | "LOW";
-  category: string;
+  confidence_level?: "HIGH" | "MEDIUM" | "LOW" | string;
+  supporting_evidence_ids?: string[];
+  evidence_ids?: string[];
+  controllability?: "HIGH" | "MEDIUM" | "LOW" | string;
+  category?: string;
 }
+
 
 export interface KPIBlockType {
   kpi_id: string;

@@ -1,348 +1,490 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { TopBar } from "@/components/navigation/TopBar";
+import { useApp } from "@/context/AppContext";
 import { apiClient } from "@/lib/api";
-import { RecommendationsResponse, SimulationResult, RecommendationRecord } from "@/lib/types";
-import {
-  formatCurrencyThousands,
-  formatCurrencyMillions,
-  formatPercent,
-  formatPoints,
-  formatConfidence,
-} from "@/lib/formatters";
-import {
-  Cpu,
-  CheckCircle2,
-  ArrowRight,
-  Sliders,
-  ShieldCheck,
-  Zap,
-  TrendingUp,
-  Clock,
-  UserCheck,
-  Check,
-  Send,
-  AlertCircle,
-  FileCheck,
-  Sparkles,
-  Layers,
-} from "lucide-react";
+import { SimulationResult } from "@/lib/types";
 import Link from "next/link";
 
 export default function RecommendationsPage() {
-  const [sliderVal, setSliderVal] = useState<number>(90.0);
-  const [isSimulating, setIsSimulating] = useState<boolean>(false);
-  const [dispatched, setDispatched] = useState<boolean>(false);
-  const [recommendations, setRecommendations] = useState<RecommendationRecord[]>([]);
+  const { region, regionData } = useApp();
+  const [availabilityVal, setAvailabilityVal] = useState<number>(90.0);
+  const [freightDaysVal, setFreightDaysVal] = useState<number>(7);
+  const [discountConcessionVal, setDiscountConcessionVal] = useState<number>(2.5);
 
-  const [simulation, setSimulation] = useState<SimulationResult>({
-    scenario_name: "Atlanta DC Inventory Optimization",
-    region: "NA-East",
-    input_availability_pct: 90.0,
-    baseline_availability_pct: 79.4,
-    availability_delta_pts: 10.6,
-    projected_recovery_usd: 341422.91,
-    projected_total_revenue_usd: 14541422.96,
-    projected_margin_impact_pts: 1.4,
-    confidence_score: 91,
-    assumptions: [
-      "Linear inventory-to-revenue elasticity ratio of 0.73.",
-      "Constant retail POS end-consumer brand demand baseline.",
-      "Expedited freight transit latency of 48 hours Chicago → Atlanta.",
-    ],
-    timestamp: new Date().toISOString(),
-  });
+  const [dispatchedActions, setDispatchedActions] = useState<Record<string, boolean>>({});
+  const [activeMatrixSpotlight, setActiveMatrixSpotlight] = useState<number>(1);
+  const [showDispatchModal, setShowDispatchModal] = useState<boolean>(false);
+  const [activeDispatchItem, setActiveDispatchItem] = useState<{ id: string; title: string; units: number; poNumber: string } | null>(null);
 
-  useEffect(() => {
-    apiClient
-      .getRecommendations("north_america_east_revenue", "NA-East")
-      .then((res) => {
-        if (res.recommendations && res.recommendations.length > 0) {
-          setRecommendations(res.recommendations);
-        }
-      })
-      .catch((e) => console.warn("Failed to load recommendations:", e));
-  }, []);
+  // Compute live multi-lever elasticity
+  const baselineAvail = 79.4;
+  const deltaAvail = Math.max(0, availabilityVal - baselineAvail);
+  const availRecovery = deltaAvail * 32209.71;
+  const freightSpeedBonus = Math.max(0, (14 - freightDaysVal) * 8500);
+  const concessionCost = (discountConcessionVal / 100) * 180000 * 0.4;
 
-  const handleSliderChange = async (newVal: number) => {
-    setSliderVal(newVal);
-    setIsSimulating(true);
-    try {
-      const res = await apiClient.simulateInventoryAvailability(newVal, "NA-East");
-      setSimulation(res);
-    } catch (e) {
-      // Deterministic client fallback matching the backend elasticity equation
-      const delta = newVal - 79.4;
-      const rec = Math.max(0, delta * 32209.71);
-      setSimulation({
-        scenario_name: "Atlanta DC Inventory Optimization",
-        region: "NA-East",
-        input_availability_pct: newVal,
-        baseline_availability_pct: 79.4,
-        availability_delta_pts: parseFloat(delta.toFixed(1)),
-        projected_recovery_usd: rec,
-        projected_total_revenue_usd: 14200000.05 + rec,
-        projected_margin_impact_pts: parseFloat((delta * 0.132).toFixed(1)),
-        confidence_score: 91,
-        assumptions: ["Linear elasticity ratio 0.73"],
-        timestamp: new Date().toISOString(),
-      });
-    } finally {
-      setIsSimulating(false);
-    }
+  const totalDynamicRecovery = availRecovery + freightSpeedBonus - concessionCost;
+  const projectedTotalRevenue = regionData.revenueRaw + totalDynamicRecovery;
+  const projectedMarginLift = parseFloat(((deltaAvail * 0.132) + ((14 - freightDaysVal) * 0.04) - (discountConcessionVal * 0.05)).toFixed(1));
+
+  const handleAuthorizeAction = (actionId: string, title: string, units: number) => {
+    const randomPo = `SAP-PO-2026-${Math.floor(1000 + Math.random() * 9000)}-ATL`;
+    setActiveDispatchItem({ id: actionId, title, units, poNumber: randomPo });
+    setShowDispatchModal(true);
   };
 
-  const defaultRecommendations = [
-    {
-      id: "REC-001",
-      priority: "Priority 1 • Critical Action",
-      title: "Emergency Inter-Facility Stock Transfer",
-      category: "Supply Chain / Logistics",
-      targetDriver: "Atlanta DC Stockout",
-      recoveryUSD: 484000,
-      marginLift: 1.2,
-      timeframe: "14 Days",
-      confidence: 91,
-      owner: "VP Global Supply Chain & Logistics",
-      description:
-        "Reallocate 3,200 units of flagship SKU-8821 from Chicago Central DC to Atlanta DC via expedited freight to restore regional inventory availability from 79.4% to >90%.",
-      levers: [
-        "Issue expedited stock transfer order (STO-9921) from Chicago Central warehouse.",
-        "Authorize dedicated team-driver freight with 48-hour delivery window.",
-        "Configure automated replenishment reorder points at Atlanta DC to 1,200 safety units.",
-      ],
-    },
-    {
-      id: "REC-002",
-      priority: "Priority 2 • High Action",
-      title: "Targeted Distributor Recovery Outreach",
-      category: "Commercial Channels",
-      targetDriver: "Distributor Purchase Order Deferral",
-      recoveryUSD: 180000,
-      marginLift: 0.6,
-      timeframe: "21 Days",
-      confidence: 85,
-      owner: "Director Commercial Accounts (East Territory)",
-      description:
-        "Deploy dedicated commercial account managers with priority delivery guarantees to capture 29 deferred distributor purchase orders before the quarterly close.",
-      levers: [
-        "Deploy account executives with verified delivery schedule commitments.",
-        "Provide temporary 2.5% promotional freight rebate on deferred purchase orders.",
-        "Establish EDI status webhook alerts for key distributor purchasing managers.",
-      ],
-    },
-  ];
+  const confirmDispatch = () => {
+    if (activeDispatchItem) {
+      setDispatchedActions((prev) => ({ ...prev, [activeDispatchItem.id]: true }));
+    }
+    setShowDispatchModal(false);
+  };
 
   return (
-    <div className="flex min-h-screen bg-background text-on-surface">
+    <div className="flex min-h-screen bg-[#051424] text-on-surface">
       <Sidebar />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <TopBar
-          persona="CFO"
-          onPersonaChange={() => {}}
-          breadcrumb="Recommendations & What-If Simulation"
-        />
+        <TopBar breadcrumb="Recommendations & What-If" />
 
-        <main className="flex-1 p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <main className="flex-1 p-6 md:p-8 space-y-6 max-w-[1600px] mx-auto w-full">
+          {/* Header Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest bg-primary-container/20 border border-primary/30 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-primary" />
-                  Prescriptive Interventions Active
+                <span className="text-[10px] font-mono text-primary font-bold uppercase tracking-widest bg-primary/10 border border-primary/20 px-2 py-0.5 rounded flex items-center gap-1">
+                  <span className="material-symbols-outlined text-[14px]">auto_awesome</span>
+                  Prescriptive Interventions
                 </span>
                 <span className="text-xs font-mono text-on-surface-variant">
-                  Total Financial Opportunity: +$757.6K • 2 Action Levers
+                  Region: <strong className="text-on-surface">{region}</strong> • Dynamic Multi-Lever Simulator
                 </span>
               </div>
-              <h1 className="font-display font-extrabold text-2xl md:text-3xl text-on-surface tracking-tight">
-                Strategic Action Plan & What-If Simulation
+              <h1 className="font-display font-extrabold text-2xl text-on-surface tracking-tight">
+                Recommendations & What-If Simulation
               </h1>
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => setDispatched(true)}
-                disabled={dispatched}
-                className={`px-4 py-2 font-mono text-xs font-bold rounded-lg transition-all flex items-center gap-2 ${
-                  dispatched
-                    ? "bg-success-container/30 border border-success/40 text-success cursor-default"
-                    : "bg-surface-container border border-primary/40 text-primary hover:bg-primary/10"
-                }`}
-              >
-                {dispatched ? <Check className="w-4 h-4" /> : <Send className="w-4 h-4" />}
-                <span>{dispatched ? "Workflows Dispatched" : "Dispatch Actions"}</span>
-              </button>
               <Link
                 href="/briefing"
-                className="px-4 py-2 bg-primary text-background font-mono text-xs font-bold rounded-lg hover:bg-primary-dark transition-all flex items-center gap-2 shadow-glow active:scale-[0.98]"
+                className="bg-primary-container text-on-primary-container font-mono text-xs font-bold px-4 py-2 rounded-lg hover:bg-primary transition-colors flex items-center gap-2 shadow-glow"
               >
-                <span>Executive Briefing</span>
-                <ArrowRight className="w-4 h-4" />
+                <span className="material-symbols-outlined text-[16px]">description</span>
+                <span>Generate Boardroom Briefing</span>
               </Link>
             </div>
           </div>
 
-          {/* Strategic Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {defaultRecommendations.map((rec) => (
+          {/* Main 2-Column Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column (5 cols): Action Strategy Cards */}
+            <div className="lg:col-span-5 space-y-4">
+              {/* Priority 1 Card */}
               <div
-                key={rec.id}
-                className="glass-panel rounded-2xl p-6 border-primary/30 shadow-glow flex flex-col justify-between bg-gradient-to-br from-surface-container via-surface to-surface-dim"
+                className={`glass-panel rounded-xl p-5 border transition-all duration-200 flex flex-col justify-between shadow-glow relative ${
+                  activeMatrixSpotlight === 1
+                    ? "border-primary bg-gradient-to-br from-primary-container/20 via-surface-container to-surface ring-2 ring-primary/60"
+                    : "border-primary/40 bg-surface-container/70"
+                }`}
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-mono font-bold text-primary bg-primary-container/25 border border-primary/30 px-2.5 py-0.5 rounded uppercase">
-                      {rec.priority}
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/40 font-mono text-[10px] font-bold uppercase">
+                      Priority 1 • Critical Action
                     </span>
-                    <span className="text-xs font-mono font-bold text-success">
-                      +{rec.marginLift} pts Margin Lift
-                    </span>
+                    <span className="font-mono text-xs text-primary font-bold">91% Conf</span>
                   </div>
 
-                  <h3 className="font-display font-extrabold text-xl text-on-surface mb-2">
-                    {rec.title}
+                  <h3 className="font-display font-bold text-base text-on-surface leading-tight mb-3">
+                    Emergency Stock Transfer (Chicago → Atlanta)
                   </h3>
 
-                  <p className="text-xs text-on-surface-variant leading-relaxed mb-4">
-                    {rec.description}
+                  <div className="grid grid-cols-3 gap-2.5 mb-3 font-mono text-xs">
+                    <div className="bg-surface-container p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Recovery</div>
+                      <div className="font-display font-bold text-sm text-primary">+$484K</div>
+                    </div>
+                    <div className="bg-surface-container p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Margin Lift</div>
+                      <div className="font-display font-bold text-sm text-on-surface">+1.2 pts</div>
+                    </div>
+                    <div className="bg-surface-container p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Lead Time</div>
+                      <div className="font-display font-bold text-sm text-on-surface">{freightDaysVal} Days</div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-on-surface-variant font-sans leading-relaxed mb-4">
+                    Transfer 3,200 surplus units of SKU-8821 from Chicago Central DC to Atlanta DC via expedited freight to restore regional inventory availability from 79.4% to {availabilityVal.toFixed(1)}%.
                   </p>
-
-                  {/* Metrics Strip */}
-                  <div className="grid grid-cols-3 gap-2.5 text-center text-xs font-mono mb-5">
-                    <div className="p-3 rounded-xl bg-surface-dim border border-outline-variant">
-                      <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Projected Recovery</div>
-                      <div className="font-display font-extrabold text-lg text-primary">{formatCurrencyThousands(rec.recoveryUSD)}</div>
-                    </div>
-                    <div className="p-3 rounded-xl bg-surface-dim border border-outline-variant">
-                      <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Confidence</div>
-                      <div className="font-display font-extrabold text-lg text-on-surface">{rec.confidence}%</div>
-                    </div>
-                    <div className="p-3 rounded-xl bg-surface-dim border border-outline-variant">
-                      <div className="text-[10px] text-on-surface-variant/70 mb-0.5">Timeframe</div>
-                      <div className="font-display font-extrabold text-lg text-secondary">{rec.timeframe}</div>
-                    </div>
-                  </div>
-
-                  {/* Levers List */}
-                  <div className="space-y-2 mb-4">
-                    <div className="text-[11px] font-mono font-bold text-on-surface-variant uppercase tracking-wider">
-                      Prescribed Action Steps:
-                    </div>
-                    {rec.levers.map((lever, idx) => (
-                      <div
-                        key={idx}
-                        className="p-2.5 rounded-xl bg-surface-dim/80 border border-outline-variant/60 flex items-start gap-2.5 text-xs"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
-                        <span className="text-on-surface-variant text-[11px] leading-relaxed">{lever}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
-                <div className="pt-3 border-t border-outline-variant/40 flex items-center justify-between text-[11px] font-mono text-on-surface-variant">
-                  <div className="flex items-center gap-1.5">
-                    <UserCheck className="w-3.5 h-3.5 text-secondary" />
-                    <span>Owner: <strong className="text-on-surface">{rec.owner}</strong></span>
+                <div className="pt-3 border-t border-outline-variant/30 flex items-center justify-between font-mono text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">
+                      SC
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-on-surface-variant block">Owner</span>
+                      <span className="text-[11px] font-sans font-semibold text-on-surface">Supply Chain Ops</span>
+                    </div>
                   </div>
-                  <span className="text-primary font-bold">Active</span>
+
+                  <button
+                    onClick={() => handleAuthorizeAction("stock_transfer", "Emergency Stock Transfer", 3200)}
+                    disabled={dispatchedActions.stock_transfer}
+                    className={`px-3.5 py-1.5 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      dispatchedActions.stock_transfer
+                        ? "bg-success/20 text-success border border-success/40"
+                        : "bg-primary text-black hover:bg-primary-light shadow-glow"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[14px]">
+                      {dispatchedActions.stock_transfer ? "check_circle" : "bolt"}
+                    </span>
+                    <span>{dispatchedActions.stock_transfer ? "In-Transit (Dispatched)" : "Authorize Transfer"}</span>
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
 
-          {/* Deterministic What-If Simulation Sandbox */}
-          <div className="glass-panel rounded-2xl p-6 md:p-8 border-primary/40 bg-gradient-to-r from-primary-container/15 via-surface-container to-surface shadow-glow">
-            <div className="flex flex-col md:flex-row md:items-center justify-between pb-5 border-b border-outline-variant gap-4 mb-6">
-              <div className="flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/40 flex items-center justify-center text-primary shadow-glow">
-                  <Sliders className="w-5 h-5" />
-                </div>
+              {/* Priority 2 Card */}
+              <div
+                className={`glass-panel rounded-xl p-5 border transition-all duration-200 flex flex-col justify-between ${
+                  activeMatrixSpotlight === 2
+                    ? "border-secondary bg-surface-container ring-2 ring-secondary/60"
+                    : "border-outline-variant/30 bg-surface-container/70"
+                }`}
+              >
                 <div>
-                  <h3 className="font-display font-extrabold text-xl text-on-surface">
-                    Deterministic What-If Simulation Engine
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container text-on-surface-variant border border-outline-variant/30 font-mono text-[10px] font-bold uppercase">
+                      Priority 2 • High Action
+                    </span>
+                    <span className="font-mono text-xs text-on-surface-variant font-bold">85% Conf</span>
+                  </div>
+
+                  <h3 className="font-display font-bold text-base text-on-surface leading-tight mb-3">
+                    Distributor Recovery Outreach
                   </h3>
-                  <p className="text-xs font-mono text-on-surface-variant">
-                    Evaluates elasticity recovery curves over Atlanta DC inventory availability
+
+                  <div className="grid grid-cols-3 gap-2.5 mb-3 font-mono text-xs">
+                    <div className="bg-surface-dim p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Recovery</div>
+                      <div className="font-display font-bold text-sm text-primary">+$180K</div>
+                    </div>
+                    <div className="bg-surface-dim p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Margin Lift</div>
+                      <div className="font-display font-bold text-sm text-on-surface">+0.6 pts</div>
+                    </div>
+                    <div className="bg-surface-dim p-2.5 rounded-lg border border-outline-variant/30 text-center">
+                      <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-0.5">Lead Time</div>
+                      <div className="font-display font-bold text-sm text-on-surface">21 Days</div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-on-surface-variant font-sans leading-relaxed mb-4">
+                    Deploy dedicated commercial sales account managers with priority delivery guarantees to capture 29 deferred distributor purchase orders before the quarter close.
                   </p>
                 </div>
+
+                <div className="pt-3 border-t border-outline-variant/30 flex items-center justify-between font-mono text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-secondary/20 text-secondary flex items-center justify-center font-bold text-[10px]">
+                      CS
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-on-surface-variant block">Owner</span>
+                      <span className="text-[11px] font-sans font-semibold text-on-surface">Commercial Sales</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleAuthorizeAction("distributor_outreach", "Distributor Recovery Outreach", 29)}
+                    disabled={dispatchedActions.distributor_outreach}
+                    className={`px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      dispatchedActions.distributor_outreach
+                        ? "bg-success/20 text-success border border-success/40"
+                        : "bg-surface-dim hover:bg-secondary/20 text-secondary border border-secondary/40"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[14px]">
+                      {dispatchedActions.distributor_outreach ? "check_circle" : "send"}
+                    </span>
+                    <span>{dispatchedActions.distributor_outreach ? "Outreach Active" : "Launch Outreach"}</span>
+                  </button>
+                </div>
               </div>
-              <span className="text-xs font-mono text-primary bg-primary-container/20 border border-primary/30 px-3 py-1 rounded-full font-bold self-start md:self-auto">
-                Elasticity Ratio: 0.73 • Deterministic Math
-              </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Slider Controls (6 cols) */}
-              <div className="lg:col-span-6 space-y-4">
-                <div className="flex justify-between items-center text-xs font-mono">
-                  <span className="text-on-surface font-semibold">Target Inventory Availability:</span>
-                  <span className="font-display font-extrabold text-3xl text-primary">{sliderVal.toFixed(1)}%</span>
+            {/* Right Column (7 cols): Prioritization Matrix + Multi-Lever Simulator */}
+            <div className="lg:col-span-7 space-y-5">
+              {/* Impact vs Effort Matrix */}
+              <div className="glass-panel rounded-xl p-5 border border-outline-variant/30 bg-surface-container/60">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-mono text-xs text-on-surface-variant uppercase tracking-wider font-bold flex items-center gap-2">
+                    <span className="material-symbols-outlined text-[16px]">grid_view</span>
+                    Action Prioritization Matrix (Click dot to focus)
+                  </h3>
+                  <span className="text-[10px] font-mono text-primary">Interactive 2x2 Plot</span>
                 </div>
 
-                <input
-                  type="range"
-                  min="75"
-                  max="100"
-                  step="0.5"
-                  value={sliderVal}
-                  onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
-                  className="w-full h-3 bg-surface-dim rounded-lg appearance-none cursor-pointer accent-primary border border-outline-variant"
-                />
-
-                <div className="flex justify-between text-[11px] font-mono text-on-surface-variant/80">
-                  <span>Baseline: 79.4%</span>
-                  <span className="text-primary font-bold">Benchmark Target: 90.0%</span>
-                  <span>Full Recovery: 100.0%</span>
-                </div>
-
-                {/* Assumptions */}
-                <div className="pt-3 border-t border-outline-variant/40 space-y-1 text-[11px] font-mono text-on-surface-variant/70">
-                  <div className="font-bold text-on-surface-variant mb-1">Model Invariants & Assumptions:</div>
-                  {simulation.assumptions.map((a, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5">
-                      <div className="w-1 h-1 rounded-full bg-primary"></div>
-                      <span>{a}</span>
+                {/* Interactive 2x2 Prioritization Matrix */}
+                <div className="relative w-full h-[210px] bg-surface-dim/90 border border-outline-variant/30 rounded-xl p-4 font-mono overflow-hidden select-none">
+                  {/* 4 Quadrant Background Tints */}
+                  <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 pointer-events-none opacity-40">
+                    <div className="border-r border-b border-outline-variant/30 bg-primary/5 flex items-start justify-start p-2.5">
+                      <span className="text-[8px] text-primary font-bold uppercase tracking-widest">
+                        Quick Wins (High ROI)
+                      </span>
                     </div>
-                  ))}
+                    <div className="border-b border-outline-variant/30 bg-surface-container/20 flex items-start justify-end p-2.5">
+                      <span className="text-[8px] text-on-surface-variant uppercase tracking-widest">
+                        Strategic Bets
+                      </span>
+                    </div>
+                    <div className="border-r border-outline-variant/30 bg-surface-container/20 flex items-end justify-start p-2.5">
+                      <span className="text-[8px] text-on-surface-variant uppercase tracking-widest">
+                        Low Effort / Low Impact
+                      </span>
+                    </div>
+                    <div className="bg-surface-dim flex items-end justify-end p-2.5">
+                      <span className="text-[8px] text-on-surface-variant/60 uppercase tracking-widest">
+                        De-Prioritized
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Axis Labels */}
+                  <div className="absolute top-2 left-1/2 -translate-x-1/2 text-[9px] text-primary font-bold uppercase z-10">
+                    ▲ High Impact
+                  </div>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[9px] text-on-surface-variant uppercase z-10">
+                    ▼ Low Impact
+                  </div>
+                  <div className="absolute top-1/2 right-2 -translate-y-1/2 text-[9px] text-on-surface-variant uppercase rotate-90 origin-right z-10">
+                    High Effort ▶
+                  </div>
+                  <div className="absolute top-1/2 left-2 -translate-y-1/2 text-[9px] text-on-surface-variant uppercase -rotate-90 origin-left z-10">
+                    ◀ Low Effort
+                  </div>
+
+                  {/* Axis Lines */}
+                  <div className="absolute inset-x-6 top-1/2 h-px bg-outline-variant/40 border-dashed z-0"></div>
+                  <div className="absolute inset-y-6 left-1/2 w-px bg-outline-variant/40 border-dashed z-0"></div>
+
+                  {/* Point 1: Emergency Stock Transfer (High Impact, Low Effort) */}
+                  <div
+                    onClick={() => setActiveMatrixSpotlight(1)}
+                    className="absolute top-[24%] left-[26%] -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[11px] font-bold text-black shadow-glow animate-pulse group-hover:scale-125 transition-transform shrink-0">
+                        1
+                      </div>
+                      <div className="bg-[#051424]/95 border border-primary/50 px-2.5 py-1 rounded-md text-[10px] whitespace-nowrap shadow-xl text-primary font-bold group-hover:border-primary">
+                        Emerg Transfer (+$484K)
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Point 2: Distributor Outreach (Moderate Impact, Low-Mid Effort) */}
+                  <div
+                    onClick={() => setActiveMatrixSpotlight(2)}
+                    className="absolute top-[60%] left-[20%] -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-[#A4C9FE] flex items-center justify-center text-[11px] font-bold text-black shadow-sm group-hover:scale-125 transition-transform shrink-0">
+                        2
+                      </div>
+                      <div className="bg-[#051424]/95 border border-[#A4C9FE]/50 px-2.5 py-1 rounded-md text-[10px] whitespace-nowrap shadow-xl text-[#A4C9FE] font-bold group-hover:border-[#A4C9FE]">
+                        Distr Outreach (+$180K)
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Point 3: Pricing Defense (Lower Impact, Higher Effort) */}
+                  <div
+                    onClick={() => setActiveMatrixSpotlight(3)}
+                    className="absolute top-[68%] left-[72%] -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-[10px] font-bold text-on-surface group-hover:scale-125 transition-transform shrink-0">
+                        3
+                      </div>
+                      <div className="bg-[#051424]/95 border border-outline-variant/60 px-2 py-0.5 rounded-md text-[10px] whitespace-nowrap shadow-lg text-on-surface-variant group-hover:text-on-surface">
+                        Pricing Defense (+$93.6K)
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Simulation Output Cards (6 cols) */}
-              <div className="lg:col-span-6 grid grid-cols-3 gap-3.5 text-center font-mono">
-                <div className="p-4 rounded-xl bg-surface-dim border border-primary/30 shadow-glow flex flex-col justify-between">
-                  <div className="text-[10px] text-on-surface-variant mb-1 uppercase font-bold">Projected Recovery</div>
-                  <div className="font-display font-extrabold text-xl md:text-2xl text-primary my-2">
-                    {formatCurrencyThousands(simulation.projected_recovery_usd)}
+              {/* Multi-Lever What-If Simulation Engine */}
+              <div className="glass-panel rounded-xl p-5 border border-primary/30 bg-gradient-to-br from-surface-container via-surface to-surface-dim space-y-4 shadow-sm">
+                <div className="flex justify-between items-center pb-2 border-b border-outline-variant/30">
+                  <h3 className="font-display font-bold text-base text-on-surface flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary text-[20px]">science</span>
+                    Multi-Lever What-If Scenario Simulator
+                  </h3>
+                  <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/30 px-2 py-0.5 rounded font-bold">
+                    91.0% Conf (HIGH)
+                  </span>
+                </div>
+
+                {/* 3 Interactive Sliders */}
+                <div className="space-y-3 font-mono text-xs">
+                  {/* Slider 1: Target Availability */}
+                  <div className="bg-surface-dim p-3 rounded-lg border border-outline-variant/30 space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-on-surface font-semibold">1. Atlanta DC Availability Target:</span>
+                      <span className="text-primary font-bold">{availabilityVal.toFixed(1)}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="79.4"
+                      max="100.0"
+                      step="0.5"
+                      value={availabilityVal}
+                      onChange={(e) => setAvailabilityVal(parseFloat(e.target.value))}
+                      className="w-full h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary"
+                    />
+                    <div className="flex justify-between text-[9px] text-on-surface-variant">
+                      <span>Baseline: 79.4%</span>
+                      <span>Target: 90.0%</span>
+                      <span>Max: 100.0%</span>
+                    </div>
                   </div>
-                  <div className="text-[10px] text-primary/80 font-bold">
-                    +{(simulation.availability_delta_pts ?? 0) > 0 ? simulation.availability_delta_pts : 0} pts Avail
+
+                  {/* Slider 2: Freight Transit SLA */}
+                  <div className="bg-surface-dim p-3 rounded-lg border border-outline-variant/30 space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-on-surface font-semibold">2. Freight Transit SLA:</span>
+                      <span className="text-primary font-bold">{freightDaysVal} Days</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="3"
+                      max="14"
+                      step="1"
+                      value={freightDaysVal}
+                      onChange={(e) => setFreightDaysVal(parseInt(e.target.value))}
+                      className="w-full h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary"
+                    />
+                    <div className="flex justify-between text-[9px] text-on-surface-variant">
+                      <span>Expedited: 3 Days</span>
+                      <span>Standard: 7 Days</span>
+                      <span>Relaxed: 14 Days</span>
+                    </div>
+                  </div>
+
+                  {/* Slider 3: Distributor Concession */}
+                  <div className="bg-surface-dim p-3 rounded-lg border border-outline-variant/30 space-y-1">
+                    <div className="flex justify-between items-center">
+                      <span className="text-on-surface font-semibold">3. Priority PO Concession Discount:</span>
+                      <span className="text-primary font-bold">{discountConcessionVal.toFixed(1)}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="10"
+                      step="0.5"
+                      value={discountConcessionVal}
+                      onChange={(e) => setDiscountConcessionVal(parseFloat(e.target.value))}
+                      className="w-full h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer accent-primary"
+                    />
+                    <div className="flex justify-between text-[9px] text-on-surface-variant">
+                      <span>None: 0%</span>
+                      <span>Moderate: 2.5%</span>
+                      <span>Aggressive: 10%</span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-surface-dim border border-outline-variant flex flex-col justify-between">
-                  <div className="text-[10px] text-on-surface-variant mb-1 uppercase font-bold">Projected Revenue</div>
-                  <div className="font-display font-extrabold text-xl md:text-2xl text-on-surface my-2">
-                    {formatCurrencyMillions(simulation.projected_total_revenue_usd)}
+                {/* Live Mathematical Elasticity Output Cards */}
+                <div className="grid grid-cols-3 gap-3 font-mono text-xs">
+                  <div className="bg-surface-container p-3 rounded-lg border border-primary/40 text-center shadow-glow">
+                    <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-1">Projected Recovery</div>
+                    <div className="font-display font-bold text-lg md:text-xl text-primary">
+                      +${(totalDynamicRecovery / 1000).toFixed(1)}K
+                    </div>
                   </div>
-                  <div className="text-[10px] text-on-surface-variant/70">vs $14.20M Q3</div>
+
+                  <div className="bg-surface-container p-3 rounded-lg border border-outline-variant/30 text-center">
+                    <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-1">Projected Revenue</div>
+                    <div className="font-display font-bold text-lg md:text-xl text-on-surface">
+                      ${(projectedTotalRevenue / 1000000).toFixed(2)}M
+                    </div>
+                  </div>
+
+                  <div className="bg-surface-container p-3 rounded-lg border border-outline-variant/30 text-center">
+                    <div className="text-[9px] text-on-surface-variant uppercase font-bold mb-1">Margin Delta</div>
+                    <div className="font-display font-bold text-lg md:text-xl text-on-surface">
+                      +{projectedMarginLift.toFixed(1)} pts
+                    </div>
+                  </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-surface-dim border border-outline-variant flex flex-col justify-between">
-                  <div className="text-[10px] text-on-surface-variant mb-1 uppercase font-bold">Gross Margin Lift</div>
-                  <div className="font-display font-extrabold text-xl md:text-2xl text-success my-2">
-                    {formatPoints(simulation.projected_margin_impact_pts)}
-                  </div>
-                  <div className="text-[10px] text-success font-bold">{simulation.confidence_score}% Conf.</div>
+                <div className="flex items-center justify-between pt-2 border-t border-outline-variant/30 font-mono text-[10px] text-on-surface-variant">
+                  <span className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[14px]">calculate</span>
+                    Multi-Factor Elasticity Ratio: 0.73
+                  </span>
+                  <span className="text-primary font-bold">Deterministic Financial Model</span>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Interactive Dispatch Confirmation Modal */}
+          {showDispatchModal && activeDispatchItem && (
+            <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="bg-surface-container border border-primary/50 rounded-2xl max-w-md w-full p-6 shadow-glow space-y-4 font-mono">
+                <div className="flex items-center gap-3 border-b border-outline-variant/30 pb-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/20 text-primary border border-primary/40 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-2xl">local_shipping</span>
+                  </div>
+                  <div>
+                    <h3 className="font-display font-bold text-base text-on-surface">Confirm Action Dispatch</h3>
+                    <span className="text-[11px] text-primary">{activeDispatchItem.title}</span>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-surface-dim rounded-xl border border-outline-variant/30 space-y-2 text-xs">
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant">Generated SAP Order:</span>
+                    <strong className="text-on-surface">{activeDispatchItem.poNumber}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant">Target Freight SLA:</span>
+                    <strong className="text-primary">{freightDaysVal} Business Days</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-on-surface-variant">Expected Recovery Lift:</span>
+                    <strong className="text-primary">+${(totalDynamicRecovery / 1000).toFixed(1)}K</strong>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <button
+                    onClick={() => setShowDispatchModal(false)}
+                    className="flex-1 py-2 rounded-lg border border-outline-variant/40 text-on-surface-variant hover:text-on-surface transition-colors text-xs font-bold"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDispatch}
+                    className="flex-1 py-2 rounded-lg bg-primary text-black font-bold hover:bg-primary-light transition-all shadow-glow text-xs"
+                  >
+                    Confirm & Dispatch
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>
