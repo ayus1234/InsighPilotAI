@@ -10,8 +10,9 @@
 [![Next.js 14](https://img.shields.io/badge/Next.js-14.2_(App_Router)-000000.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org)
 [![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph_Multi--Agent-orange.svg?style=for-the-badge)](https://langchain-ai.github.io/langgraph/)
 [![AI Engines](https://img.shields.io/badge/AI_Engines-Groq_Llama_3.3_70B_%7C_Google_Gemini_2.5_Flash-purple.svg?style=for-the-badge)](https://groq.com)
-[![Tests Passing](https://img.shields.io/badge/Tests-296%2F296_Passing_(100%25)-success.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
+[![Tests Passing](https://img.shields.io/badge/Tests-305%2F305_Passing_(100%25)-success.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
 [![Build Status](https://img.shields.io/badge/Production_Build-10%2F10_Static_Routes_Passed-brightgreen.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
+
 
 
 
@@ -158,7 +159,7 @@ InsightPilot AI maintains a strict, zero-drift verification pipeline:
 # 1. Validate dataset integrity & referential constraints (6/6 checks)
 python tests/validate_dataset.py
 
-# 2. Run full backend test suite (296/296 tests passing)
+# 2. Run full backend test suite (305/305 tests passing)
 python -m unittest discover -s tests -t . -p "test_*.py"
 
 # 3. Build Next.js production bundle (10/10 static routes pre-rendered)
@@ -182,6 +183,8 @@ cd frontend/next-app && npm run build
 | **🎤 Judge Simulation & Defense** | Tough technical, business, and AI defense transcripts. | [`docs/rehearsal/`](docs/rehearsal/JUDGE_SIMULATION_AND_REHEARSAL_TRANSCRIPT.md) |
 | **🏛️ Project Closure & Handoff** | Final completion report, long-term handoff manual, and closure register. | [`docs/closure/`](docs/closure/README.md) |
 | **🌐 Public Release & Readiness** | Evaluator 5-min guide, public readiness audit, and external action register. | [`docs/release/`](docs/release/README.md) |
+| **🎯 Final Owner Handoff** | Master execution roadmap, recording checklist, and portal runbook. | [`docs/handoff/`](docs/handoff/README.md) |
+
 
 
 
@@ -192,7 +195,8 @@ cd frontend/next-app && npm run build
 
 | Status Scope | Verification Level | Current State |
 | :--- | :--- | :---: |
-| **Core Product & Analytics** | `VERIFIED LOCALLY` | 🟢 100% Complete & Tested (296/296 Tests) |
+| **Core Product & Analytics** | `VERIFIED LOCALLY` | 🟢 100% Complete & Tested (305/305 Tests) |
+
 
 
 
