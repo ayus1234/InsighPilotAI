@@ -207,6 +207,10 @@ def build_readme_pdf():
     # Title & Header
     story.append(Paragraph("InsightPilot AI — System README & Technical Manual", title_style))
     story.append(Paragraph("Enterprise Decision Intelligence, Deterministic Root-Cause Attribution & Cryptographic Evidence Lineage", subtitle_style))
+    story.append(Paragraph(
+        "<b>🌐 Live Production URL:</b> <font color='#0284C7'>https://insigh-pilot-ai.vercel.app</font> &nbsp;|&nbsp; <b>Public GitHub:</b> <font color='#0284C7'>https://github.com/ayus1234/InsighPilotAI</font>",
+        callout_style
+    ))
     story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#0284C7"), spaceAfter=8))
 
     # Executive Summary
