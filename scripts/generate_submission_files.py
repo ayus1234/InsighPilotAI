@@ -531,122 +531,128 @@ def build_business_proposal_pdf():
 
 
 # ----------------------------------------------------------------------
-# 3. BUILD DETAILED BUSINESS PROPOSAL PPTX (12 SLIDES)
+# 3. BUILD DETAILED BUSINESS PROPOSAL PPTX (12 SLIDES) - LARGE HIGH-CONTRAST TYPOGRAPHY
 # ----------------------------------------------------------------------
 def build_business_proposal_pptx():
     if not PPTX_AVAILABLE:
         print("[ERROR] python-pptx is required to build PowerPoint presentations. Run: pip install python-pptx")
         return
+        
     pptx_path = ASSETS_DIR / "InsightPilot_AI_Detailed_Business_Proposal.pptx"
+    alt_pptx_path = ASSETS_DIR / "InsightPilot_AI_Executive_Pitch_Deck.pptx"
+    
     prs = Presentation()
     
-    # 16:9 Widescreen dimensions
+    # 16:9 Widescreen dimensions (13.333" x 7.5")
     prs.slide_width = Inches(13.333)
     prs.slide_height = Inches(7.5)
     
-    # Dark Enterprise Theme Colors
-    BG_COLOR = RGBColor(5, 20, 36)        # #051424
-    CARD_BG = RGBColor(15, 33, 55)        # #0F2137
-    PRIMARY = RGBColor(79, 222, 200)      # #4FDEC8 (Teal)
-    TEXT_LIGHT = RGBColor(241, 245, 249)  # #F1F5F9 (White/Light)
-    TEXT_MUTED = RGBColor(148, 163, 184)  # #94A3B8 (Gray)
-    ACCENT_WARN = RGBColor(255, 107, 107) # #FF6B6B (Coral/Red)
-    ACCENT_GOLD = RGBColor(251, 191, 36)  # #FBBF24 (Gold)
+    # Executive Dark Theme Color Palette
+    BG_COLOR = RGBColor(4, 15, 29)         # #040F1D Deep Navy
+    CARD_BG = RGBColor(12, 33, 56)         # #0C2138 Slate Navy
+    CARD_BORDER = RGBColor(30, 68, 108)    # #1E446C Border
+    PRIMARY = RGBColor(79, 222, 200)       # #4FDEC8 Electric Teal
+    TEXT_WHITE = RGBColor(255, 255, 255)   # #FFFFFF Crisp White
+    TEXT_MUTED = RGBColor(203, 213, 225)   # #CBD5E1 High-Contrast Silver
+    ACCENT_GOLD = RGBColor(251, 191, 36)   # #FBBF24 Amber Gold
+    ACCENT_CORAL = RGBColor(248, 113, 113) # #F87171 Coral
+    
+    FONT_FAMILY = 'Segoe UI'  # Recommended executive presentation font
 
     slides_content = [
         {
             "num": "01",
-            "title": "InsightPilot AI: Autonomous Enterprise Decision Intelligence",
+            "title": "InsightPilot AI: Enterprise Decision Intelligence",
             "subtitle": "Accenture Innovation Challenge 2026 • Track 3: BusinessIntelligence.ai",
             "bullets": [
-                "Automating the transition from descriptive anomaly detection to prescriptive operational action.",
-                "Reducing enterprise investigation latency from 14-28 business days to under 30 seconds.",
-                "Built on strict mathematical determinism, LangGraph 11-node orchestration, and SHA-256 evidence lineage.",
-                "Team: Ayush Kumar (Developer & Architect) • Repository: https://github.com/ayus1234/InsighPilotAI"
+                ("Autonomous Decision Intelligence:", "Automates transition from descriptive anomaly alerts to prescriptive operational action."),
+                ("Investigation Latency Reduction:", "Collapses enterprise triage cycles from 14-28 business days to under 30 seconds."),
+                ("Deterministic Architecture:", "Zero LLM hallucinations; calculations powered by pure Python deterministic engines."),
+                ("Architect & Repository:", "Ayush Kumar (Lead Architect) • GitHub: https://github.com/ayus1234/InsighPilotAI")
             ],
-            "kpis": [("-$1.23M", "Empirical Revenue Deficit"), ("43.2%", "Primary Stockout Attribution"), ("+$757.6K", "Modeled Recovery Pool"), ("<30s", "Automated Resolution Time")]
+            "kpis": [("-$1.23M", "Q3 Revenue Deficit"), ("43.2%", "Primary Stockout Share"), ("+$757.6K", "Modeled Recovery Pool"), ("<30s", "Automated Triage Time")]
         },
         {
             "num": "02",
-            "title": "Executive Problem: The Enterprise Investigation Latency Paradox",
-            "subtitle": "Modern BI tools show WHAT happened; finding WHY takes weeks of manual cross-silo triage.",
+            "title": "The Enterprise Investigation Latency Paradox",
+            "subtitle": "Modern BI dashboards show WHAT happened; finding WHY takes weeks of cross-silo triage.",
             "bullets": [
-                "Fragmented Silos: Critical operational data is locked in SAP S/4HANA (ERP), Salesforce (CRM), EDI gateways, and WMS.",
-                "Decision Latency: Investigating a revenue deficit requires 2-4 weeks of manual cross-department coordination.",
-                "Irreversible Losses: By the time root causes are discovered, distributor orders are cancelled and market share is lost.",
-                "GenAI Hallucination Risk: Generic LLM chat tools invent metrics and lack verifiable audit trails for executive sign-off."
+                ("Fragmented Enterprise Silos:", "Data is isolated in SAP S/4HANA (ERP), Salesforce (CRM), EDI gateways, and WMS."),
+                ("Critical Investigation Delay:", "Diagnosing root causes requires 2 to 4 weeks of manual multi-team coordination."),
+                ("Irreversible Financial Loss:", "By the time causes are found, distributor orders are cancelled and revenue is lost."),
+                ("GenAI Hallucination Barrier:", "Generic LLMs fabricate metrics without verifiable cryptographic audit trails.")
             ],
-            "kpis": [("21 Days", "Avg Enterprise Investigation"), ("-$550K", "Avoidable Stockout Loss"), ("29 POs", "Deferred Distributor Orders"), ("+310%", "Support Ticket Escalations")]
+            "kpis": [("21 Days", "Avg Investigation Time"), ("-$550K", "Avoidable Stockout Loss"), ("29 POs", "Deferred Distributor POs"), ("+310%", "Support Escalations")]
         },
         {
             "num": "03",
-            "title": "The InsightPilot AI Solution: Defensible, Grounded Decision Intelligence",
+            "title": "The InsightPilot AI Solution Architecture",
             "subtitle": "Deterministic Systems Own Truth • LangGraph Orchestrates • AI Explains Facts",
             "bullets": [
-                "Deterministic Core: Pure Python analytics calculate variance, rank drivers, and simulate recovery without LLM hallucinations.",
-                "Agentic Orchestration: LangGraph 11-node StateGraph executes autonomous multi-step investigation loops with tool inspection.",
-                "Multi-Model Routing: Dynamically routes requests between Groq LLaMA 3.3 70B and Google Gemini 2.5 Flash with fallback resilience.",
-                "Calibrated Guardrails: Built-in abstention engine halts execution if factual grounding falls below strict 80% confidence threshold."
+                ("Deterministic Analytics Core:", "Pure Python calculation engines calculate variance and simulate recovery with 100% precision."),
+                ("LangGraph 11-Node Orchestration:", "Autonomous multi-agent state graph executes systematic investigation cycles."),
+                ("Capability-Aware Multi-Model Routing:", "Dynamic routing between Groq LLaMA 3.3 70B and Google Gemini 2.5 Flash."),
+                ("Calibrated Abstention Guardrail:", "Halts execution if factual grounding confidence drops below strict 80% threshold.")
             ],
-            "kpis": [("100%", "Mathematical Precision"), ("11 Nodes", "StateGraph Orchestration"), ("2 Engines", "Groq + Gemini Multi-Pool"), ("0%", "Speculative Hallucinations")]
+            "kpis": [("100%", "Mathematical Precision"), ("11 Nodes", "LangGraph StateGraph"), ("2 Engines", "Groq + Gemini Multi-Pool"), ("0%", "Speculative Numbers")]
         },
         {
             "num": "04",
-            "title": "Empirical Diagnostic Findings: East Region Disruption Case Study",
+            "title": "Empirical Diagnostic Findings: East Region Case Study",
             "subtitle": "Deterministic decomposition of -$1,230,000.01 net variance across 8 enterprise systems.",
             "bullets": [
-                "Empirical Gap: Q3 2026 actual revenue fell to $14,200,000.05 against $15,430,000.06 baseline (-7.97% critical deficit).",
-                "Trigger Event: Atlanta DC experienced 14 consecutive days of zero available inventory for flagship product SKU-8821.",
-                "Channel Friction: 29 Tier-1 distributor purchase orders ($240K value) deferred due to unconfirmed warehouse dispatch dates.",
-                "External Factor: Horizon Foods launched aggressive 15% promotional pricing in East territory, capturing deferred volume."
+                ("Critical Net Deficit:", "Q3 2026 actual revenue fell to $14.20M vs $15.43M baseline (-7.97% critical gap)."),
+                ("Primary Operational Trigger:", "Atlanta DC suffered 14 consecutive days of zero available inventory for SKU-8821."),
+                ("Supply Chain Friction:", "29 Tier-1 distributor purchase orders ($240K) deferred due to dispatch uncertainty."),
+                ("Competitive Territory Pressure:", "Competitor Horizon Foods executed 15% discount pricing in East territory.")
             ],
-            "kpis": [("$15.43M", "Q2 Baseline Revenue"), ("$14.20M", "Q3 Actual Revenue"), ("-$1.23M", "Net Financial Deficit"), ("14 Days", "Zero-Stock Duration")]
+            "kpis": [("$15.43M", "Q2 Baseline Revenue"), ("$14.20M", "Q3 Actual Revenue"), ("-$1.23M", "Net Variance Deficit"), ("14 Days", "Zero-Stock Duration")]
         },
         {
             "num": "05",
             "title": "Deterministic Root-Cause Attribution Waterfall",
             "subtitle": "Exhaustive mathematical decomposition explaining 100.0% of net financial variance.",
             "bullets": [
-                "Driver #1: Atlanta DC Inventory Stockout — 43.2% contribution (-$550,000.00 impact, 94% confidence, Directly Controllable).",
-                "Driver #2: SKU-8821 Sales Velocity Contraction — 26.7% contribution (-$340,000.00 impact, 88.5% confidence, Controllable).",
-                "Driver #3: Distributor Purchase Order Deferrals — 18.8% contribution (-$240,000.00 impact, 89% confidence, Semi-Controllable).",
-                "Driver #4: Competitor Horizon Promotional Pressure — 11.3% contribution (-$144,000.00 impact, 86% confidence, Market Factor)."
+                ("Driver #1 (Atlanta DC Stockout):", "43.2% contribution (-$550,000.00 impact, 94.0% confidence, Directly Controllable)."),
+                ("Driver #2 (Sales Velocity Contraction):", "26.7% contribution (-$340,000.00 impact, 88.5% confidence, Directly Controllable)."),
+                ("Driver #3 (Distributor PO Deferrals):", "18.8% contribution (-$240,000.00 impact, 89.0% confidence, Semi-Controllable)."),
+                ("Driver #4 (Competitor Pricing Action):", "11.3% contribution (-$144,000.00 impact, 86.0% confidence, Market Factor).")
             ],
             "kpis": [("100.0%", "Variance Explained"), ("-$550K", "Primary Driver Share"), ("4 Drivers", "Ranked Attribution"), ("92.4%", "Average Confidence")]
         },
         {
             "num": "06",
             "title": "Panoramic 6-Column Decision Graph (Causal DAG)",
-            "subtitle": "Interactive causal graph connecting Anomaly -> Drivers -> Market -> Evidence -> Actions -> Outcome.",
+            "subtitle": "Interactive causal graph mapping Anomaly -> Drivers -> Market -> Evidence -> Actions -> Outcome.",
             "bullets": [
-                "14 Nodes & 17 Directed Edges: Visual causality flow illustrating cascading operational dependencies.",
-                "Active Pathway Highlighting: 1-click focus mode isolates specific causal chains (e.g. Stockout -> Transfer -> Recovery).",
-                "3-Section Enterprise Toolbar: Flow selector, quick search, and toggleable Node Details drawer for deep telemetry.",
-                "Floating Stage Stepper: Smoothly auto-scrolls between DAG columns without node clipping across any viewport."
+                ("14 Nodes & 17 Directed Edges:", "Visual causality flow illustrating cascading operational dependencies."),
+                ("1-Click Pathway Focus Mode:", "Spotlights specific causal chains (e.g. Stockout -> Transfer -> Recovery)."),
+                ("Balanced 3-Section Toolbar:", "Flow selector, instant node search, and toggleable telemetry inspection drawer."),
+                ("Floating Stage Stepper:", "Smooth auto-scroll between lifecycle columns with zero node cutoff.")
             ],
-            "kpis": [("6 Columns", "Lifecycle DAG Canvas"), ("14 Nodes", "Grounded Entities"), ("17 Edges", "Directed Lineage"), ("1-Click", "Path Spotlight")]
+            "kpis": [("6 Columns", "DAG Lifecycle Canvas"), ("14 Nodes", "Grounded Entities"), ("17 Edges", "Directed Lineage"), ("1-Click", "Pathway Spotlight")]
         },
         {
             "num": "07",
-            "title": "Cryptographic Evidence Explorer & SHA-256 Provenance",
+            "title": "Cryptographic Evidence Explorer & SHA-256 Lineage",
             "subtitle": "12 multi-modal records carrying immutable cryptographic SHA-256 audit digests.",
             "bullets": [
-                "8 Structured Records: Live ledger integration across SAP S/4HANA (MM-WM), NetSuite EDI, Salesforce CRM, and Retail POS.",
-                "4 Unstructured Streams: Distributor communication logs, customer escalation transcripts, and competitive web scrapes.",
-                "Consolidated 3-Column Table: Source & Domain, Record ID, and Confidence badge with zero right-edge clipping.",
-                "100% Cryptographic Verification: On-demand SHA-256 digest validation ensures audit-ready compliance for enterprise governance."
+                ("8 Structured Enterprise Records:", "Live telemetry from SAP S/4HANA (MM-WM), NetSuite EDI, Salesforce CRM, POS."),
+                ("4 Unstructured Data Streams:", "Distributor emails, customer service tickets, and competitor market pricing intel."),
+                ("Consolidated 3-Column Table:", "Source & Domain, Record ID, and Confidence badge with zero right-edge clipping."),
+                ("100% Cryptographic Lineage:", "On-demand SHA-256 hash validation delivers SOX-compliant corporate governance.")
             ],
             "kpis": [("12 Records", "Empirical Evidence"), ("100%", "SHA-256 Integrity"), ("8 Systems", "Cross-Silo Ingestion"), ("SOX-Ready", "Governance Proof")]
         },
         {
             "num": "08",
-            "title": "Prescriptive Action Recommendations & What-If Sandbox",
+            "title": "Prescriptive Recommendations & What-If Sandbox",
             "subtitle": "Prioritized operational playbook generating +$757,600.00 in modeled recovery value.",
             "bullets": [
-                "Priority 1: Emergency Stock Transfer (Chicago Central -> Atlanta DC) — Recovers +$484,000.00 (4,800 surplus units available).",
-                "Priority 2: Distributor PO Incentive (-4% early payment discount) — Recovers +$180,000.00 across 29 deferred orders.",
-                "Priority 3: Targeted East Retail Co-Op Promotion — Recovers +$93,600.00 to counter competitor pricing pressure.",
-                "2x2 Matrix & Elasticity Sandbox: Availability elasticity ($32.2K/pt) recovers 61.6% of total revenue deficit in 14-30 days."
+                ("Priority 1 (Emergency Stock Transfer):", "Chicago -> Atlanta DC recovers +$484,000.00 (4,800 surplus units available)."),
+                ("Priority 2 (Distributor PO Incentive):", "-4% early payment terms recover +$180,000.00 across 29 deferred orders."),
+                ("Priority 3 (Retail Co-Op Promotion):", "Targeted marketing promotion recovers +$93,600.00 to counter competitor pricing."),
+                ("What-If Multi-Slider Sandbox:", "Availability elasticity ($32.2K/pt) recovers 61.6% of deficit in 14-30 days.")
             ],
             "kpis": [("+$484K", "Priority 1 Transfer ROI"), ("+$180K", "Distributor Recovery"), ("+$757.6K", "Total Modeled Pool"), ("61.6%", "Deficit Recouped")]
         },
@@ -655,22 +661,22 @@ def build_business_proposal_pptx():
             "title": "Multi-Persona Executive Decision Briefings",
             "subtitle": "Role-tailored narrative synthesis with 1-click boardroom PDF generation.",
             "bullets": [
-                "CFO View: Emphasizes GAAP revenue reconciliation, SOX compliance, working capital impact, and capital allocation.",
-                "VP of Supply Chain View: Focuses on warehouse safety stock targets, freight lead times, and Chicago-to-Atlanta transfer logistics.",
-                "COO View: Highlights SLA restoration, operational throughput, distributor relationships, and cross-functional execution.",
-                "Regional Sales Director View: Details account-level impact, retail scan rates, and competitive market share defense."
+                ("Chief Financial Officer (CFO):", "GAAP revenue reconciliation, SOX compliance, and capital allocation priorities."),
+                ("VP of Supply Chain:", "Warehouse safety stock targets, freight logistics, and Chicago-to-Atlanta transfer."),
+                ("Chief Operating Officer (COO):", "SLA recovery, operational throughput, distributor relationships, and execution."),
+                ("Regional Sales Director:", "Account-level velocity, retail sell-through rates, and competitive market share.")
             ],
             "kpis": [("4 Personas", "Executive Views"), ("1-Click", "Boardroom PDF Export"), ("Zero Hallucination", "Strict Guardrails"), ("30 Seconds", "Briefing Generation")]
         },
         {
             "num": "10",
-            "title": "System Architecture, Security & Enterprise Scalability",
+            "title": "Enterprise Cloud Architecture & Security Guardrails",
             "subtitle": "Modern cloud-native stack engineered for enterprise resilience, high concurrency, and zero downtime.",
             "bullets": [
-                "FastAPI ASGI Backend: Sub-50ms deterministic inference with Pydantic v2 data contract validation and rate limiting.",
-                "Next.js 14 App Router Frontend: Pure Tailwind CSS, React 18, Glassmorphism UI, and 10 pre-rendered static routes.",
-                "Comprehensive Observability: Structured JSON logging with unique X-Request-ID tracing and 12-subsystem health probes.",
-                "OWASP Compliance: Strict Content Security Policy, X-Frame-Options DENY, sanitization, and 0 secret leakage in repository."
+                ("FastAPI ASGI High-Throughput API:", "Sub-50ms deterministic inference with Pydantic v2 validation contracts."),
+                ("Next.js 14 App Router Frontend:", "Pure Tailwind CSS, React 18, Glassmorphism UI, 10 pre-rendered static routes."),
+                ("Structured Observability & Tracing:", "Structured JSON logging with unique X-Request-ID tracing and 12-subsystem probes."),
+                ("Enterprise Security Standards:", "Strict CSP, X-Frame-Options DENY, sanitization, and 0 secret leakage in repository.")
             ],
             "kpis": [("305/305", "Backend Tests Passing"), ("10/10", "Static Routes Compiled"), ("<50ms", "Engine API Latency"), ("0 Secrets", "Verified Git Clean")]
         },
@@ -679,22 +685,22 @@ def build_business_proposal_pptx():
             "title": "Commercial Business Model & Fortune 500 ROI",
             "subtitle": "Compelling enterprise SaaS economics with a 2.7x first-year ROI in under 90 days.",
             "bullets": [
-                "Pricing Structure: Tiered annual SaaS subscription ($180,000/year/business unit) + $45,000 enterprise connector onboarding.",
-                "Direct ROI Proof: For a $250M consumer goods enterprise, mitigating a single 14-day stockout recovers +$484,000 in net margin.",
-                "Customer Payback: Full software investment recouped in less than 3 months of production operation.",
-                "Expansion Vectors: Land & expand across Supply Chain, Commercial Sales, Finance, and Procurement divisions."
+                ("Tiered Enterprise Pricing:", "Annual SaaS subscription ($180K/year/business unit) + $45K connector onboarding."),
+                ("Immediate Margin Protection:", "Preventing a single 14-day stockout recovers +$484,000 in net profit margin."),
+                ("Rapid Investment Payback:", "Full software investment recouped in less than 3 months of live operation."),
+                ("Expansion Vectors:", "Scales across Supply Chain, Commercial Sales, Finance, and Procurement divisions.")
             ],
             "kpis": [("$180K/yr", "Enterprise SaaS Tier"), ("2.7x", "First-Year ROI"), ("<90 Days", "Payback Period"), ("$250M+", "Target Account Scale")]
         },
         {
             "num": "12",
-            "title": "Conclusion, Production Readiness & Competition Summary",
+            "title": "Conclusion, Production Readiness & Submission Summary",
             "subtitle": "Fully tested, deployed, documented, and ready for immediate executive evaluation.",
             "bullets": [
-                "Competition Track: Accenture Innovation Challenge 2026 • Track 3: BusinessIntelligence.ai",
-                "Repository: Public GitHub with 100% test coverage — https://github.com/ayus1234/InsighPilotAI",
-                "Prototype Video: High-definition 3-minute executive walkthrough showcasing all 7 core analytical screens.",
-                "Submission Deliverables: Master README (PDF), Detailed Business Proposal (PDF/PPTX), and Prototype Demo Video."
+                ("Competition Track:", "Accenture Innovation Challenge 2026 • Track 3: BusinessIntelligence.ai"),
+                ("Public Repository:", "100% test coverage & zero secrets — https://github.com/ayus1234/InsighPilotAI"),
+                ("High-Definition Video Demo:", "3-minute executive walkthrough showcasing all 7 core analytical screens."),
+                ("Final Deliverables:", "Master README (PDF), Business Proposal (PDF/PPTX), and Prototype Demo Video.")
             ],
             "kpis": [("100%", "Competition Ready"), ("305 Tests", "Green Test Suite"), ("7 Screens", "Full User Journey"), ("Ready", "Final Submission")]
         }
@@ -705,109 +711,130 @@ def build_business_proposal_pptx():
     for item in slides_content:
         slide = prs.slides.add_slide(blank_layout)
         
-        # Background shape
+        # 1. Slide Background
         bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, prs.slide_width, prs.slide_height)
         bg.fill.solid()
         bg.fill.fore_color.rgb = BG_COLOR
         bg.line.fill.background()
 
-        # Top Accent Line
-        accent = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(0.4), Inches(11.733), Inches(0.04))
+        # 2. Top Glowing Accent Line
+        accent = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(0.35), Inches(11.733), Inches(0.05))
         accent.fill.solid()
         accent.fill.fore_color.rgb = PRIMARY
         accent.line.fill.background()
 
-        # Slide Number Badge
-        num_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.55), Inches(0.8), Inches(0.5))
+        # 3. Slide Number Badge
+        num_box = slide.shapes.add_textbox(Inches(0.8), Inches(0.5), Inches(0.8), Inches(0.6))
         tf_num = num_box.text_frame
-        tf_num.text = item["num"]
+        tf_num.word_wrap = False
         p_num = tf_num.paragraphs[0]
-        p_num.font.name = 'Arial'
-        p_num.font.size = Pt(14)
+        p_num.text = item["num"]
+        p_num.font.name = FONT_FAMILY
+        p_num.font.size = Pt(22)
         p_num.font.bold = True
         p_num.font.color.rgb = PRIMARY
 
-        # Slide Title
-        title_box = slide.shapes.add_textbox(Inches(1.6), Inches(0.5), Inches(10.9), Inches(0.55))
+        # 4. Slide Title (Large 26pt Bold)
+        title_box = slide.shapes.add_textbox(Inches(1.6), Inches(0.45), Inches(10.9), Inches(0.65))
         tf_title = title_box.text_frame
-        tf_title.text = item["title"]
+        tf_title.word_wrap = True
         p_title = tf_title.paragraphs[0]
-        p_title.font.name = 'Arial'
-        p_title.font.size = Pt(20)
+        p_title.text = item["title"]
+        p_title.font.name = FONT_FAMILY
+        p_title.font.size = Pt(26)
         p_title.font.bold = True
-        p_title.font.color.rgb = TEXT_LIGHT
+        p_title.font.color.rgb = TEXT_WHITE
 
-        # Subtitle
-        sub_box = slide.shapes.add_textbox(Inches(1.6), Inches(1.05), Inches(10.9), Inches(0.4))
+        # 5. Subtitle (Large 15pt Semi-Bold)
+        sub_box = slide.shapes.add_textbox(Inches(1.6), Inches(1.1), Inches(10.9), Inches(0.45))
         tf_sub = sub_box.text_frame
-        tf_sub.text = item["subtitle"]
+        tf_sub.word_wrap = True
         p_sub = tf_sub.paragraphs[0]
-        p_sub.font.name = 'Arial'
-        p_sub.font.size = Pt(11)
-        p_sub.font.color.rgb = TEXT_MUTED
+        p_sub.text = item["subtitle"]
+        p_sub.font.name = FONT_FAMILY
+        p_sub.font.size = Pt(14.5)
+        p_sub.font.bold = True
+        p_sub.font.color.rgb = PRIMARY
 
-        # Main Content Card (Left 7.2 Inches)
-        card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.6), Inches(7.5), Inches(5.2))
+        # 6. Main Content Card (Left 7.5 Inches wide, 5.3 Inches high)
+        card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.65), Inches(7.5), Inches(5.15))
         card.fill.solid()
         card.fill.fore_color.rgb = CARD_BG
-        card.line.color.rgb = RGBColor(30, 58, 90)
-        card.line.width = Pt(1)
+        card.line.color.rgb = CARD_BORDER
+        card.line.width = Pt(1.5)
 
-        # Bullets inside Card
-        bullets_box = slide.shapes.add_textbox(Inches(1.0), Inches(1.8), Inches(7.1), Inches(4.8))
+        # Bullets inside Main Card
+        bullets_box = slide.shapes.add_textbox(Inches(1.05), Inches(1.8), Inches(7.0), Inches(4.85))
         tf_b = bullets_box.text_frame
         tf_b.word_wrap = True
 
-        for i, bullet in enumerate(item["bullets"]):
+        for i, (head, body) in enumerate(item["bullets"]):
             p = tf_b.add_paragraph() if i > 0 else tf_b.paragraphs[0]
-            p.text = f"•  {bullet}"
-            p.font.name = 'Arial'
-            p.font.size = Pt(11.5)
-            p.font.color.rgb = TEXT_LIGHT
-            p.space_after = Pt(12)
+            p.space_after = Pt(14)
+            
+            # Bold Head
+            run_h = p.add_run()
+            run_h.text = f"•  {head} "
+            run_h.font.name = FONT_FAMILY
+            run_h.font.size = Pt(15)
+            run_h.font.bold = True
+            run_h.font.color.rgb = PRIMARY
 
-        # KPI Callout Cards (Right Side: 4 small cards)
-        kpi_y_starts = [1.6, 2.95, 4.3, 5.65]
+            # Body Text
+            run_b = p.add_run()
+            run_b.text = body
+            run_b.font.name = FONT_FAMILY
+            run_b.font.size = Pt(14.5)
+            run_b.font.bold = False
+            run_b.font.color.rgb = TEXT_MUTED
+
+        # 7. KPI Callout Cards (Right Side: 4 prominent cards)
+        kpi_y_starts = [1.65, 2.98, 4.31, 5.64]
         for idx, (kpi_val, kpi_label) in enumerate(item["kpis"]):
             y_pos = kpi_y_starts[idx]
-            k_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.6), Inches(y_pos), Inches(3.933), Inches(1.15))
+            k_card = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.6), Inches(y_pos), Inches(3.933), Inches(1.18))
             k_card.fill.solid()
             k_card.fill.fore_color.rgb = CARD_BG
-            k_card.line.color.rgb = PRIMARY if idx == 0 else RGBColor(30, 58, 90)
-            k_card.line.width = Pt(1.5 if idx == 0 else 1)
+            k_card.line.color.rgb = PRIMARY if idx == 0 else CARD_BORDER
+            k_card.line.width = Pt(2.0 if idx == 0 else 1.2)
 
             # KPI Text
-            k_box = slide.shapes.add_textbox(Inches(8.8), Inches(y_pos + 0.1), Inches(3.533), Inches(0.95))
+            k_box = slide.shapes.add_textbox(Inches(8.85), Inches(y_pos + 0.08), Inches(3.45), Inches(1.0))
             tf_k = k_box.text_frame
             tf_k.word_wrap = True
             
+            # Big Metric Number (30pt Bold)
             p_v = tf_k.paragraphs[0]
             p_v.text = kpi_val
-            p_v.font.name = 'Arial'
-            p_v.font.size = Pt(18)
+            p_v.font.name = FONT_FAMILY
+            p_v.font.size = Pt(30)
             p_v.font.bold = True
-            p_v.font.color.rgb = PRIMARY if idx == 0 else (ACCENT_GOLD if idx == 2 else TEXT_LIGHT)
+            p_v.font.color.rgb = PRIMARY if idx == 0 else (ACCENT_GOLD if idx == 2 else TEXT_WHITE)
 
+            # Metric Descriptor (13pt Bold)
             p_l = tf_k.add_paragraph()
             p_l.text = kpi_label
-            p_l.font.name = 'Arial'
-            p_l.font.size = Pt(9.5)
+            p_l.font.name = FONT_FAMILY
+            p_l.font.size = Pt(13)
+            p_l.font.bold = True
             p_l.font.color.rgb = TEXT_MUTED
 
-        # Footer
-        footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(7.0), Inches(11.733), Inches(0.3))
+        # 8. Footer Bar
+        footer_box = slide.shapes.add_textbox(Inches(0.8), Inches(6.95), Inches(11.733), Inches(0.4))
         tf_f = footer_box.text_frame
         p_f = tf_f.paragraphs[0]
         p_f.text = f"InsightPilot AI • Confidential • Slide {item['num']} of 12 • Track 3: BusinessIntelligence.ai"
-        p_f.font.name = 'Arial'
-        p_f.font.size = Pt(8.5)
-        p_f.font.color.rgb = RGBColor(100, 116, 139)
+        p_f.font.name = FONT_FAMILY
+        p_f.font.size = Pt(11)
+        p_f.font.color.rgb = RGBColor(148, 163, 184)
 
-    try:
-        prs.save(str(pptx_path))
-        print(f"[OK] Generated: {pptx_path}")
-    except PermissionError:
-        print(f"[NOTE] {pptx_path} is currently open in another application (e.g. PowerPoint). The existing file is retained.")
+    # Save to master and alternate paths
+    for target in [pptx_path, alt_pptx_path]:
+        try:
+            prs.save(str(target))
+            print(f"[OK] Generated: {target}")
+        except PermissionError:
+            print(f"[NOTE] {target} is currently open in PowerPoint. Please close it if you wish to overwrite.")
 
 
 if __name__ == "__main__":
