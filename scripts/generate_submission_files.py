@@ -91,7 +91,7 @@ def build_readme_pdf():
         pagesize=letter,
         leftMargin=40,
         rightMargin=40,
-        topMargin=55,
+        topMargin=60,
         bottomMargin=55,
     )
 
@@ -101,8 +101,8 @@ def build_readme_pdf():
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=22,
-        leading=26,
+        fontSize=18,
+        leading=22,
         textColor=colors.HexColor('#0F172A'),
         spaceAfter=4,
     )
@@ -111,68 +111,95 @@ def build_readme_pdf():
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=11,
-        leading=15,
+        fontSize=9.5,
+        leading=13,
         textColor=colors.HexColor('#0284C7'),
-        spaceAfter=12,
+        spaceAfter=8,
     )
     
     h1_style = ParagraphStyle(
         'Heading1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=14,
-        leading=18,
+        fontSize=11.5,
+        leading=15,
         textColor=colors.HexColor('#0F172A'),
-        spaceBefore=14,
-        spaceAfter=6,
+        spaceBefore=10,
+        spaceAfter=4,
     )
 
     h2_style = ParagraphStyle(
         'Heading2',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=11,
-        leading=15,
+        fontSize=9.5,
+        leading=13,
         textColor=colors.HexColor('#1E293B'),
-        spaceBefore=10,
-        spaceAfter=4,
+        spaceBefore=6,
+        spaceAfter=2,
     )
 
     body_style = ParagraphStyle(
         'Body',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=13,
+        fontSize=8,
+        leading=11.5,
         textColor=colors.HexColor('#334155'),
-        spaceAfter=6,
+        spaceAfter=4,
     )
 
     code_style = ParagraphStyle(
         'CodeBlock',
         parent=styles['Normal'],
         fontName='Courier',
-        fontSize=8,
-        leading=11,
+        fontSize=7.5,
+        leading=10,
         textColor=colors.HexColor('#0F172A'),
         backColor=colors.HexColor('#F1F5F9'),
-        borderPadding=6,
-        spaceAfter=8,
+        borderPadding=5,
+        spaceAfter=5,
     )
 
     callout_style = ParagraphStyle(
         'Callout',
         parent=styles['Normal'],
         fontName='Helvetica-Oblique',
-        fontSize=8.5,
-        leading=12,
+        fontSize=8,
+        leading=11,
         textColor=colors.HexColor('#0369A1'),
         backColor=colors.HexColor('#F0F9FF'),
         borderColor=colors.HexColor('#BAE6FD'),
-        borderWidth=1,
-        borderPadding=6,
-        spaceAfter=8,
+        borderWidth=0.75,
+        borderPadding=5,
+        spaceAfter=6,
+    )
+
+    th_style = ParagraphStyle(
+        'TableHeader',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=8,
+        leading=10,
+        textColor=colors.white,
+    )
+
+    td_style = ParagraphStyle(
+        'TableCell',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=7.5,
+        leading=10,
+        textColor=colors.HexColor('#334155'),
+    )
+
+    td_bold = ParagraphStyle(
+        'TableCellBold',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=7.5,
+        leading=10,
+        textColor=colors.HexColor('#0F172A'),
     )
 
     story = []
@@ -180,12 +207,12 @@ def build_readme_pdf():
     # Title & Header
     story.append(Paragraph("InsightPilot AI — System README & Technical Manual", title_style))
     story.append(Paragraph("Enterprise Decision Intelligence, Deterministic Root-Cause Attribution & Cryptographic Evidence Lineage", subtitle_style))
-    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#0284C7"), spaceAfter=10))
+    story.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor("#0284C7"), spaceAfter=8))
 
     # Executive Summary
     story.append(Paragraph("1. Executive Summary & Problem Context", h1_style))
     story.append(Paragraph(
-        "<b>InsightPilot AI</b> is an enterprise decision intelligence platform that automates the transition from descriptive anomaly detection to prescriptive operational recovery. Traditional BI tools indicate <i>what</i> occurred (e.g., -$1.23M revenue deficit), but investigating <i>why</i> requires weeks of cross-silo dataset triage across ERP, CRM, and EDI systems. InsightPilot AI bridges this gap using deterministic analytics engines, LangGraph 11-node orchestration, and SHA-256 cryptographic provenance.",
+        "<b>InsightPilot AI</b> is an enterprise decision intelligence platform that automates the transition from descriptive anomaly detection to prescriptive operational recovery. Traditional BI tools indicate <i>what</i> occurred (e.g., -$1.23M revenue deficit), but investigating <i>why</i> requires weeks of cross-silo triage across ERP, CRM, and EDI systems. InsightPilot AI bridges this gap using deterministic analytics engines, LangGraph 11-node orchestration, and SHA-256 cryptographic provenance.",
         body_style
     ))
     
@@ -196,56 +223,68 @@ def build_readme_pdf():
 
     # 7-Screen Analytical Workflow
     story.append(Paragraph("2. The 7-Screen Executive Analytical Journey", h1_style))
-    screens_data = [
-        ["Screen / Route", "Primary Capability", "Enterprise Impact"],
-        ["1. Command Center (/)", "Real-time revenue anomaly triage & data source synchronization", "Detects -$1.23M deficit (-7.97%) across 8 synced enterprise systems."],
-        ["2. Root Cause (/root-cause)", "Deterministic waterfall attribution & 6-milestone timeline", "Attributes 43.2% ($550K) to Atlanta DC stockout; 100% variance explained."],
-        ["3. Investigation (/investigation)", "LangGraph 11-node state graph trace & agent replay", "Full agentic audit trail with tool execution logs & confidence scores."],
-        ["4. Decision Graph (/decision-graph)", "Interactive 6-column DAG mapping Anomaly -> Actions", "Visual causality pipeline with stage stepper & node inspector."],
-        ["5. Evidence Explorer (/evidence)", "12 multi-modal records with SHA-256 verification", "Cryptographic provenance proof for ERP, EDI, CRM, and POS data."],
-        ["6. Recommendations (/recommendations)", "2x2 Prioritization Matrix & What-If Elasticity Sandbox", "Priority 1 Stock Transfer ($484K recovery); $757.6K modeled recovery pool."],
-        ["7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready governance briefings with 1-click boardroom PDF export."],
+    raw_screens = [
+        ("Screen / Route", "Primary Capability", "Enterprise Impact"),
+        ("1. Command Center (/)", "Real-time revenue anomaly triage & data source synchronization", "Detects -$1.23M deficit (-7.97%) across 8 synced enterprise systems."),
+        ("2. Root Cause (/root-cause)", "Deterministic waterfall attribution & 6-milestone timeline", "Attributes 43.2% ($550K) to Atlanta DC stockout; 100% variance explained."),
+        ("3. Investigation (/investigation)", "LangGraph 11-node state graph trace & agent replay", "Full agentic audit trail with tool execution logs & confidence scores."),
+        ("4. Decision Graph (/decision-graph)", "Interactive 6-column DAG mapping Anomaly -> Actions", "Visual causality pipeline with stage stepper & node inspector."),
+        ("5. Evidence Explorer (/evidence)", "12 multi-modal records with SHA-256 verification", "Cryptographic provenance proof for ERP, EDI, CRM, and POS data."),
+        ("6. Recommendations (/recommendations)", "2x2 Prioritization Matrix & What-If Elasticity Sandbox", "Priority 1 Stock Transfer ($484K recovery); $757.6K modeled recovery pool."),
+        ("7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready governance briefings with 1-click boardroom PDF export."),
     ]
-    t = Table(screens_data, colWidths=[120, 210, 200])
+    
+    screens_table_data = []
+    for r_idx, (c1, c2, c3) in enumerate(raw_screens):
+        if r_idx == 0:
+            screens_table_data.append([Paragraph(c1, th_style), Paragraph(c2, th_style), Paragraph(c3, th_style)])
+        else:
+            screens_table_data.append([Paragraph(c1, td_bold), Paragraph(c2, td_style), Paragraph(c3, td_style)])
+
+    t = Table(screens_table_data, colWidths=[120, 205, 205])
     t.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#0F172A')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 8),
         ('BOTTOMPADDING', (0,0), (-1,0), 4),
         ('TOPPADDING', (0,0), (-1,0), 4),
         ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#F8FAFC')),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
-        ('FONTNAME', (0,1), (-1,-1), 'Helvetica'),
-        ('FONTSIZE', (0,1), (-1,-1), 7.5),
+        ('TOPPADDING', (0,1), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 3),
         ('VALIGN', (0,0), (-1,-1), 'TOP'),
     ]))
     story.append(t)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 6))
 
     # Architecture & Technology Stack
     story.append(Paragraph("3. Technology Stack & Verification", h1_style))
-    tech_data = [
-        ["Layer", "Technologies", "Verification Level"],
-        ["Backend API", "Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn", "305/305 Unit/Integration Tests Passing"],
-        ["Deterministic Core", "Pure Python Engines (KPI, Driver, Evidence, Confidence)", "100.000% Mathematical Precision ($1.23M locked)"],
-        ["AI Orchestration", "LangGraph 11-Node StateGraph, Groq LLaMA 3.3 70B, Gemini 2.5", "Grounded facts only; calibrated abstention gate"],
-        ["Frontend Web App", "Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide", "10/10 Static Routes Pre-rendered Cleanly"],
-        ["Lineage & Security", "8 Normalized CSV Schemas (43K+ rows), SHA-256 Hashes", "100% Cryptographic Digest Verification"],
+    raw_tech = [
+        ("Layer", "Technologies", "Verification Level"),
+        ("Backend API", "Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn", "305/305 Unit/Integration Tests Passing"),
+        ("Deterministic Core", "Pure Python Engines (KPI, Driver, Evidence, Confidence)", "100.000% Mathematical Precision ($1.23M locked)"),
+        ("AI Orchestration", "LangGraph 11-Node StateGraph, Groq LLaMA 3.3 70B, Gemini 2.5", "Grounded facts only; calibrated abstention gate"),
+        ("Frontend Web App", "Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide", "10/10 Static Routes Pre-rendered Cleanly"),
+        ("Lineage & Security", "8 Normalized CSV Schemas (43K+ rows), SHA-256 Hashes", "100% Cryptographic Digest Verification"),
     ]
-    t2 = Table(tech_data, colWidths=[110, 260, 160])
+    tech_table_data = []
+    for r_idx, (c1, c2, c3) in enumerate(raw_tech):
+        if r_idx == 0:
+            tech_table_data.append([Paragraph(c1, th_style), Paragraph(c2, th_style), Paragraph(c3, th_style)])
+        else:
+            tech_table_data.append([Paragraph(c1, td_bold), Paragraph(c2, td_style), Paragraph(c3, td_style)])
+
+    t2 = Table(tech_table_data, colWidths=[110, 260, 160])
     t2.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#0284C7')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 8),
+        ('BOTTOMPADDING', (0,0), (-1,0), 4),
+        ('TOPPADDING', (0,0), (-1,0), 4),
         ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#FFFFFF')),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
-        ('FONTSIZE', (0,1), (-1,-1), 7.5),
+        ('TOPPADDING', (0,1), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 3),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     story.append(t2)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 6))
 
     # Quick Start Commands
     story.append(Paragraph("4. Quick Start & Execution Commands", h1_style))
@@ -273,7 +312,7 @@ def build_business_proposal_pdf():
         pagesize=letter,
         leftMargin=40,
         rightMargin=40,
-        topMargin=55,
+        topMargin=60,
         bottomMargin=55,
     )
 
@@ -283,8 +322,8 @@ def build_business_proposal_pdf():
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=20,
-        leading=24,
+        fontSize=18,
+        leading=22,
         textColor=colors.HexColor('#0F172A'),
         spaceAfter=4,
     )
@@ -293,45 +332,72 @@ def build_business_proposal_pdf():
         'DocSubtitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=10.5,
-        leading=14,
+        fontSize=9.5,
+        leading=13,
         textColor=colors.HexColor('#0D9488'),
-        spaceAfter=12,
+        spaceAfter=8,
     )
     
     h1_style = ParagraphStyle(
         'Heading1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=17,
+        fontSize=11.5,
+        leading=15,
         textColor=colors.HexColor('#0F172A'),
-        spaceBefore=12,
-        spaceAfter=5,
+        spaceBefore=9,
+        spaceAfter=4,
     )
 
     body_style = ParagraphStyle(
         'Body',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8.5,
-        leading=12.5,
+        fontSize=8,
+        leading=11.5,
         textColor=colors.HexColor('#334155'),
-        spaceAfter=5,
+        spaceAfter=4,
     )
 
     callout_style = ParagraphStyle(
         'Callout',
         parent=styles['Normal'],
         fontName='Helvetica-Oblique',
-        fontSize=8.5,
-        leading=12,
+        fontSize=8,
+        leading=11,
         textColor=colors.HexColor('#0F766E'),
         backColor=colors.HexColor('#F0FDFA'),
         borderColor=colors.HexColor('#99F6E4'),
-        borderWidth=1,
-        borderPadding=6,
-        spaceAfter=8,
+        borderWidth=0.75,
+        borderPadding=5,
+        spaceAfter=6,
+    )
+
+    th_style = ParagraphStyle(
+        'TableHeader',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=8,
+        leading=10,
+        textColor=colors.white,
+    )
+
+    td_style = ParagraphStyle(
+        'TableCell',
+        parent=styles['Normal'],
+        fontName='Helvetica',
+        fontSize=7.5,
+        leading=10,
+        textColor=colors.HexColor('#334155'),
+    )
+
+    td_bold = ParagraphStyle(
+        'TableCellBold',
+        parent=styles['Normal'],
+        fontName='Helvetica-Bold',
+        fontSize=7.5,
+        leading=10,
+        textColor=colors.HexColor('#0F172A'),
     )
 
     story = []
@@ -354,75 +420,100 @@ def build_business_proposal_pdf():
 
     # 2. Case Study: East Region Disruption
     story.append(Paragraph("2. Financial Telemetry & Empirical Investigation Findings", h1_style))
-    fin_table_data = [
-        ["Metric", "Baseline (Q2 2026)", "Actual (Q3 2026)", "Empirical Gap", "Status"],
-        ["East Region Net Revenue", "$15,430,000.06", "$14,200,000.05", "-$1,230,000.01 (-7.97%)", "Critical Deficit"],
-        ["SKU-8821 Stockout Duration", "0.0 Days (Normal)", "14.0 Days (Atlanta DC)", "+14.0 Days Unfulfilled", "Primary Bottleneck"],
-        ["Distributor PO Deferrals", "0 Held Orders", "29 Held Orders ($240K)", "29 Postponed POs", "Channel Friction"],
-        ["Customer Escalations", "34 Baseline Tickets", "142 Backlog Tickets", "+310% Surge in SLA Breaches", "Customer Impact"],
+    raw_fin = [
+        ("Metric", "Baseline (Q2 2026)", "Actual (Q3 2026)", "Empirical Gap", "Status"),
+        ("East Region Net Revenue", "$15,430,000.06", "$14,200,000.05", "-$1,230,000.01 (-7.97%)", "Critical Deficit"),
+        ("SKU-8821 Stockout Duration", "0.0 Days (Normal)", "14.0 Days (Atlanta DC)", "+14.0 Days Unfulfilled", "Primary Bottleneck"),
+        ("Distributor PO Deferrals", "0 Held Orders", "29 Held Orders ($240K)", "29 Postponed POs", "Channel Friction"),
+        ("Customer Escalations", "34 Baseline Tickets", "142 Backlog Tickets", "+310% Surge in SLA Breaches", "Customer Impact"),
     ]
-    t_fin = Table(fin_table_data, colWidths=[125, 100, 100, 125, 80])
+    fin_table_data = []
+    for r_idx, row in enumerate(raw_fin):
+        if r_idx == 0:
+            fin_table_data.append([Paragraph(cell, th_style) for cell in row])
+        else:
+            fin_table_data.append([Paragraph(row[0], td_bold)] + [Paragraph(cell, td_style) for cell in row[1:]])
+
+    t_fin = Table(fin_table_data, colWidths=[125, 95, 95, 135, 80])
     t_fin.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#0F172A')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 7.5),
+        ('BOTTOMPADDING', (0,0), (-1,0), 4),
+        ('TOPPADDING', (0,0), (-1,0), 4),
         ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#F8FAFC')),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
-        ('FONTSIZE', (0,1), (-1,-1), 7.5),
+        ('TOPPADDING', (0,1), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 3),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     story.append(t_fin)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # 3. Root Cause Attribution
     story.append(Paragraph("3. Deterministic Root-Cause Attribution Waterfall", h1_style))
-    driver_data = [
-        ["Rank", "Driver Name", "Attribution %", "Financial Impact", "Confidence", "Controllability"],
-        ["#1", "Atlanta DC Inventory Stockout (SKU-8821)", "43.2%", "-$550,000.00", "94.0% High", "Directly Controllable"],
-        ["#2", "SKU-8821 Sales Velocity Contraction", "26.7%", "-$340,000.00", "88.5% High", "Directly Controllable"],
-        ["#3", "Distributor Purchase Order Deferrals", "18.8%", "-$240,000.00", "89.0% High", "Semi-Controllable"],
-        ["#4", "Competitor Horizon Price Cut (-15%)", "11.3%", "-$144,000.00", "86.0% High", "Market Factor"],
-        ["Total", "100.0% Variance Explained", "100.0%", "-$1,230,000.00", "92.4% Avg", "Exhaustive Reconciliation"],
+    raw_drv = [
+        ("Rank", "Driver Name", "Attribution %", "Financial Impact", "Confidence", "Controllability"),
+        ("#1", "Atlanta DC Inventory Stockout (SKU-8821)", "43.2%", "-$550,000.00", "94.0% High", "Directly Controllable"),
+        ("#2", "SKU-8821 Sales Velocity Contraction", "26.7%", "-$340,000.00", "88.5% High", "Directly Controllable"),
+        ("#3", "Distributor Purchase Order Deferrals", "18.8%", "-$240,000.00", "89.0% High", "Semi-Controllable"),
+        ("#4", "Competitor Horizon Price Cut (-15%)", "11.3%", "-$144,000.00", "86.0% High", "Market Factor"),
+        ("Total", "100.0% Variance Explained", "100.0%", "-$1,230,000.00", "92.4% Avg", "Exhaustive Reconciliation"),
     ]
-    t_drv = Table(driver_data, colWidths=[30, 195, 75, 85, 75, 70])
+    drv_table_data = []
+    for r_idx, row in enumerate(raw_drv):
+        if r_idx == 0:
+            drv_table_data.append([Paragraph(cell, th_style) for cell in row])
+        elif r_idx == len(raw_drv) - 1:
+            drv_table_data.append([Paragraph(cell, td_bold) for cell in row])
+        else:
+            drv_table_data.append([Paragraph(row[0], td_style), Paragraph(row[1], td_bold)] + [Paragraph(cell, td_style) for cell in row[2:]])
+
+    t_drv = Table(drv_table_data, colWidths=[30, 195, 75, 85, 75, 70])
     t_drv.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#0F766E')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 7.5),
+        ('BOTTOMPADDING', (0,0), (-1,0), 4),
+        ('TOPPADDING', (0,0), (-1,0), 4),
+        ('BACKGROUND', (0,1), (-1,-2), colors.HexColor('#FFFFFF')),
         ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#CCFBF1')),
-        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E2E8F0')),
-        ('FONTSIZE', (0,1), (-1,-1), 7.5),
+        ('TOPPADDING', (0,1), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 3),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     story.append(t_drv)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # 4. Prescriptive Actions & ROI
     story.append(Paragraph("4. Prescriptive Action Roadmap & Modeled ROI", h1_style))
-    action_data = [
-        ["Priority", "Recommended Action", "Recovery Value", "Feasibility", "SLA / Timeline"],
-        ["Priority 1", "Emergency Stock Transfer (Chicago Central -> Atlanta DC)", "+$484,000.00", "High (4,800 units avail)", "14 Days (Immediate)"],
-        ["Priority 2", "Distributor PO Discount Incentive (-4% early release)", "+$180,000.00", "High (29 POs target)", "7 Days (Commercial)"],
-        ["Priority 3", "Targeted East Retail Co-Op Counter-Promotion", "+$93,600.00", "Medium (Marketing)", "30 Days (Quarterly)"],
-        ["Total", "Modeled Financial Recovery Pool", "+$757,600.00", "High Feasibility", "61.6% Deficit Recouped"],
+    raw_act = [
+        ("Priority", "Recommended Action", "Recovery Value", "Feasibility", "SLA / Timeline"),
+        ("Priority 1", "Emergency Stock Transfer (Chicago -> Atlanta)", "+$484,000.00", "High (4,800 units avail)", "14 Days (Immediate)"),
+        ("Priority 2", "Distributor PO Discount Incentive (-4% early release)", "+$180,000.00", "High (29 POs target)", "7 Days (Commercial)"),
+        ("Priority 3", "Targeted East Retail Co-Op Counter-Promotion", "+$93,600.00", "Medium (Marketing)", "30 Days (Quarterly)"),
+        ("Total", "Modeled Financial Recovery Pool", "+$757,600.00", "High Feasibility", "61.6% Deficit Recouped"),
     ]
-    t_act = Table(action_data, colWidths=[55, 205, 85, 95, 90])
+    act_table_data = []
+    for r_idx, row in enumerate(raw_act):
+        if r_idx == 0:
+            act_table_data.append([Paragraph(cell, th_style) for cell in row])
+        elif r_idx == len(raw_act) - 1:
+            act_table_data.append([Paragraph(cell, td_bold) for cell in row])
+        else:
+            act_table_data.append([Paragraph(row[0], td_bold)] + [Paragraph(cell, td_style) for cell in row[1:]])
+
+    t_act = Table(act_table_data, colWidths=[55, 205, 85, 95, 90])
     t_act.setStyle(TableStyle([
         ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#1E293B')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('FONTSIZE', (0,0), (-1,0), 7.5),
+        ('BOTTOMPADDING', (0,0), (-1,0), 4),
+        ('TOPPADDING', (0,0), (-1,0), 4),
+        ('BACKGROUND', (0,1), (-1,-2), colors.HexColor('#FFFFFF')),
         ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor('#F1F5F9')),
-        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
         ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#CBD5E1')),
-        ('FONTSIZE', (0,1), (-1,-1), 7.5),
+        ('TOPPADDING', (0,1), (-1,-1), 3),
+        ('BOTTOMPADDING', (0,1), (-1,-1), 3),
         ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
     ]))
     story.append(t_act)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # 5. Commercial Model & Competitive Moat
     story.append(Paragraph("5. Commercialization, Enterprise Pricing & ROI Moat", h1_style))
@@ -712,8 +803,11 @@ def build_business_proposal_pptx():
         p_f.font.size = Pt(8.5)
         p_f.font.color.rgb = RGBColor(100, 116, 139)
 
-    prs.save(str(pptx_path))
-    print(f"[OK] Generated: {pptx_path}")
+    try:
+        prs.save(str(pptx_path))
+        print(f"[OK] Generated: {pptx_path}")
+    except PermissionError:
+        print(f"[NOTE] {pptx_path} is currently open in another application (e.g. PowerPoint). The existing file is retained.")
 
 
 if __name__ == "__main__":
