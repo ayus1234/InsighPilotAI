@@ -114,10 +114,19 @@ InsightPilot AI guides decision-makers through an interactive, mathematically co
 | :--- | :--- |
 | **Backend API Gateway** | Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn, JSON Schema Contracts, CORS, OWASP Headers |
 | **Deterministic Analytics** | Pure Python calculation engines (KPI, Driver, Evidence, Confidence Calibration, Elasticity Simulation) |
-| **AI Orchestration & Guardrails** | LangGraph (11-Node StateGraph), Groq (LLaMA 3.3 70B), Google Gemini (2.5 Flash), Abstention Gate |
+| **Multi-Model AI & Guardrails** | LangGraph (11-Node StateGraph), Dual-Pool Key Rotation (Groq + Gemini), Auto-Failover, Calibrated Abstention Gate |
 | **Frontend Web Application** | Next.js 14.2 (App Router), React 18, Tailwind CSS, Material Symbols & Lucide Icons, Glassmorphism UI |
 | **Data & Lineage Provenance** | 8 Normalized Enterprise CSV Schemas (43,000+ rows), SHA-256 cryptographic digests, zero-truncation tables |
-| **Security & Observability** | Structured JSON Logs (`X-Request-ID`), 12-Subsystem Health Probes, Rate Limiting, Input Sanitization |
+| **Security & Observability** | Structured JSON Logs (`X-Request-ID`), 12-Subsystem Health Probes, Rate Limiting, 0 Secrets in Git |
+
+---
+
+## ⚡ Multi-Pool AI Routing & Key Failover
+
+InsightPilot AI incorporates a production-grade **Dual-Pool AI Routing Layer**:
+- **Groq Dual-Pool (`GROQ_API_KEY_1`, `GROQ_API_KEY_2`):** Primary ultra-low-latency structured reasoning (<1.8s execution).
+- **Google Gemini Dual-Pool (`GEMINI_API_KEY_1`, `GEMINI_API_KEY_2`):** Transparent live failover for complex multi-modal synthesis.
+- **Deterministic Offline Fallback:** 100% operational in offline environments with zero external API key requirements.
 
 ---
 
@@ -157,9 +166,9 @@ npm run dev
 
 ---
 
-## 🧪 Verification & Quality Suite
+## 🧪 Verification & Submission Package Suite
 
-InsightPilot AI maintains a strict, zero-drift verification pipeline:
+InsightPilot AI maintains a strict, zero-drift verification and submission build pipeline:
 
 ```bash
 # 1. Validate dataset integrity & referential constraints (6/6 checks)
@@ -170,7 +179,17 @@ python -m unittest discover -s tests -t . -p "test_*.py"
 
 # 3. Build Next.js production bundle (10/10 static routes pre-rendered)
 cd frontend/next-app && npm run build
+
+# 4. Generate submission-ready PDF & PPTX executive packages
+python scripts/generate_submission_files.py
 ```
+
+### 📦 Generated Submission Deliverables (`submission_assets/`)
+| Deliverable | Format | Target Upload Field | Size |
+| :--- | :---: | :--- | :---: |
+| **System Technical Manual** | `PDF` | *Please submit a README document (\*)* | `<10 KB` |
+| **Detailed Business Proposal** | `PDF` | *Detailed Business Proposal in PDF (\*)* | `<10 KB` |
+| **Executive Pitch Deck** | `PPTX` | *Detailed Business Proposal in PPT (\*)* | `<60 KB` |
 
 ---
 
