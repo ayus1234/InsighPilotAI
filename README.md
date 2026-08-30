@@ -72,46 +72,52 @@ InsightPilot AI bridges this gap through a defensible, multi-layered architectur
 
 ## 🔄 The 7-Screen Executive Journey
 
-InsightPilot AI guides decision-makers through a cohesive 7-screen analytical workflow:
+InsightPilot AI guides decision-makers through an interactive, mathematically consistent analytical workflow:
 
 ```text
 1. Executive Command Center (/ )
-   • Real-time anomaly triage ($15.43M -> $14.20M, -$1.23M / -7.97% drop)
+   • Real-time anomaly triage ($15.43M -> $14.20M, -$1.23M / -7.97% net deficit)
    • Data source sync monitoring across 8 enterprise systems
+   • Interactive 6-Stage Attribution Flow strip with deep-linking & micro-animations
 
 2. Root-Cause Waterfall Decomposition (/root-cause)
-   • 4 ranked drivers explaining 100.0% of net variance
-   • Primary Driver: Atlanta DC Stockout (43.2% contribution / -$550K impact)
+   • 4 ranked drivers explaining 100.0% of net variance with What-If mitigation toggles
+   • Primary Driver: Atlanta DC Stockout (43.2% contribution / -$550K impact / 94% confidence)
+   • 6-milestone Sequence of Events timeline with animated progress track & zero-truncation telemetry drawer
 
 3. LangGraph Investigation Trace (/investigation)
-   • Visual 11-node state graph lifecycle trace showing multi-agent reasoning steps
+   • Visual 11-node state graph lifecycle trace showing multi-agent reasoning steps & replay timeline
 
-4. Dynamic 6-Column Decision Graph (/decision-graph)
-   • Interactive DAG (14 nodes, 17 edges) mapping Cause -> Evidence -> Action -> Outcome
+4. Panoramic Decision Graph (/decision-graph)
+   • Interactive 6-Column DAG (14 nodes, 17 edges) mapping Anomaly -> Drivers -> Market -> Evidence -> Actions -> Outcome
+   • 3-Section toolbar with Flow Pathway selector, search, toggleable Node Details drawer & floating stage stepper
 
-5. SHA-256 Evidence Explorer (/evidence)
-   • 9 corroborated empirical records carrying 64-character cryptographic SHA-256 hashes
+5. Cryptographic Evidence Explorer (/evidence)
+   • 12 verified multi-modal records (8 structured ERP/CRM/EDI/POS/TMS/GL + 4 unstructured feeds)
+   • 100% SHA-256 cryptographic provenance with interactive hash verification & zero-clipping consolidated ledger
 
 6. Action Recommendations & What-If Sandbox (/recommendations)
-   • Priority 1 Action: Emergency Stock Transfer (+$484K recovery, 14-day SLA)
-   • What-If Slider: 79.4% -> 90.0% availability yields +$341,422.91 recovery ($32.2K/pt)
+   • 2x2 Impact vs Feasibility Prioritization Matrix with quadrant zones & non-overlapping coordinates
+   • Priority 1 Action: Emergency Stock Transfer (+$484K recovery, 14-day SLA, Chicago -> Atlanta Hub)
+   • Multi-slider What-If sandbox: Availability elasticity ($32.2K/pt) yielding +$757,600.00 total recovery pool
 
-7. Executive Decision Briefing (/briefing)
-   • Role-tailored narrative synthesis for CFO Boardroom vs Regional Sales Manager
+7. Multi-Persona Executive Briefing (/briefing)
+   • 4 role-tailored narrative syntheses: CFO, VP of Supply Chain, COO, and Regional Sales Director
+   • Instant PDF briefing export, structured risk matrices, and boardroom-ready action plans
 ```
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technologies |
+| Layer | Technologies & Implementations |
 | :--- | :--- |
-| **Backend API Gateway** | Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn, JSON Schema Contracts |
-| **Deterministic Analytics** | Pure Python calculation engines (KPI, Driver, Evidence, Confidence, Simulation) |
-| **AI Orchestration** | LangGraph (11-Node StateGraph), Groq (LLaMA 3.3 70B), Google Gemini (2.5 Flash) |
-| **Frontend Web App** | Next.js 14 (App Router), React 18, Tailwind CSS, Lucide Icons, Glassmorphism UI |
-| **Data & Lineage** | 8 Normalized Enterprise CSV Schemas (43,000+ rows), SHA-256 cryptographic digests |
-| **Security & Operations**| OWASP Security Headers, Structured JSON Logs (`X-Request-ID`), Health Probes |
+| **Backend API Gateway** | Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn, JSON Schema Contracts, CORS, OWASP Headers |
+| **Deterministic Analytics** | Pure Python calculation engines (KPI, Driver, Evidence, Confidence Calibration, Elasticity Simulation) |
+| **AI Orchestration & Guardrails** | LangGraph (11-Node StateGraph), Groq (LLaMA 3.3 70B), Google Gemini (2.5 Flash), Abstention Gate |
+| **Frontend Web Application** | Next.js 14.2 (App Router), React 18, Tailwind CSS, Material Symbols & Lucide Icons, Glassmorphism UI |
+| **Data & Lineage Provenance** | 8 Normalized Enterprise CSV Schemas (43,000+ rows), SHA-256 cryptographic digests, zero-truncation tables |
+| **Security & Observability** | Structured JSON Logs (`X-Request-ID`), 12-Subsystem Health Probes, Rate Limiting, Input Sanitization |
 
 ---
 
