@@ -126,23 +126,51 @@ class GroqProvider(BaseAIProvider):
             max_tokens = request.max_tokens or ai_config.MAX_OUTPUT_TOKENS
 
             messages = []
-            if request.system_instruction:
-                messages.append({"role": "system", "content": request.system_instruction})
+            sys_inst = request.system_instruction or "You are InsightPilot AI, an enterprise decision intelligence system."
+            if Capability.STRUCTURED_JSON in request.required_capabilities and "json" not in sys_inst.lower() and "json" not in request.prompt.lower():
+                sys_inst += " You must respond with a valid JSON object."
+
+            messages.append({"role": "system", "content": sys_inst})
             messages.append({"role": "user", "content": request.prompt})
 
-            kwargs: Dict[str, Any] = {
-                "model": self.model_name,
-                "messages": messages,
-                "temperature": temperature,
-                "max_tokens": max_tokens
-            }
+            candidate_models = [
+                self.model_name,
+                "openai/gpt-oss-120b",
+                "openai/gpt-oss-20b",
+                "qwen/qwen3.8-27b",
+                "llama-3.3-70b-versatile",
+                "llama-3.1-8b-instant"
+            ]
 
-            if Capability.STRUCTURED_JSON in request.required_capabilities:
-                kwargs["response_format"] = {"type": "json_object"}
+            completion = None
+            used_model = self.model_name
+            last_err = None
 
-            completion = client.chat.completions.create(**kwargs)
+            for m in candidate_models:
+                try:
+                    kwargs: Dict[str, Any] = {
+                        "model": m,
+                        "messages": messages,
+                        "temperature": temperature,
+                        "max_tokens": max_tokens
+                    }
+                    if Capability.STRUCTURED_JSON in request.required_capabilities:
+                        kwargs["response_format"] = {"type": "json_object"}
+
+                    completion = client.chat.completions.create(**kwargs)
+                    used_model = m
+                    break
+                except Exception as call_err:
+                    last_err = call_err
+                    err_str = str(call_err).lower()
+                    if "model_not_found" in err_str or "model_decommissioned" in err_str or "decommissioned" in err_str or "404" in err_str:
+                        continue
+                    raise
+
+            if completion is None and last_err is not None:
+                raise last_err
+
             elapsed_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
-
             raw_text = completion.choices[0].message.content or "{}"
             cleaned_text = self._clean_json_text(raw_text)
 
@@ -170,7 +198,7 @@ class GroqProvider(BaseAIProvider):
                 content=cleaned_text,
                 parsed_json=parsed_json,
                 provider=self.name,
-                model=self.model_name,
+                model=used_model,
                 key_pool_id=pool_id,
                 latency_ms=elapsed_ms,
                 success=True,

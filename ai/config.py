@@ -20,7 +20,7 @@ class AIConfig:
     # Groq Key Pools
     GROQ_API_KEY_1: str = (os.getenv("GROQ_API_KEY_1") or os.getenv("GROQ_API_KEY") or "").strip()
     GROQ_API_KEY_2: str = os.getenv("GROQ_API_KEY_2", "").strip()
-    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile").strip()
+    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant").strip()
 
     # Provider Routing Priorities
     AI_PRIMARY_PROVIDER: str = os.getenv("AI_PRIMARY_PROVIDER", "groq").lower().strip()
