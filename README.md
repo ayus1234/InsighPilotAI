@@ -4,6 +4,7 @@
 
 **Enterprise Decision Intelligence, Deterministic Root-Cause Attribution & Cryptographic Evidence Lineage**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-insigh--pilot--ai.vercel.app-00dfa2.svg?style=for-the-badge&logo=vercel&logoColor=black)](https://insigh-pilot-ai.vercel.app)
 [![Accenture Innovation Challenge 2026](https://img.shields.io/badge/Accenture_Innovation_Challenge_2026-Track_3:_BusinessIntelligence.ai-blue.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -13,12 +14,9 @@
 [![Tests Passing](https://img.shields.io/badge/Tests-305%2F305_Passing_(100%25)-success.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
 [![Build Status](https://img.shields.io/badge/Production_Build-10%2F10_Static_Routes_Passed-brightgreen.svg?style=for-the-badge)](https://github.com/ayus1234/InsighPilotAI)
 
+---
 
-
-
-
-[💼 Recruiter Overview (2 Mins)](docs/portfolio/RECRUITER_OVERVIEW.md) • [📖 Technical Case Study](docs/portfolio/CASE_STUDY.md) • [🗺️ System Walkthrough](docs/portfolio/TECHNICAL_WALKTHROUGH.md) • [🌟 Feature Showcase](docs/portfolio/FEATURE_SHOWCASE.md) • [🏗️ Engineering Hub](docs/engineering/README.md)
-
+[🌐 **Live Web Application**](https://insigh-pilot-ai.vercel.app) • [💼 Recruiter Overview](docs/portfolio/RECRUITER_OVERVIEW.md) • [📖 Case Study](docs/portfolio/CASE_STUDY.md) • [🗺️ System Walkthrough](docs/portfolio/TECHNICAL_WALKTHROUGH.md) • [🌟 Feature Showcase](docs/portfolio/FEATURE_SHOWCASE.md) • [🏗️ Engineering Hub](docs/engineering/README.md)
 
 </div>
 
