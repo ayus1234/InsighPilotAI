@@ -7,19 +7,31 @@ Generates:
 """
 
 import os
+import sys
 from pathlib import Path
-from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable
-)
-from reportlab.pdfgen import canvas
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN
-from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
+
+# Safe dynamic import check
+try:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.lib import colors
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable
+    )
+    from reportlab.pdfgen import canvas
+    REPORTLAB_AVAILABLE = True
+except ImportError:
+    REPORTLAB_AVAILABLE = False
+
+try:
+    from pptx import Presentation
+    from pptx.util import Inches, Pt
+    from pptx.enum.text import PP_ALIGN
+    from pptx.dml.color import RGBColor
+    from pptx.enum.shapes import MSO_SHAPE
+    PPTX_AVAILABLE = True
+except ImportError:
+    PPTX_AVAILABLE = False
 
 ASSETS_DIR = Path("submission_assets")
 ASSETS_DIR.mkdir(parents=True, exist_ok=True)
@@ -27,7 +39,9 @@ ASSETS_DIR.mkdir(parents=True, exist_ok=True)
 # ----------------------------------------------------------------------
 # PDF Numbered Canvas Helper
 # ----------------------------------------------------------------------
-class NumberedCanvas(canvas.Canvas):
+BaseCanvas = canvas.Canvas if REPORTLAB_AVAILABLE else object
+
+class NumberedCanvas(BaseCanvas):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._saved_page_states = []
@@ -68,6 +82,9 @@ class NumberedCanvas(canvas.Canvas):
 # 1. BUILD README PDF
 # ----------------------------------------------------------------------
 def build_readme_pdf():
+    if not REPORTLAB_AVAILABLE:
+        print("[ERROR] reportlab is required to build PDF documents. Run: pip install reportlab")
+        return
     pdf_path = ASSETS_DIR / "InsightPilot_AI_README.pdf"
     doc = SimpleDocTemplate(
         str(pdf_path),
@@ -247,6 +264,9 @@ def build_readme_pdf():
 # 2. BUILD DETAILED BUSINESS PROPOSAL PDF
 # ----------------------------------------------------------------------
 def build_business_proposal_pdf():
+    if not REPORTLAB_AVAILABLE:
+        print("[ERROR] reportlab is required to build PDF documents. Run: pip install reportlab")
+        return
     pdf_path = ASSETS_DIR / "InsightPilot_AI_Detailed_Business_Proposal.pdf"
     doc = SimpleDocTemplate(
         str(pdf_path),
@@ -423,6 +443,9 @@ def build_business_proposal_pdf():
 # 3. BUILD DETAILED BUSINESS PROPOSAL PPTX (12 SLIDES)
 # ----------------------------------------------------------------------
 def build_business_proposal_pptx():
+    if not PPTX_AVAILABLE:
+        print("[ERROR] python-pptx is required to build PowerPoint presentations. Run: pip install python-pptx")
+        return
     pptx_path = ASSETS_DIR / "InsightPilot_AI_Detailed_Business_Proposal.pptx"
     prs = Presentation()
     
