@@ -258,10 +258,10 @@ def build_readme_pdf():
     # Architecture & Technology Stack
     story.append(Paragraph("3. Technology Stack & Verification", h1_style))
     raw_tech = [
-        ("Layer", "Technologies", "Verification Level"),
+        ("Layer", "Technologies & Implementations", "Verification Level"),
         ("Backend API", "Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn", "305/305 Unit/Integration Tests Passing"),
         ("Deterministic Core", "Pure Python Engines (KPI, Driver, Evidence, Confidence)", "100.000% Mathematical Precision ($1.23M locked)"),
-        ("AI Orchestration", "LangGraph 11-Node StateGraph, Groq LLaMA 3.3 70B, Gemini 2.5", "Grounded facts only; calibrated abstention gate"),
+        ("Multi-Model AI", "LangGraph (11 Nodes), Dual-Pool Groq + Gemini, Auto-Failover", "Grounded facts only; calibrated abstention gate"),
         ("Frontend Web App", "Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide", "10/10 Static Routes Pre-rendered Cleanly"),
         ("Lineage & Security", "8 Normalized CSV Schemas (43K+ rows), SHA-256 Hashes", "100% Cryptographic Digest Verification"),
     ]
