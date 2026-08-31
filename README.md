@@ -70,39 +70,49 @@ InsightPilot AI bridges this gap through a defensible, multi-layered architectur
 
 ## 🔄 The 7-Screen Executive Journey
 
-InsightPilot AI guides decision-makers through an interactive, mathematically consistent analytical workflow:
+InsightPilot AI guides enterprise decision-makers through an interactive, mathematically consistent 7-screen analytical workflow:
 
-```text
-1. Executive Command Center (/ )
-   • Real-time anomaly triage ($15.43M -> $14.20M, -$1.23M / -7.97% net deficit)
-   • Data source sync monitoring across 8 enterprise systems
-   • Interactive 6-Stage Attribution Flow strip with deep-linking & micro-animations
+---
 
-2. Root-Cause Waterfall Decomposition (/root-cause)
-   • 4 ranked drivers explaining 100.0% of net variance with What-If mitigation toggles
-   • Primary Driver: Atlanta DC Stockout (43.2% contribution / -$550K impact / 94% confidence)
-   • 6-milestone Sequence of Events timeline with animated progress track & zero-truncation telemetry drawer
+### 1. Executive Command Center (`/`)
+![Executive Command Center](docs/assets/screenshots/01_command_center.png)
+*Real-time enterprise anomaly detection alerting leadership to a -$1.23M (-7.97%) revenue deficit with 6-stage interactive attribution flow.*
 
-3. LangGraph Investigation Trace (/investigation)
-   • Visual 11-node state graph lifecycle trace showing multi-agent reasoning steps & replay timeline
+---
 
-4. Panoramic Decision Graph (/decision-graph)
-   • Interactive 6-Column DAG (14 nodes, 17 edges) mapping Anomaly -> Drivers -> Market -> Evidence -> Actions -> Outcome
-   • 3-Section toolbar with Flow Pathway selector, search, toggleable Node Details drawer & floating stage stepper
+### 2. Root-Cause Waterfall Decomposition (`/root-cause`)
+![Root Cause Investigation & Attribution](docs/assets/screenshots/02_root_cause_attribution.png)
+*Deterministic multi-factor waterfall decomposition attributing 43.2% of net loss to the Atlanta DC stockout with 94% calibrated confidence.*
 
-5. Cryptographic Evidence Explorer (/evidence)
-   • 12 verified multi-modal records (8 structured ERP/CRM/EDI/POS/TMS/GL + 4 unstructured feeds)
-   • 100% SHA-256 cryptographic provenance with interactive hash verification & zero-clipping consolidated ledger
+---
 
-6. Action Recommendations & What-If Sandbox (/recommendations)
-   • 2x2 Impact vs Feasibility Prioritization Matrix with quadrant zones & non-overlapping coordinates
-   • Priority 1 Action: Emergency Stock Transfer (+$484K recovery, 14-day SLA, Chicago -> Atlanta Hub)
-   • Multi-slider What-If sandbox: Availability elasticity ($32.2K/pt) yielding +$757,600.00 total recovery pool
+### 3. Autonomous Multi-Agent Investigation Trace (`/investigation`)
+![AI Investigation Activity](docs/assets/screenshots/03_ai_investigation_trace.png)
+*Visual 11-node LangGraph state graph lifecycle trace showcasing autonomous multi-agent reasoning, latency telemetry, and node execution logs.*
 
-7. Multi-Persona Executive Briefing (/briefing)
-   • 4 role-tailored narrative syntheses: CFO, VP of Supply Chain, COO, and Regional Sales Director
-   • Instant PDF briefing export, structured risk matrices, and boardroom-ready action plans
-```
+---
+
+### 4. Panoramic Decision Graph Canvas (`/decision-graph`)
+![Decision Graph Canvas](docs/assets/screenshots/04_decision_graph.png)
+*Interactive 6-column DAG mapping the end-to-end causality pipeline from root anomaly, through empirical evidence, to projected fiscal outcomes.*
+
+---
+
+### 5. Cryptographic Evidence Explorer (`/evidence`)
+![Evidence Explorer](docs/assets/screenshots/05_evidence_explorer.png)
+*Multi-modal evidence ledger consolidating 12 ERP, CRM, and EDI records with interactive SHA-256 cryptographic provenance verification.*
+
+---
+
+### 6. Action Recommendations & What-If Simulation (`/recommendations`)
+![Recommendations & What-If Simulation](docs/assets/screenshots/06_recommendations_what_if.png)
+*Interactive 2x2 ROI Prioritization Matrix paired with a multi-lever What-If sandbox modeling +$757.6K in addressable fiscal recovery.*
+
+---
+
+### 7. Multi-Persona Executive Intelligence Briefing (`/briefing`)
+![Executive Intelligence Briefing](docs/assets/screenshots/07_executive_briefing.png)
+*Audit-ready executive intelligence briefing tailored across CFO, COO, VP Supply Chain, and Sales perspectives with 1-click PDF export.*
 
 ---
 
