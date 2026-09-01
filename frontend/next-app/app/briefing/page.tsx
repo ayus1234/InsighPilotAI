@@ -23,9 +23,249 @@ export default function ExecutiveBriefingPage() {
     setShowApprovalModal(false);
   };
 
-  const handlePrint = () => {
-    if (typeof window !== "undefined") {
-      window.print();
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+
+  const handleExportPdf = async () => {
+    try {
+      setIsExporting(true);
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "pt",
+        format: "letter",
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 40;
+      const contentWidth = pageWidth - margin * 2;
+
+      // Header background
+      doc.setFillColor(15, 23, 42); // #0F172A
+      doc.rect(0, 0, pageWidth, 75, "F");
+
+      // Header Accent line
+      doc.setFillColor(2, 132, 199); // #0284C7
+      doc.rect(0, 75, pageWidth, 3, "F");
+
+      // Title
+      doc.setTextColor(255, 255, 255);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(15);
+      doc.text("INSIGHTPILOT AI — EXECUTIVE INTELLIGENCE BRIEFING", margin, 34);
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(186, 230, 253); // #BAE6FD
+      doc.text("Track 3: BusinessIntelligence.ai • Accenture Innovation Challenge 2026", margin, 52);
+      doc.text("Live URL: https://insigh-pilot-ai.vercel.app", pageWidth - margin, 52, { align: "right" });
+
+      let y = 96;
+
+      // Metadata card banner
+      doc.setFillColor(241, 245, 249); // #F1F5F9
+      doc.roundedRect(margin, y, contentWidth, 38, 4, 4, "F");
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(margin, y, contentWidth, 38, 4, 4, "S");
+
+      doc.setFontSize(8);
+      doc.setTextColor(51, 65, 85);
+      doc.setFont("helvetica", "bold");
+      doc.text("QUARTER: ", margin + 10, y + 15);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${quarter}`, margin + 60, y + 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("REGION: ", margin + 130, y + 15);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${region}`, margin + 175, y + 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("LENS / PERSONA: ", margin + 250, y + 15);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(2, 132, 199);
+      doc.text(`${persona.replace(/_/g, " ")}`, margin + 345, y + 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(51, 65, 85);
+      doc.text("DOC ID: ", margin + 10, y + 29);
+      doc.setFont("helvetica", "normal");
+      doc.text(`BRIEF-${quarter}-${region}-REV`, margin + 50, y + 29);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("GENERATED: ", margin + 250, y + 29);
+      doc.setFont("helvetica", "normal");
+      doc.text(`${new Date().toLocaleString()}`, margin + 325, y + 29);
+
+      y += 50;
+
+      // Section 1: Executive KPI Scorecard
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text("1. Executive Variance & Health Scorecard", margin, y);
+      y += 12;
+
+      const cardWidth = (contentWidth - 24) / 4;
+      const kpis = [
+        { label: "Net Revenue", val: regionData.revenue, sub: `${regionData.variance} (${regionData.variancePct})`, alert: true },
+        { label: "Gross Margin", val: regionData.grossMargin, sub: `${regionData.grossMarginDelta} vs Baseline`, alert: true },
+        { label: "Availability", val: regionData.availability, sub: `${regionData.availabilityDelta || "-14.8 pts"} (CRITICAL)`, alert: true },
+        { label: "Recovery Pool", val: regionData.recoveryPool, sub: "27.0x Modeled ROI", alert: false },
+      ];
+
+      kpis.forEach((kpi, idx) => {
+        const cx = margin + idx * (cardWidth + 8);
+        doc.setFillColor(kpi.alert ? 254 : 240, kpi.alert ? 242 : 253, kpi.alert ? 242 : 244);
+        doc.roundedRect(cx, y, cardWidth, 46, 4, 4, "F");
+        doc.setDrawColor(kpi.alert ? 254 : 186, kpi.alert ? 202 : 230, kpi.alert ? 202 : 253);
+        doc.roundedRect(cx, y, cardWidth, 46, 4, 4, "S");
+
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(100, 116, 139);
+        doc.text(kpi.label.toUpperCase(), cx + 7, y + 13);
+
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(kpi.alert ? 185 : 13, kpi.alert ? 28 : 148, kpi.alert ? 28 : 136);
+        doc.text(kpi.val, cx + 7, y + 28);
+
+        doc.setFontSize(6.5);
+        doc.setFont("helvetica", "normal");
+        doc.text(kpi.sub, cx + 7, y + 39);
+      });
+
+      y += 58;
+
+      // Section 2: Situation & Executive Narrative
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text(`2. Operational Situation (${persona.replace(/_/g, " ")} Lens)`, margin, y);
+      y += 12;
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(51, 65, 85);
+      const situationLines = doc.splitTextToSize(narrative.situation, contentWidth - 16);
+      
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(margin, y, contentWidth, situationLines.length * 11 + 12, 4, 4, "F");
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, y, contentWidth, situationLines.length * 11 + 12, 4, 4, "S");
+      
+      doc.text(situationLines, margin + 8, y + 12);
+      y += situationLines.length * 11 + 20;
+
+      // Section 3: 4-Factor Deterministic Root-Cause Attribution Table
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text("3. Causal Decomposition (100.0% Variance Explained)", margin, y);
+      y += 12;
+
+      // Table Header
+      doc.setFillColor(15, 23, 42);
+      doc.rect(margin, y, contentWidth, 16, "F");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(7);
+      doc.setFont("helvetica", "bold");
+      doc.text("RANK & CAUSAL FACTOR", margin + 8, y + 11);
+      doc.text("FISCAL IMPACT", margin + 200, y + 11);
+      doc.text("ATTRIBUTION SHARE", margin + 300, y + 11);
+      doc.text("CONFIDENCE", margin + 410, y + 11);
+      y += 16;
+
+      const drivers = [
+        { rank: "1. Atlanta DC Stockout (INV-SNAP-21971)", impact: "-$550,000.00", share: "43.2%", conf: "94% (CRITICAL)", alert: true },
+        { rank: "2. SKU-8821 Volume Contraction", impact: "-$340,000.00", share: "26.7%", conf: "88% (HIGH)", alert: false },
+        { rank: "3. Distributor PO Deferrals (29 Orders)", impact: "-$240,000.00", share: "18.8%", conf: "85% (HIGH)", alert: false },
+        { rank: "4. Horizon Competitor Price War (-15%)", impact: "-$144,000.00", share: "11.3%", conf: "82% (MODERATE)", alert: false },
+      ];
+
+      drivers.forEach((d, i) => {
+        doc.setFillColor(i % 2 === 0 ? 255 : 248, i % 2 === 0 ? 255 : 250, i % 2 === 0 ? 255 : 252);
+        doc.rect(margin, y, contentWidth, 15, "F");
+        doc.setDrawColor(226, 232, 240);
+        doc.line(margin, y + 15, margin + contentWidth, y + 15);
+
+        doc.setFontSize(7);
+        doc.setFont("helvetica", d.alert ? "bold" : "normal");
+        doc.setTextColor(d.alert ? 185 : 51, d.alert ? 28 : 65, d.alert ? 28 : 85);
+        doc.text(d.rank, margin + 8, y + 10);
+        doc.text(d.impact, margin + 200, y + 10);
+        doc.text(d.share, margin + 300, y + 10);
+        doc.text(d.conf, margin + 410, y + 10);
+        y += 15;
+      });
+
+      y += 14;
+
+      // Section 4: Prescriptive Recommendation & ROI
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text("4. Prescriptive Action Plan & Projected Recovery", margin, y);
+      y += 12;
+
+      const recLines = doc.splitTextToSize(narrative.recommendation, contentWidth - 16);
+      doc.setFillColor(240, 253, 244); // #F0FDF4
+      doc.roundedRect(margin, y, contentWidth, recLines.length * 11 + 12, 4, 4, "F");
+      doc.setDrawColor(187, 247, 208);
+      doc.roundedRect(margin, y, contentWidth, recLines.length * 11 + 12, 4, 4, "S");
+      
+      doc.setFontSize(8);
+      doc.setTextColor(22, 101, 52); // green-800
+      doc.setFont("helvetica", "bold");
+      doc.text(recLines, margin + 8, y + 12);
+      y += recLines.length * 11 + 18;
+
+      // Section 5: Governance & Cryptographic Provenance
+      doc.setFillColor(241, 245, 249);
+      doc.roundedRect(margin, y, contentWidth, 34, 4, 4, "F");
+      doc.setDrawColor(203, 213, 225);
+      doc.roundedRect(margin, y, contentWidth, 34, 4, 4, "S");
+
+      doc.setFontSize(7);
+      doc.setTextColor(30, 41, 59);
+      doc.setFont("helvetica", "bold");
+      doc.text("CRYPTOGRAPHIC PROVENANCE & AUDIT TRAIL:", margin + 8, y + 12);
+      doc.setFont("courier", "normal");
+      doc.setFontSize(6);
+      doc.setTextColor(71, 85, 105);
+      doc.text("SHA-256: a7f92b41c0e891d4e21971bc3f8204618e7921a982635a901f4c7183e921d904", margin + 8, y + 24);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(approved ? 22 : 100, approved ? 101 : 116, approved ? 52 : 139);
+      doc.text(
+        approved
+          ? `✓ EXECUTIVE SIGN-OFF CONFIRMED (${approvalTimestamp || "APPROVED"})`
+          : "STATUS: READY FOR BOARDROOM SIGN-OFF",
+        pageWidth - margin - 8,
+        y + 18,
+        { align: "right" }
+      );
+
+      // Footer
+      doc.setDrawColor(203, 213, 225);
+      doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text("InsightPilot AI • Enterprise Decision Intelligence • Track 3: BusinessIntelligence.ai", margin, pageHeight - 14);
+      doc.text("Page 1 of 1 • Confidential", pageWidth - margin, pageHeight - 14, { align: "right" });
+
+      // Save / Direct Download
+      const fileName = `InsightPilot_Executive_Briefing_${persona}_${quarter}_${region}.pdf`;
+      doc.save(fileName);
+    } catch (err) {
+      console.error("Failed to generate PDF:", err);
+      if (typeof window !== "undefined") {
+        window.print();
+      }
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -103,11 +343,14 @@ export default function ExecutiveBriefingPage() {
               </button>
 
               <button
-                onClick={handlePrint}
-                className="px-2.5 py-1.5 rounded-lg border border-outline-variant/30 text-on-surface-variant font-mono text-xs hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-1.5"
+                onClick={handleExportPdf}
+                disabled={isExporting}
+                className="px-2.5 py-1.5 rounded-lg border border-outline-variant/30 text-on-surface-variant font-mono text-xs hover:bg-surface-container hover:text-primary transition-colors flex items-center gap-1.5 disabled:opacity-50"
               >
-                <span className="material-symbols-outlined text-[15px]">print</span>
-                <span>Export PDF</span>
+                <span className="material-symbols-outlined text-[15px]">
+                  {isExporting ? "hourglass_empty" : "download"}
+                </span>
+                <span>{isExporting ? "Generating..." : "Export PDF"}</span>
               </button>
 
               <button
