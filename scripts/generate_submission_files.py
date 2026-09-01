@@ -235,7 +235,7 @@ def build_readme_pdf():
         ("4. Decision Graph (/decision-graph)", "Interactive 6-column DAG mapping Anomaly -> Actions", "Visual causality pipeline with stage stepper & node inspector."),
         ("5. Evidence Explorer (/evidence)", "12 multi-modal records with SHA-256 verification", "Cryptographic provenance proof for ERP, EDI, CRM, and POS data."),
         ("6. Recommendations (/recommendations)", "2x2 Prioritization Matrix & What-If Elasticity Sandbox", "Priority 1 Stock Transfer ($484K recovery); $757.6K modeled recovery pool."),
-        ("7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready governance briefings with 1-click boardroom PDF export."),
+        ("7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready governance briefings with 1-click direct dynamic PDF download."),
     ]
     
     screens_table_data = []
@@ -266,7 +266,7 @@ def build_readme_pdf():
         ("Backend API", "Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn", "305/305 Unit/Integration Tests Passing"),
         ("Deterministic Core", "Pure Python Engines (KPI, Driver, Evidence, Confidence)", "100.000% Mathematical Precision ($1.23M locked)"),
         ("Multi-Model AI", "LangGraph (11 Nodes), Dual-Pool Groq + Gemini, Auto-Failover", "Grounded facts only; calibrated abstention gate"),
-        ("Frontend Web App", "Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide", "10/10 Static Routes Pre-rendered Cleanly"),
+        ("Frontend Web App", "Next.js 14.2 (App Router), React 18, Tailwind CSS, Lucide, jsPDF", "10/10 Static Routes Pre-rendered, Direct PDF Export"),
         ("Lineage & Security", "8 Normalized CSV Schemas (43K+ rows), SHA-256 Hashes", "100% Cryptographic Digest Verification"),
     ]
     tech_table_data = []
@@ -847,7 +847,7 @@ if __name__ == "__main__":
     print("==================================================")
     build_readme_pdf()
     build_business_proposal_pdf()
-    build_business_proposal_pptx()
+    # build_business_proposal_pptx()  # Preserved: User customized master PPTX
     print("==================================================")
-    print("All submission assets successfully generated in 'submission_assets/'")
+    print("Submission PDFs successfully generated in 'submission_assets/'")
     print("==================================================")

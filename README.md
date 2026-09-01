@@ -112,7 +112,7 @@ InsightPilot AI guides enterprise decision-makers through an interactive, mathem
 
 ### 7. Multi-Persona Executive Intelligence Briefing (`/briefing`)
 ![Executive Intelligence Briefing](docs/assets/screenshots/07_executive_briefing.png)
-*Audit-ready executive intelligence briefing tailored across CFO, COO, VP Supply Chain, and Sales perspectives with 1-click PDF export.*
+*Audit-ready executive intelligence briefing tailored across CFO, COO, VP Supply Chain, and Sales perspectives with 1-click direct dynamic PDF download.*
 
 ---
 
@@ -123,7 +123,7 @@ InsightPilot AI guides enterprise decision-makers through an interactive, mathem
 | **Backend API Gateway** | Python 3.11+, FastAPI (ASGI), Pydantic v2, Uvicorn, JSON Schema Contracts, CORS, OWASP Headers |
 | **Deterministic Analytics** | Pure Python calculation engines (KPI, Driver, Evidence, Confidence Calibration, Elasticity Simulation) |
 | **Multi-Model AI & Guardrails** | LangGraph (11-Node StateGraph), Dual-Pool Key Rotation (Groq + Gemini), Auto-Failover, Calibrated Abstention Gate |
-| **Frontend Web Application** | Next.js 14.2 (App Router), React 18, Tailwind CSS, Material Symbols & Lucide Icons, Glassmorphism UI |
+| **Frontend Web Application** | Next.js 14.2 (App Router), React 18, Tailwind CSS, Material Symbols & Lucide, jsPDF (Direct Export), Glassmorphism UI |
 | **Data & Lineage Provenance** | 8 Normalized Enterprise CSV Schemas (43,000+ rows), SHA-256 cryptographic digests, zero-truncation tables |
 | **Security & Observability** | Structured JSON Logs (`X-Request-ID`), 12-Subsystem Health Probes, Rate Limiting, 0 Secrets in Git |
 
