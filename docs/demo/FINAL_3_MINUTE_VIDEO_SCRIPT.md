@@ -32,13 +32,13 @@
 ## Beat-by-Beat Production Script
 
 ### BEAT 1: TITLE & THE ENTERPRISE BI GAP (0:00 – 0:15 | 15s)
-- **Visual:** Pitch Deck Slide 1 transitioning to Slide 2 ("The Enterprise BI Investigation Gap").
+- **Visual:** Updated Pitch Deck (`submission_assets/InsightPilot_AI_Business_Proposal.pptx`) Slide 1 transitioning to Slide 2 ("The Enterprise BI Investigation Gap").
 - **UI Route:** N/A (Slide Presentation).
 - **Presenter Action:** Voiceover begins over title screen; transition to BI gap comparison diagram.
 - **Narration (32 words):**  
   *"Judges, traditional BI dashboards tell executives WHAT happened, but leave the WHY to weeks of manual correlation. Generic AI hallucinates numbers. We built InsightPilot AI: autonomous decision intelligence from KPI anomaly to executive action."*
 - **Visual Overlay:** `[OVERLAY 1]` *INSIGHTPILOT AI: From KPI Anomaly to Executive Action* (Lower-Third).
-- **Transition:** Smooth cross-dissolve to live browser fullscreen (`http://localhost:3000`).
+- **Transition:** Smooth cross-dissolve to live browser fullscreen (`https://insigh-pilot-ai.vercel.app` or `http://localhost:3000`).
 
 ---
 
@@ -80,11 +80,11 @@
 
 ### BEAT 5: EMPIRICAL EVIDENCE & SHA-256 LINEAGE (1:10 – 1:25 | 15s)
 - **Visual:** Empirical Evidence Explorer (`/evidence`).
-- **UI Route:** `http://localhost:3000/evidence`
-- **Presenter Action:** Filter by "ERP"; click "Inspect Lineage" on `EVID_ERP_ATL_STOCKOUT_001` to slide out the 5-layer lineage drawer.
+- **UI Route:** `https://insigh-pilot-ai.vercel.app/evidence` (or `http://localhost:3000/evidence`)
+- **Presenter Action:** Filter by "ERP"; click "Inspect Lineage" on `EVID_ERP_ATL_STOCKOUT_001` to slide out the lineage drawer with cryptographic SHA-256 verification.
 - **Narration (35 words):**  
-  *"Every claim is backed by empirical proof. Here we see 9 evidence nodes across SAP ERP and Salesforce, each protected by a 64-character SHA-256 cryptographic verification hash with complete 5-layer ETL lineage and zero data tampering."*
-- **Key Metrics Shown:** `9 Verified Nodes` • `SHA-256 Cryptographic Verification` • `5-Layer Lineage`.
+  *"Every claim is backed by empirical proof. Here we see 12 multi-modal evidence records across ERP, CRM, and EDI, each protected by a 64-character SHA-256 cryptographic verification hash with complete lineage and zero data tampering."*
+- **Key Metrics Shown:** `12 Verified Records` • `SHA-256 Cryptographic Provenance` • `Multi-Modal Lineage`.
 - **Visual Overlay:** `[OVERLAY 5]` *CRYPTOGRAPHIC EVIDENCE: SHA-256 Verified Lineage* (Top-Right Chip).
 - **Transition:** Click back to `/root-cause` or scroll to AI Summary.
 
