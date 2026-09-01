@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "@/components/navigation/Sidebar";
 import { TopBar } from "@/components/navigation/TopBar";
 import { useApp } from "@/context/AppContext";
@@ -12,6 +12,21 @@ export default function ExecutiveBriefingPage() {
   const [showApprovalModal, setShowApprovalModal] = useState<boolean>(false);
   const [approvalTimestamp, setApprovalTimestamp] = useState<string>("");
   const [slideMode, setSlideMode] = useState<boolean>(false);
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+
+  // Keyboard navigation for Slide Mode (Arrow Left / Right)
+  useEffect(() => {
+    if (!slideMode) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight" || e.key === "PageDown") {
+        setCurrentSlide((prev) => (prev < 3 ? prev + 1 : prev));
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        setCurrentSlide((prev) => (prev > 0 ? prev - 1 : prev));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [slideMode]);
 
   const handleApprove = () => {
     setApprovalTimestamp(new Date().toLocaleString());
@@ -383,182 +398,536 @@ export default function ExecutiveBriefingPage() {
             </div>
           )}
 
-          {/* 5-Section Boardroom Grid */}
-          <div className="space-y-6">
-            {/* Top 3-Card Bento Row */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Section 1: Situation */}
-              <section className="glass-panel rounded-2xl p-6 flex flex-col justify-between border border-outline-variant/30 bg-surface-container/70">
-                <div>
-                  <h2 className="font-mono text-xs text-on-surface-variant mb-4 uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
-                    <span className="material-symbols-outlined text-error text-[18px]">trending_down</span>
-                    1. Situation
-                  </h2>
-                  <div className="font-display font-extrabold text-4xl md:text-5xl text-error mb-2 leading-none">
-                    {regionData.variance}
-                  </div>
-                  <div className="flex items-center gap-1 text-error font-mono text-sm font-bold">
-                    <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
-                    <span>{regionData.variancePct} vs Q2 baseline</span>
-                  </div>
+          {slideMode ? (
+            /* 16:9 Interactive Presentation Slide Mode */
+            <div className="space-y-4">
+              {/* Slide Navigation & Stepper Header */}
+              <div className="p-4 bg-surface-container/90 rounded-2xl border border-primary/30 flex flex-wrap items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-primary uppercase tracking-widest bg-primary/10 border border-primary/20 px-3 py-1 rounded-lg flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-[16px]">slideshow</span>
+                    Slide {currentSlide + 1} of 4
+                  </span>
+                  <span className="text-xs font-mono text-on-surface-variant hidden sm:inline">
+                    Use ← / → keys to navigate
+                  </span>
                 </div>
-                <p className="text-xs text-on-surface-variant font-sans leading-relaxed mt-4 border-t border-outline-variant/30 pt-4">
-                  {narrative.situation}
-                </p>
-              </section>
 
-              {/* Section 2: Diagnosis */}
-              <section className="glass-panel rounded-2xl p-6 flex flex-col border border-outline-variant/30 bg-surface-container/70 space-y-4">
-                <h2 className="font-mono text-xs text-on-surface-variant uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
-                  <span className="material-symbols-outlined text-primary text-[18px]">troubleshoot</span>
-                  2. Diagnosis
-                </h2>
-
-                <div className="space-y-3">
-                  <div className="bg-surface-dim p-3.5 rounded-xl border border-outline-variant/30">
-                    <h3 className="font-display font-bold text-xs text-on-surface mb-1">
-                      Primary: {regionData.primaryDriver}
-                    </h3>
-                    <p className="text-[11px] text-on-surface-variant font-sans mb-2">
-                      Critical inventory depletion at regional DC (-14.8 pts availability drop).
-                    </p>
-                    <div className="flex justify-between font-mono text-[10px] mb-1">
-                      <span className="text-on-surface-variant">Attribution Share</span>
-                      <span className="text-error font-bold">{regionData.primaryDriverShare} (-$550K)</span>
-                    </div>
-                    <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-error w-[43.2%] h-full"></div>
-                    </div>
-                  </div>
-
-                  <div className="bg-surface-dim p-3.5 rounded-xl border border-outline-variant/30">
-                    <h3 className="font-display font-bold text-xs text-on-surface mb-1">
-                      Secondary: SKU-8821 Contraction
-                    </h3>
-                    <p className="text-[11px] text-on-surface-variant font-sans mb-2">
-                      Flagship volume contraction exacerbated by distributor PO deferrals.
-                    </p>
-                    <div className="flex justify-between font-mono text-[10px] mb-1">
-                      <span className="text-on-surface-variant">Attribution Share</span>
-                      <span className="text-primary font-bold">26.7% (-$340K)</span>
-                    </div>
-                    <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-primary w-[26.7%] h-full"></div>
-                    </div>
-                  </div>
+                {/* Slide Tabs */}
+                <div className="flex items-center gap-1.5 bg-surface-dim p-1 rounded-xl border border-outline-variant/30 flex-wrap">
+                  {[
+                    { label: "1. Situation & KPIs", icon: "trending_down" },
+                    { label: "2. Root Cause", icon: "troubleshoot" },
+                    { label: "3. Evidence", icon: "verified" },
+                    { label: "4. Strategic Action", icon: "offline_bolt" },
+                  ].map((tab, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentSlide(idx)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 ${
+                        currentSlide === idx
+                          ? "bg-primary text-black shadow-glow"
+                          : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container"
+                      }`}
+                    >
+                      <span className="material-symbols-outlined text-[15px]">{tab.icon}</span>
+                      <span>{tab.label}</span>
+                    </button>
+                  ))}
                 </div>
-              </section>
 
-              {/* Section 3: Corroborating Evidence */}
-              <section className="glass-panel rounded-2xl p-6 flex flex-col border border-outline-variant/30 bg-surface-container/70 space-y-3">
-                <h2 className="font-mono text-xs text-on-surface-variant uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
-                  <span className="material-symbols-outlined text-primary text-[18px]">plagiarism</span>
-                  3. Corroborating Evidence
-                </h2>
-
-                <div className="space-y-2.5 flex-1 flex flex-col justify-around">
-                  <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
-                    <span className="font-sans font-semibold text-xs text-on-surface">Atlanta DC Availability</span>
-                    <span className="font-mono text-[10px] font-bold text-error bg-error/15 px-2 py-0.5 rounded border border-error/30">
-                      {regionData.availability} (CRITICAL)
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
-                    <span className="font-sans font-semibold text-xs text-on-surface">Zendesk Stockout Tickets</span>
-                    <span className="font-mono text-[10px] font-bold text-error bg-error/15 px-2 py-0.5 rounded border border-error/30">
-                      +310% Surge
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
-                    <span className="font-sans font-semibold text-xs text-on-surface">Competitor Horizon Pricing</span>
-                    <span className="font-mono text-[10px] font-bold text-primary bg-primary/15 px-2 py-0.5 rounded border border-primary/30">
-                      -15.0% Scrape
-                    </span>
-                  </div>
+                {/* Prev / Next Arrows */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentSlide((prev) => Math.max(0, prev - 1))}
+                    disabled={currentSlide === 0}
+                    className="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-on-surface hover:bg-surface-dim disabled:opacity-30 transition-all flex items-center justify-center"
+                    title="Previous Slide"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentSlide((prev) => Math.min(3, prev + 1))}
+                    disabled={currentSlide === 3}
+                    className="p-2 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:text-on-surface hover:bg-surface-dim disabled:opacity-30 transition-all flex items-center justify-center"
+                    title="Next Slide"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                  </button>
                 </div>
-              </section>
-            </div>
+              </div>
 
-            {/* Bottom Full-Width Section: Recommended Action & Projected Impact */}
-            <section className="glass-panel rounded-2xl p-6 md:p-8 border border-primary/40 bg-gradient-to-br from-primary-container/15 via-surface-container to-surface shadow-glow relative overflow-hidden">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
-                {/* Left: Recommended Action */}
-                <div className="flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant/30 pb-6 lg:pb-0 lg:pr-8">
-                  <div>
-                    <div className="flex justify-between items-center mb-3 border-b border-primary/20 pb-2.5">
-                      <h2 className="font-mono text-xs text-primary uppercase tracking-widest flex items-center gap-2 font-bold">
-                        <span className="material-symbols-outlined text-[20px]">offline_bolt</span>
-                        4. Recommended Action
-                      </h2>
-                      <span className="font-mono text-[10px] bg-primary/20 text-primary px-2.5 py-0.5 rounded-full border border-primary/30 font-bold uppercase">
-                        Priority: Critical
+              {/* Active Slide Canvas (Executive Glassmorphism Presentation Container) */}
+              <div className="glass-panel rounded-3xl p-8 md:p-12 border-2 border-primary/30 bg-gradient-to-br from-surface-container via-surface to-[#030d17] shadow-glow min-h-[520px] flex flex-col justify-between relative overflow-hidden">
+                {/* Slide Watermark Background Accent */}
+                <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none"></div>
+
+                {/* SLIDE 1: Situation & Anomaly Overview */}
+                {currentSlide === 0 && (
+                  <div className="space-y-8 flex-1 flex flex-col justify-between">
+                    <div className="border-b border-outline-variant/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest">
+                          Slide 1 • Executive Anomaly Assessment
+                        </span>
+                        <h2 className="font-display font-black text-2xl md:text-3xl text-on-surface mt-1">
+                          Regional Revenue Deficit & Financial Variance Overview
+                        </h2>
+                      </div>
+                      <span className="text-xs font-mono text-error font-bold px-3 py-1 rounded-lg bg-error/15 border border-error/30">
+                        CRITICAL ANOMALY
                       </span>
                     </div>
 
-                    <h3 className="font-display font-extrabold text-xl md:text-2xl text-on-surface mb-3 leading-tight">
-                      Execute Emergency Inventory Transfer (3,200 Units)
-                    </h3>
-
-                    <p className="text-xs md:text-sm leading-relaxed text-on-surface-variant font-sans">
-                      {narrative.recommendation}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center gap-4 font-mono text-[11px] text-on-surface-variant">
-                    <span>SLA: 14 Days</span>
-                    <span>•</span>
-                    <span>Owner: Supply Chain Operations</span>
-                  </div>
-                </div>
-
-                {/* Right: Projected Impact & Confidence */}
-                <div className="flex flex-col justify-between">
-                  <div>
-                    <h2 className="font-mono text-xs text-on-surface-variant mb-3 uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-2.5 font-bold">
-                      <span className="material-symbols-outlined text-[18px]">insights</span>
-                      5. Projected Impact & Confidence
-                    </h2>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                      <div className="bg-surface-dim border border-primary/30 rounded-xl p-5 flex flex-col justify-center">
-                        <div className="font-mono text-[10px] text-on-surface-variant uppercase font-bold mb-1">
-                          Projected Recovery Pool
-                        </div>
-                        <div className="font-display font-extrabold text-3xl md:text-4xl text-primary leading-none mb-1">
-                          {regionData.recoveryPool}
-                        </div>
-                        <div className="text-xs font-mono text-on-surface-variant">+$729.6K net fiscal benefit</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-error/40 flex flex-col justify-between">
+                        <span className="text-xs font-mono text-on-surface-variant uppercase font-bold">Net Revenue</span>
+                        <div className="font-display font-extrabold text-4xl text-error my-2">{regionData.revenue}</div>
+                        <span className="text-xs font-mono text-error font-bold">{regionData.variance} ({regionData.variancePct}) vs target</span>
                       </div>
 
-                      <div className="bg-surface-dim border border-outline-variant/30 rounded-xl p-5 flex flex-col justify-center gap-3">
-                        <div>
-                          <div className="flex justify-between items-center mb-1 font-mono">
-                            <span className="text-[10px] text-on-surface-variant uppercase font-bold">
-                              Confidence Score
-                            </span>
-                            <span className="text-sm text-primary font-extrabold">89.0%</span>
-                          </div>
-                          <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
-                            <div className="bg-primary w-[89%] h-full"></div>
-                          </div>
-                        </div>
-                        <p className="text-[10px] font-sans text-on-surface-variant leading-snug">
-                          Multi-layer deterministic reconciliation across 8 enterprise data sources.
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-error/40 flex flex-col justify-between">
+                        <span className="text-xs font-mono text-on-surface-variant uppercase font-bold">Gross Margin</span>
+                        <div className="font-display font-extrabold text-4xl text-error my-2">{regionData.grossMargin}</div>
+                        <span className="text-xs font-mono text-error font-bold">{regionData.grossMarginDelta} Dilution</span>
+                      </div>
+
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-error/40 flex flex-col justify-between">
+                        <span className="text-xs font-mono text-on-surface-variant uppercase font-bold">Regional Availability</span>
+                        <div className="font-display font-extrabold text-4xl text-error my-2">{regionData.availability}</div>
+                        <span className="text-xs font-mono text-error font-bold">{regionData.availabilityDelta || "-14.8 pts"} Stockout</span>
+                      </div>
+
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-primary/40 flex flex-col justify-between">
+                        <span className="text-xs font-mono text-primary uppercase font-bold">Addressable Recovery</span>
+                        <div className="font-display font-extrabold text-4xl text-primary my-2">{regionData.recoveryPool}</div>
+                        <span className="text-xs font-mono text-primary font-bold">27.0x Modeled Fiscal ROI</span>
+                      </div>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-surface-container/90 border border-outline-variant/30 flex items-start gap-4">
+                      <span className="material-symbols-outlined text-primary text-3xl shrink-0 mt-0.5">account_balance</span>
+                      <div>
+                        <h3 className="font-display font-bold text-sm text-on-surface mb-1">
+                          Executive Synthesis ({persona.replace(/_/g, " ")} Lens)
+                        </h3>
+                        <p className="text-sm text-on-surface-variant leading-relaxed font-sans">
+                          {narrative.situation}
                         </p>
                       </div>
                     </div>
                   </div>
+                )}
 
-                  <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between font-mono text-[10px] text-on-surface-variant">
-                    <span>Deterministic Lineage Verified</span>
-                    <span className="text-primary font-bold">Zero-Hallucination Safe</span>
+                {/* SLIDE 2: Root-Cause Decomposition */}
+                {currentSlide === 1 && (
+                  <div className="space-y-6 flex-1 flex flex-col justify-between">
+                    <div className="border-b border-outline-variant/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest">
+                          Slide 2 • Causal Waterfall Decomposition
+                        </span>
+                        <h2 className="font-display font-black text-2xl md:text-3xl text-on-surface mt-1">
+                          100.0% Variance Explained Across 4 Ranked Deterministic Factors
+                        </h2>
+                      </div>
+                      <span className="text-xs font-mono text-primary font-bold px-3 py-1 rounded-lg bg-primary/15 border border-primary/30">
+                        ZERO HALLUCINATION
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Left: Driver Breakdown Table */}
+                      <div className="space-y-3">
+                        {[
+                          { rank: "1. Atlanta DC Stockout", impact: "-$550,000", share: "43.2%", conf: "94% Statistical Conf", alert: true },
+                          { rank: "2. SKU-8821 Contraction", impact: "-$340,000", share: "26.7%", conf: "88% Conf", alert: false },
+                          { rank: "3. Distributor PO Deferrals", impact: "-$240,000", share: "18.8%", conf: "85% Conf", alert: false },
+                          { rank: "4. Horizon Price War (-15%)", impact: "-$144,000", share: "11.3%", conf: "82% Conf", alert: false },
+                        ].map((d, i) => (
+                          <div
+                            key={i}
+                            className={`p-4 rounded-xl border flex items-center justify-between ${
+                              d.alert ? "bg-error/10 border-error/40" : "bg-surface-dim border-outline-variant/30"
+                            }`}
+                          >
+                            <div>
+                              <strong className={`text-sm ${d.alert ? "text-error" : "text-on-surface"}`}>{d.rank}</strong>
+                              <div className="text-xs font-mono text-on-surface-variant mt-0.5">{d.conf}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className={`font-mono text-sm font-bold ${d.alert ? "text-error" : "text-primary"}`}>{d.impact}</div>
+                              <span className="text-xs font-mono text-on-surface-variant">{d.share} share</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Right: Primary Bottleneck Callout */}
+                      <div className="bg-surface-container/90 p-6 rounded-2xl border border-error/30 flex flex-col justify-between">
+                        <div>
+                          <span className="text-xs font-mono text-error uppercase font-bold flex items-center gap-1.5 mb-2">
+                            <span className="material-symbols-outlined text-[16px]">warning</span>
+                            Primary Bottleneck Diagnostic
+                          </span>
+                          <h3 className="font-display font-extrabold text-xl text-on-surface mb-2">
+                            Atlanta Distribution Center Depletion
+                          </h3>
+                          <p className="text-xs text-on-surface-variant leading-relaxed font-sans">
+                            Atlanta DC experienced 14 consecutive days of zero available inventory for SKU-8821. Regional availability collapsed from 94.2% down to 79.4%, triggering 29 distributor PO deferrals and surging customer stockout tickets (+310%).
+                          </p>
+                        </div>
+
+                        <div className="pt-4 border-t border-outline-variant/30 space-y-2 font-mono text-xs">
+                          <div className="flex justify-between">
+                            <span className="text-on-surface-variant">Attribution Weight:</span>
+                            <strong className="text-error">43.2% (-$550K)</strong>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-on-surface-variant">Calibrated Confidence:</span>
+                            <strong className="text-primary">94.0% HIGH</strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* SLIDE 3: Corroborating Evidence & Provenance */}
+                {currentSlide === 2 && (
+                  <div className="space-y-6 flex-1 flex flex-col justify-between">
+                    <div className="border-b border-outline-variant/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest">
+                          Slide 3 • Empirical Proof & Cryptographic Lineage
+                        </span>
+                        <h2 className="font-display font-black text-2xl md:text-3xl text-on-surface mt-1">
+                          12 Verified Multi-Modal Records Across ERP, CRM & EDI
+                        </h2>
+                      </div>
+                      <span className="text-xs font-mono text-success font-bold px-3 py-1 rounded-lg bg-success/15 border border-success/30">
+                        SHA-256 SEALED
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-outline-variant/30 space-y-3">
+                        <span className="text-xs font-mono text-primary uppercase font-bold flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px]">database</span>
+                          SAP S/4HANA (MM-WM)
+                        </span>
+                        <h3 className="font-display font-bold text-sm text-on-surface">Record: INV-SNAP-21971</h3>
+                        <p className="text-xs text-on-surface-variant leading-relaxed font-sans">
+                          Atlanta inventory snapshot confirmed 0 units available for 14 consecutive days.
+                        </p>
+                        <span className="text-[10px] font-mono text-error font-bold bg-error/15 px-2 py-0.5 rounded border border-error/30 block w-fit">
+                          Confidence: 94% (CRITICAL)
+                        </span>
+                      </div>
+
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-outline-variant/30 space-y-3">
+                        <span className="text-xs font-mono text-primary uppercase font-bold flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px]">support_agent</span>
+                          Zendesk Service Cloud
+                        </span>
+                        <h3 className="font-display font-bold text-sm text-on-surface">Support Ticket Influx</h3>
+                        <p className="text-xs text-on-surface-variant leading-relaxed font-sans">
+                          +310% surge in stockout & unfulfilled order complaints from key East retail partners.
+                        </p>
+                        <span className="text-[10px] font-mono text-error font-bold bg-error/15 px-2 py-0.5 rounded border border-error/30 block w-fit">
+                          +310% Escalation Surge
+                        </span>
+                      </div>
+
+                      <div className="bg-surface-dim/80 p-6 rounded-2xl border border-outline-variant/30 space-y-3">
+                        <span className="text-xs font-mono text-primary uppercase font-bold flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px]">price_change</span>
+                          EDI 832 Market Scrape
+                        </span>
+                        <h3 className="font-display font-bold text-sm text-on-surface">Competitor Horizon Scrape</h3>
+                        <p className="text-xs text-on-surface-variant leading-relaxed font-sans">
+                          Horizon Foods launched an aggressive 15% discount across competing SKU lines in territory.
+                        </p>
+                        <span className="text-[10px] font-mono text-primary font-bold bg-primary/15 px-2 py-0.5 rounded border border-primary/30 block w-fit">
+                          -15.0% Price Disruption
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-surface-container border border-outline-variant/30 flex items-center justify-between font-mono text-xs">
+                      <span className="text-on-surface-variant">Cryptographic Provenance Digest:</span>
+                      <span className="text-primary font-mono text-[11px] truncate max-w-md">
+                        SHA-256: a7f92b41c0e891d4e21971bc3f8204618e7921a982635a901f4c7183e921d904
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* SLIDE 4: Strategic Recommendation & Sign-Off */}
+                {currentSlide === 3 && (
+                  <div className="space-y-6 flex-1 flex flex-col justify-between">
+                    <div className="border-b border-outline-variant/30 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[11px] font-mono text-primary font-bold uppercase tracking-widest">
+                          Slide 4 • Prescriptive Action & Governance
+                        </span>
+                        <h2 className="font-display font-black text-2xl md:text-3xl text-on-surface mt-1">
+                          Priority 1 Emergency Inventory Transfer & Executive Authorization
+                        </h2>
+                      </div>
+                      <span className="text-xs font-mono text-primary font-bold px-3 py-1 rounded-lg bg-primary/15 border border-primary/30">
+                        BOARDROOM SIGN-OFF
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <div className="bg-surface-container/90 p-6 rounded-2xl border border-primary/40 space-y-4">
+                        <span className="text-xs font-mono text-primary uppercase font-bold flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-[16px]">offline_bolt</span>
+                          Prescriptive Strategy ({persona.replace(/_/g, " ")} Focus)
+                        </span>
+                        <h3 className="font-display font-bold text-lg text-on-surface">
+                          Transfer 3,200 Units (Chicago Central &rarr; Atlanta DC)
+                        </h3>
+                        <p className="text-xs text-on-surface-variant leading-relaxed font-sans">
+                          {narrative.recommendation}
+                        </p>
+                        <div className="pt-3 border-t border-outline-variant/30 grid grid-cols-3 gap-2 font-mono text-[11px] text-center">
+                          <div className="bg-surface-dim p-2 rounded-lg">
+                            <span className="text-on-surface-variant block text-[9px]">SLA</span>
+                            <strong className="text-on-surface">14 Days</strong>
+                          </div>
+                          <div className="bg-surface-dim p-2 rounded-lg">
+                            <span className="text-on-surface-variant block text-[9px]">EXPEDITED COST</span>
+                            <strong className="text-on-surface">$28,000</strong>
+                          </div>
+                          <div className="bg-surface-dim p-2 rounded-lg">
+                            <span className="text-on-surface-variant block text-[9px]">RECOVERY</span>
+                            <strong className="text-primary">+$484,000</strong>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-surface-container/90 p-6 rounded-2xl border border-outline-variant/30 flex flex-col justify-between space-y-4">
+                        <div>
+                          <span className="text-xs font-mono text-on-surface-variant uppercase font-bold block mb-2">
+                            Total Modeled Fiscal Benefit
+                          </span>
+                          <div className="font-display font-black text-5xl text-primary mb-1">
+                            +$757,600.00
+                          </div>
+                          <span className="text-xs font-mono text-on-surface-variant">
+                            Yields 27.0x ROI against $28K total intervention expenditure.
+                          </span>
+                        </div>
+
+                        <div className="p-4 bg-surface-dim rounded-xl border border-outline-variant/30 flex items-center justify-between">
+                          <div>
+                            <div className="text-xs font-mono font-bold text-on-surface">Executive Sign-Off:</div>
+                            <div className="text-[11px] font-mono text-on-surface-variant">
+                              {approved ? `Approved on ${approvalTimestamp}` : "Pending Boardroom Authorization"}
+                            </div>
+                          </div>
+
+                          <button
+                            onClick={handleApprove}
+                            disabled={approved}
+                            className={`font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center gap-1.5 ${
+                              approved
+                                ? "bg-success/20 text-success border border-success/40"
+                                : "bg-primary text-black hover:bg-primary-light shadow-glow"
+                            }`}
+                          >
+                            <span className="material-symbols-outlined text-[16px]">
+                              {approved ? "verified" : "draw"}
+                            </span>
+                            <span>{approved ? "Signed" : "Authorize Strategy"}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            /* 5-Section Boardroom Grid (Standard Document View) */
+            <div className="space-y-6">
+              {/* Top 3-Card Bento Row */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Section 1: Situation */}
+                <section className="glass-panel rounded-2xl p-6 flex flex-col justify-between border border-outline-variant/30 bg-surface-container/70">
+                  <div>
+                    <h2 className="font-mono text-xs text-on-surface-variant mb-4 uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
+                      <span className="material-symbols-outlined text-error text-[18px]">trending_down</span>
+                      1. Situation
+                    </h2>
+                    <div className="font-display font-extrabold text-4xl md:text-5xl text-error mb-2 leading-none">
+                      {regionData.variance}
+                    </div>
+                    <div className="flex items-center gap-1 text-error font-mono text-sm font-bold">
+                      <span className="material-symbols-outlined text-[16px]">arrow_downward</span>
+                      <span>{regionData.variancePct} vs Q2 baseline</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-on-surface-variant font-sans leading-relaxed mt-4 border-t border-outline-variant/30 pt-4">
+                    {narrative.situation}
+                  </p>
+                </section>
+
+                {/* Section 2: Diagnosis */}
+                <section className="glass-panel rounded-2xl p-6 flex flex-col border border-outline-variant/30 bg-surface-container/70 space-y-4">
+                  <h2 className="font-mono text-xs text-on-surface-variant uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
+                    <span className="material-symbols-outlined text-primary text-[18px]">troubleshoot</span>
+                    2. Diagnosis
+                  </h2>
+
+                  <div className="space-y-3">
+                    <div className="bg-surface-dim p-3.5 rounded-xl border border-outline-variant/30">
+                      <h3 className="font-display font-bold text-xs text-on-surface mb-1">
+                        Primary: {regionData.primaryDriver}
+                      </h3>
+                      <p className="text-[11px] text-on-surface-variant font-sans mb-2">
+                        Critical inventory depletion at regional DC (-14.8 pts availability drop).
+                      </p>
+                      <div className="flex justify-between font-mono text-[10px] mb-1">
+                        <span className="text-on-surface-variant">Attribution Share</span>
+                        <span className="text-error font-bold">{regionData.primaryDriverShare} (-$550K)</span>
+                      </div>
+                      <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-error w-[43.2%] h-full"></div>
+                      </div>
+                    </div>
+
+                    <div className="bg-surface-dim p-3.5 rounded-xl border border-outline-variant/30">
+                      <h3 className="font-display font-bold text-xs text-on-surface mb-1">
+                        Secondary: SKU-8821 Contraction
+                      </h3>
+                      <p className="text-[11px] text-on-surface-variant font-sans mb-2">
+                        Flagship volume contraction exacerbated by distributor PO deferrals.
+                      </p>
+                      <div className="flex justify-between font-mono text-[10px] mb-1">
+                        <span className="text-on-surface-variant">Attribution Share</span>
+                        <span className="text-primary font-bold">26.7% (-$340K)</span>
+                      </div>
+                      <div className="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+                        <div className="bg-primary w-[26.7%] h-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Section 3: Corroborating Evidence */}
+                <section className="glass-panel rounded-2xl p-6 flex flex-col border border-outline-variant/30 bg-surface-container/70 space-y-3">
+                  <h2 className="font-mono text-xs text-on-surface-variant uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-3 font-bold">
+                    <span className="material-symbols-outlined text-primary text-[18px]">plagiarism</span>
+                    3. Corroborating Evidence
+                  </h2>
+
+                  <div className="space-y-2.5 flex-1 flex flex-col justify-around">
+                    <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
+                      <span className="font-sans font-semibold text-xs text-on-surface">Atlanta DC Availability</span>
+                      <span className="font-mono text-[10px] font-bold text-error bg-error/15 px-2 py-0.5 rounded border border-error/30">
+                        {regionData.availability} (CRITICAL)
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
+                      <span className="font-sans font-semibold text-xs text-on-surface">Zendesk Stockout Tickets</span>
+                      <span className="font-mono text-[10px] font-bold text-error bg-error/15 px-2 py-0.5 rounded border border-error/30">
+                        +310% Surge
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-surface-dim rounded-xl border border-outline-variant/30">
+                      <span className="font-sans font-semibold text-xs text-on-surface">Competitor Horizon Pricing</span>
+                      <span className="font-mono text-[10px] font-bold text-primary bg-primary/15 px-2 py-0.5 rounded border border-primary/30">
+                        -15.0% Scrape
+                      </span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              {/* Bottom Full-Width Section: Recommended Action & Projected Impact */}
+              <section className="glass-panel rounded-2xl p-6 md:p-8 border border-primary/40 bg-gradient-to-br from-primary-container/15 via-surface-container to-surface shadow-glow relative overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
+                  {/* Left: Recommended Action */}
+                  <div className="flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-outline-variant/30 pb-6 lg:pb-0 lg:pr-8">
+                    <div>
+                      <div className="flex justify-between items-center mb-3 border-b border-primary/20 pb-2.5">
+                        <h2 className="font-mono text-xs text-primary uppercase tracking-widest flex items-center gap-2 font-bold">
+                          <span className="material-symbols-outlined text-[20px]">offline_bolt</span>
+                          4. Recommended Action
+                        </h2>
+                        <span className="font-mono text-[10px] bg-primary/20 text-primary px-2.5 py-0.5 rounded-full border border-primary/30 font-bold uppercase">
+                          Priority: Critical
+                        </span>
+                      </div>
+
+                      <h3 className="font-display font-extrabold text-xl md:text-2xl text-on-surface mb-3 leading-tight">
+                        Execute Emergency Inventory Transfer (3,200 Units)
+                      </h3>
+
+                      <p className="text-xs md:text-sm leading-relaxed text-on-surface-variant font-sans">
+                        {narrative.recommendation}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center gap-4 font-mono text-[11px] text-on-surface-variant">
+                      <span>SLA: 14 Days</span>
+                      <span>•</span>
+                      <span>Owner: Supply Chain Operations</span>
+                    </div>
+                  </div>
+
+                  {/* Right: Projected Impact & Confidence */}
+                  <div className="flex flex-col justify-between">
+                    <div>
+                      <h2 className="font-mono text-xs text-on-surface-variant mb-3 uppercase tracking-widest flex items-center gap-2 border-b border-outline-variant/30 pb-2.5 font-bold">
+                        <span className="material-symbols-outlined text-[18px]">insights</span>
+                        5. Projected Impact & Confidence
+                      </h2>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+                        <div className="bg-surface-dim border border-primary/30 rounded-xl p-5 flex flex-col justify-center">
+                          <div className="font-mono text-[10px] text-on-surface-variant uppercase font-bold mb-1">
+                            Projected Recovery Pool
+                          </div>
+                          <div className="font-display font-extrabold text-3xl md:text-4xl text-primary leading-none mb-1">
+                            {regionData.recoveryPool}
+                          </div>
+                          <div className="text-xs font-mono text-on-surface-variant">+$729.6K net fiscal benefit</div>
+                        </div>
+
+                        <div className="bg-surface-dim border border-outline-variant/30 rounded-xl p-5 flex flex-col justify-center gap-3">
+                          <div>
+                            <div className="flex justify-between items-center mb-1 font-mono">
+                              <span className="text-[10px] text-on-surface-variant uppercase font-bold">
+                                Confidence Score
+                              </span>
+                              <span className="text-sm text-primary font-extrabold">89.0%</span>
+                            </div>
+                            <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+                              <div className="bg-primary w-[89%] h-full"></div>
+                            </div>
+                          </div>
+                          <p className="text-[10px] font-sans text-on-surface-variant leading-snug">
+                            Multi-layer deterministic reconciliation across 8 enterprise data sources.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-outline-variant/20 flex items-center justify-between font-mono text-[10px] text-on-surface-variant">
+                      <span>Deterministic Lineage Verified</span>
+                      <span className="text-primary font-bold">Zero-Hallucination Safe</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          </div>
+              </section>
+            </div>
+          )}
 
           {/* Boardroom Sign-Off Modal */}
           {showApprovalModal && (
