@@ -112,7 +112,7 @@ InsightPilot AI guides enterprise decision-makers through an interactive, mathem
 
 ### 7. Multi-Persona Executive Intelligence Briefing (`/briefing`)
 ![Executive Intelligence Briefing](docs/assets/screenshots/07_executive_briefing.png)
-*Audit-ready executive intelligence briefing tailored across CFO, COO, VP Supply Chain, and Sales perspectives with 1-click direct dynamic PDF download.*
+*Audit-ready executive intelligence briefing tailored across CFO, COO, VP Supply Chain, and Sales perspectives with interactive 16:9 Slide Mode toggle and 1-click direct dynamic PDF export.*
 
 ---
 

@@ -235,7 +235,7 @@ def build_readme_pdf():
         ("4. Decision Graph (/decision-graph)", "Interactive 6-column DAG mapping Anomaly -> Actions", "Visual causality pipeline with stage stepper & node inspector."),
         ("5. Evidence Explorer (/evidence)", "12 multi-modal records with SHA-256 verification", "Cryptographic provenance proof for ERP, EDI, CRM, and POS data."),
         ("6. Recommendations (/recommendations)", "2x2 Prioritization Matrix & What-If Elasticity Sandbox", "Priority 1 Stock Transfer ($484K recovery); $757.6K modeled recovery pool."),
-        ("7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready governance briefings with 1-click direct dynamic PDF download."),
+        ("7. Executive Briefing (/briefing)", "Role-tailored synthesis (CFO, VP Supply Chain, COO, Sales)", "Audit-ready briefings with interactive 16:9 Slide Mode & 1-click dynamic PDF export."),
     ]
     
     screens_table_data = []
