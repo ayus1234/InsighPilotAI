@@ -99,3 +99,10 @@ logs/
 *.tmp
 scratch/
 .system_generated/
+
+# Competition Submission Assets & Local Presentation Files (Kept locally, ignored by Git)
+submission_assets/
+stitch_insightpilot_ai_executive_platform/
+*.pptx
+*.ppt
+
