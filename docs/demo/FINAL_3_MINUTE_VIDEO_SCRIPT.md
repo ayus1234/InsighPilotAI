@@ -108,18 +108,18 @@
 
 ---
 
-### 🟢 BEAT 6: Role-Tailored Executive Briefings & 1-Click PDF Export
+### 🟢 BEAT 6: Role-Tailored Executive Briefings, Slide Mode & Direct PDF Export
 * **Timestamp:** `2:20 – 2:45` (25 Seconds)
-* **Live Route:** `https://insigh-pilot-ai.vercel.app/briefing`
+* **Live Route:** [https://insigh-pilot-ai.vercel.app/briefing](https://insigh-pilot-ai.vercel.app/briefing)
 
 #### 🖱️ Mouse / Screen Actions:
 1. Show the **CFO Executive Synthesis**.
-2. Click the **"VP Supply Chain"** tab $\to$ notice the tone and operational focus adapt instantly.
-3. Click the **"COO"** tab, then **"Regional Sales Director"** tab.
-4. Click the top button: **"Export Executive PDF"** to trigger the clean download.
+2. Click **"Slide Mode"** $\to$ briefly show the 16:9 boardroom presentation slide deck with arrow navigation.
+3. Click **"Doc View"** and glance across the **"VP Supply Chain"** and **"COO"** persona tabs.
+4. Click the top button: **"Export PDF"** to trigger the instant direct file download.
 
 #### 🗣️ Exact Words to Speak:
-> *"Finally, InsightPilot generates role-tailored briefings for key stakeholders. Whether viewing through the lens of a CFO focused on margin preservation, or a VP of Supply Chain managing warehouse replenishment, the system delivers grounded, audit-ready summaries with a 1-click boardroom PDF export."*
+> *"Finally, InsightPilot generates role-tailored briefings for key stakeholders. Whether presenting in our interactive 16:9 Slide Mode, or viewing through the lens of a CFO focused on margin preservation versus a VP of Supply Chain managing replenishment, the system delivers grounded, audit-ready summaries with an instant 1-click direct PDF export."*
 
 ---
 
